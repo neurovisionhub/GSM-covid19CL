@@ -1,4 +1,5 @@
-function [covid19chile,I,R,F,U,T,IC,RC,FC] = loadDataIvanGit(region,grafica,pathDATA)
+function [covid19chile,I,R,F,U,T,IC,RC,FC] = loadDataIvanGit(region,grafica,pathDATA,globalPais)
+%global globalUCImovil
 %IMPORTFILE Import data from a text file
 % https://github.com/ivanMSC/COVID19_Chile
 %  See also READTABLE.
@@ -13,6 +14,9 @@ function [covid19chile,I,R,F,U,T,IC,RC,FC] = loadDataIvanGit(region,grafica,path
 % If dataLines is not specified, define defaults
 %if nargin < 2
 dataLines = [2, Inf];
+
+
+
 %end
 filename = strcat(pathDATA,'\git-ivanMSC\Covid19_chile.csv')
 %% Set up the Import Options and import the data
@@ -36,7 +40,28 @@ opts = setvaropts(opts, ["Fecha", "Region"], "EmptyFieldRule", "auto");
 % Import the data
 covid19chile = readtable(filename, opts);
 
+[f,c] = size(covid19chile)
+if globalPais==1  
+    salto=17; % regiones + no informado
+    inicio=1;
+    sz = [f/salto c];
+    VariableNames0 = {'Fecha', 'Region', 'NuevoConfirmado', 'NuevoMuerte', 'NuevoRecuperado', 'AcumConfirmado', 'AcumMuerte', 'AcumRecuperado', 'CasosUCI'};
+    VariableTypes0 = {'categorical', 'categorical', 'double', 'double', 'double', 'double', 'double', 'double', 'double'};
+    tmpTable = table('size',sz,'VariableTypes',VariableTypes0,'VariableNames',VariableNames0);
+    for i=1:f/salto
+        a=inicio;
+        b=inicio+salto-1;
+        A = table2array(covid19chile(a:b,3:end));
+        values = sum(A,'omitnan');
+        inicio=inicio+salto;
+        variable = covid19chile.Fecha(a);
+        tmpTable(i,1:end) = {variable,'Chile',values(1,1),values(1,2),values(1,3),values(1,4),values(1,5),values(1,6),values(1,7)};
+    end
+dataTable = tmpTable;
+else
 dataTable = covid19chile(string(covid19chile.Region)==region, :);
+end
+
 T = dataTable(:,:); % Tabla completa
 dataTableDouble = dataTable(:,3:end);
 I = table2array(dataTableDouble(:,1))';% Casos Infectados
@@ -45,10 +70,6 @@ R = table2array(dataTableDouble(:,3))';% Casos Recuperados
 IC = table2array(dataTableDouble(:,4))';% Casos Infectados
 FC = table2array(dataTableDouble(:,5))';% Casos Fallecidos
 RC = table2array(dataTableDouble(:,6))';% Casos Recuperados
-
 U = table2array(dataTableDouble(:,7))';% Casos UCI
- 
-%sumasTotales = covid19chile(:,3:end-1);%
-%A = table2array(dataTableDouble);
 
 end

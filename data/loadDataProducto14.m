@@ -1,4 +1,4 @@
-function [Poblaciones,fRegion,fpais,fdist,T,fstring,ftable,fdouble] = loadDataProducto14(regionA,grafica,pathDATA)
+function [Poblaciones,fRegion,fpais,fdist,T,fstring,ftable,fdouble,fnacional] = loadDataProducto14(regionA,grafica,pathDATA)
 addpath ./data/functions/D14
 Poblaciones = 0;
 fRegion  = 0;
@@ -19,11 +19,11 @@ pData = strcat(pathDATA,'\producto14\FallecidosCumulativo.csv')
     dataTest1 = dataDouble(1:end,2:end); %% Datos regionales
     dataTest2 = sortrows(dataTest1,size(dataTest1,2));
     test1 =   abs(dataTest1(1:end,2:end) - dataTest1(1:end,1:end-1));
-    test2 =   abs(dataTest2(1:end,2:end) - dataTest2(1:end,1:end-1));
-    
+    test2 =   abs(dataTest2(1:end,2:end) - dataTest2(1:end,1:end-1));    
     fdist = [dataTest1(1:end,1),test1];  
     fRegion = fdist;
-    fpais = fdouble(end,2:end);
+    %fdouble(isnan( fdouble(:,:))) = []
+    fpais = fdouble(2:end-1,2:end);
     
         if grafica == 1
         createfigure(dataTest1,dataTest1)   

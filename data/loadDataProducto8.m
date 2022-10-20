@@ -14,7 +14,7 @@ Ddouble=0;
 %if ID==1
     
 %pData = pathDATA + '\producto1\Covid-19.csv'
-pData = strcat(pathDATA,'\producto8\UCI.csv')
+pData = strcat(pathDATA,'\producto8\UCI.csv');
 %pData = "C:\Users\Patricio Cumsille\Documents\MATLAB\code-dev\producto1\Covid-19.csv"
 [Dstring,Dtable,Ddouble] = D8(pData);
 
@@ -36,18 +36,18 @@ pData = strcat(pathDATA,'\producto8\UCI.csv')
       
 %     Rt = iTotalesComunasRegion;
 %     data = dataTest1;
-%         if grafica == 1
-%         createfigure(dataTest1,dataTest1)   
-%         title('Infectados acumulados sort sum-',regionA)
+        if grafica == 1
+        createfigure(UCIdist,UCIdist)   
+        title('UCIdists sort sum-',regionA)
 %         figure
 %         surf(sortrows(test1,size(test1,2))')
-%         title('Infectados  -',regionA)
+%         title('UCIdist  -',regionA)
 %         figure
 %         surf(sortrows(dataTest1,size(dataTest1,2)))
-%         title('Infectados sort sum-',regionA)
+%         title('UCIdist sort sum-',regionA)
 %         figure
 %         surf(test2)
 %         title('Infectados sort max-',regionA)
-%         end
+        end
 
 end

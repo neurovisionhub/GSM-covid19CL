@@ -8,7 +8,7 @@ T = 0;
 Dstring=0;
 Dtable=0;
 Ddouble=0;
-pData = strcat(pathDATA,'\producto1\Covid-19.csv')
+pData = strcat(pathDATA,'\producto1\Covid-19.csv');
 [Dstring,Dtable,Ddouble] = D1(pData);
 
 %% I-Covid
@@ -26,7 +26,7 @@ pData = strcat(pathDATA,'\producto1\Covid-19.csv')
     
     iTotalesComunasRegion =test1;% [sum(dataTest1(1:end,1)),sum(test1)];
     iRegion = sum([dataTest1(1:end,1),test1]);
-    ipais = 0;
+    ipais = sum(Ddouble(2:end,4:end));
     
         if grafica == 1
         createfigure(dataTest1,dataTest1)   
@@ -44,74 +44,6 @@ pData = strcat(pathDATA,'\producto1\Covid-19.csv')
 
 %end
 
-% if ID==38
-% pData = pathDATA + '/producto38/CasosFallecidosPorComuna.csv'
-% [Dstring,Dtable,Ddouble] = D38(pData);
-%     %% F-Covid
-%     dataTable = Dtable(string(Dtable.Region)==regionB, :);
-%     T=dataTable;
-%     rowsIndex = Dtable.('Region')==regionB;
-%     dataDouble = Ddouble(rowsIndex,:);
-%     dataTest1 = dataDouble(1:end-2,6:end-1);
-%     dataTest2 = sortrows(dataTest1,size(dataTest1,2));
-%     test1 =   abs(dataTest1(1:end-1,2:end) - dataTest1(1:end-1,1:end-1));
-%     test2 =   abs(dataTest2(1:end-1,2:end) - dataTest2(1:end-1,1:end-1));
-%     fTotalesComunasRegion = sum(test1);
-%     fRegion = test1;
-%     R = fRegion;
-%     Rt = fTotalesComunasRegion;
-%     data = dataTest1;
-%         if grafica == 1
-%         createfigure(dataTest1,dataTest1)  
-%         title('Fallecidos acumulados - sort sum-',regionB)
-%         figure
-%         surf(sortrows(test1,size(test1,2))')
-%         title('Fallecidos-',regionB)
-%         figure
-%         surf(sortrows(dataTest1,size(dataTest1,2)))
-%         title('Fallecidos sort sum-',regionB)
-%         figure
-%         surf(test2)
-%         title('Fallecidos sort max -',regionB)
-%         end
-% end
-% 
-% if ID==53
-% pData = pathDATA + '/producto53/confirmados_provinciales.csv'
-% [Dstring,Dtable,Ddouble] = D53(pData);
-%  dataTable = Dtable(string(Dtable.Provincia)==regionB, :);
-%     T=dataTable;
-%     regionB
-%     rowsIndex = string(Dtable.Provincia)==regionB;
-%     %rowsIndex = Dtable.('Provincia')==regionB;
-%     dataDouble = Ddouble(rowsIndex,:);
-% 
-%     
-%     
-%     dataTest1 = dataDouble(1:end,6:end);
-%     %dataTest2 = sortrows(dataTest1,size(dataTest1,2));
-%     %test1 =   abs(dataTest1(1:end-1,2:end) - dataTest1(1:end-1,1:end-1));
-%     %test2 =   abs(dataTest2(1:end-1,2:end) - dataTest2(1:end-1,1:end-1));
-%     %fTotalesComunasRegion = sum(test1);
-%     %fRegion = test1;
-%     %R = fRegion;
-%     %Rt = fTotalesComunasRegion;
-%     data = dataTest1;
-% end
-% if ID==46
-% pData = pathDATA + '\producto46\activos_vs_recuperados.csv'    
-% %R = importfile46("\output\producto46\activos_vs_recuperados.csv", [2, Inf]);
-% 
-% R = importfile46(pData, [2, Inf]);
-% data=R;
-% T=abs(R(2:end,2) - R(1:end-1,2));
-% Rt=abs(R(2:end,3) - R(1:end-1,3));
-% R = R(1:end,2);
-% Rt=[0;Rt];
-% T=[1;T];
-% end
-
-%[D81string,D81table,D81double] = D81(nTimeRF);
 
 
 %% Data Product 38 - Casos fallecidos por comuna: Este producto da cuenta del número de casos fallecidos en cada una de las comunas de Chile según su residencia, y concatena la historia de los informes epidemiológicos publicados por el Ministerio de Salud del país. Ver más
@@ -139,35 +71,6 @@ pData = strcat(pathDATA,'\producto1\Covid-19.csv')
 
 
 
-
-%% D53 Consolidación experimental PUC/UChile/UDEC
-%dataTable = D53table(string(D53table.Region)==regionB, :);
-% TF=dataTable;
-% rowsIndex = D53table.('Region')==regionB;
-% dataDouble = D53double(rowsIndex,:);
-% dataTest1 = dataDouble(1:end-2,6:end-1);
-% dataTest2 = sortrows(dataTest1,size(dataTest1,2));
-% test1 =   abs(dataTest1(1:end-1,2:end) - dataTest1(1:end-1,1:end-1));
-% test2 =   abs(dataTest2(1:end-1,2:end) - dataTest2(1:end-1,1:end-1));
-% fTotalesComunasRegion = sum(test1);
-% fRegion = test1;
-% fR = fRegion;
-% fRt = fTotalesComunasRegion;
-% F = dataTest1;
-% if grafica == 1
-% createfigure(dataTest1,dataTest1)  
-% title('Fallecidos acumulados - sort sum-',regionB)
-% figure
-% 
-% surf(sortrows(test1,size(test1,2))')
-% title('Fallecidos-',regionB)
-% figure
-% surf(sortrows(dataTest1,size(dataTest1,2)))
-% title('Fallecidos sort sum-',regionB)
-% figure
-% surf(test2)
-% title('Fallecidos sort max -',regionB)
-% end
 
 
 

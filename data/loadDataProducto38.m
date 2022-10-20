@@ -13,6 +13,7 @@ Dtable=0;
 Ddouble=0;
 %if ID==1
 
+
 regionB = regionA;
 
 if strcmp(regionA,'Tarapacá')
@@ -53,10 +54,11 @@ end
 
 %regionB
 %pData = pathDATA + '\producto1\Covid-19.csv'
-pData = strcat(pathDATA,'/producto38/CasosFallecidosPorComuna.csv')
+pData = strcat(pathDATA,'/producto38/CasosFallecidosPorComuna.csv');
 
 [Dstring,Dtable,Ddouble] = D38(pData);
     %% F-Covid
+    
     dataTable = Dtable(string(Dtable.Region)==regionB, :);
     T=dataTable;
     rowsIndex = Dtable.('Region')==regionB;
@@ -69,7 +71,15 @@ pData = strcat(pathDATA,'/producto38/CasosFallecidosPorComuna.csv')
     
     Fdist = [dataDouble(1:end-2,6),test1];
     fTotalesComunasRegion = sum(test1);
-    
+    Ddouble(isnan( Ddouble(:,:))) = 0;
+    %Ddouble(isnan( Ddouble(:,:))) = 0
+    %pause
+    %tmp   = [Ddouble(ls,2),Ddouble(ls,4:)]
+    Fpais = Ddouble;
+    %Fpais = sortrows(Ddouble,2);
+    Fpais(Fpais(:,4)==0,:)=[];
+    FpaisDiff = diff(Fpais(:,6:end)');
+    %Fpais = 
     FRegion = [ dataDouble(end,6),fTotalesComunasRegion];
     data = dataTest1;
         if grafica == 1
@@ -84,6 +94,13 @@ pData = strcat(pathDATA,'/producto38/CasosFallecidosPorComuna.csv')
         figure
         surf(test2)
         title('Fallecidos sort max -',regionB)
+        figure
+        surf(Fpais(:,6:end)')
+        title('Fallecidos acumulados Fpais -')
+        figure
+        surf(FpaisDiff)
+        title('Fallecidos FpaisDiff Fpais -')
+        
         end
 regionB
 end
