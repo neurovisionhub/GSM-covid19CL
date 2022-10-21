@@ -1,8 +1,8 @@
-%global option_model
-addpath calls/models
-global numTetas;
+global option_model numThetas nGammas
+addpath (genpath('calls/models'))
+
 maxiters = 50;
-numThetas=5;
+numThetas=20;
 nGammas = numThetas;
 
 %% Model with unique gamma, alfaS and deltaS (constant)

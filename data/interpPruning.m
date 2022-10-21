@@ -3,7 +3,7 @@ R=aR_day_movil';
 F=aF_day_movil';
 %[aF_day_movil] = mediamovil(F,ventana);
 U=aU_day_movil';
-global grafica_data 
+%global grafica_data 
 
 %if interpolacion == 1
     vn = size(I,1);

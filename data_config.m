@@ -1,8 +1,8 @@
 addpath ./calls
 addpath ./data
 format short e
-global traza nGammas globalPais globalUCImovil interpolacion cont grafica_data
-
+global traza nGammas globalPais globalUCImovil interpolacion cont %grafica_data
+grafica_data
 cont=0;
 %%  Para experimentos ad-hoc / vacunas / comunales / simulación
 % config
@@ -41,7 +41,7 @@ traza = 0;
 ventana_general=14;
 diaInicio = 280;
 diaFinEstudio = 530;
-nF=1;
+nF=84;
 diaFin=diaFinEstudio-nF;
 
 

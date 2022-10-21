@@ -1,4 +1,4 @@
-
+%% old callTestVacuna
 %% Definic�n de datos y par�metros iniciales para el ajuste
 %% format short e
 %% Los resultados no cambian considerando diferentes "datos mejorados"
@@ -7,15 +7,15 @@
 % % % load('datos-metrop-28-09-20.mat');
 global nBetas 
 global nGammas
-%global nTau
+global nTau
 global time_range 
 global all_taus;
 global all_betas;
 global all_gammasU;
 global all_gammasR;
-global numTetas;
+global numThetas;
 %global pMatrix;
-nBetas=numTetas;
+nBetas=numThetas; % igual numero de thetas y betas
 
 
 t=1:size(I,1);
@@ -93,7 +93,7 @@ tau4n=(tau4-1)/239;
 tau5n=(tau5-14)/42;
 tau6n=(tau6-21)/21;
 all_taus = [tau1n,tau2n,tau3n,tau4n,tau5n,tau6n]';
-beta_qty = numTetas ; %RM % Ojo aqui con el n�mero de betas
+beta_qty = numThetas ; %RM % Ojo aqui con el n�mero de betas
 %beta_qty = 15 ; 
 %nTau = 2;
 %nBetas = beta_qty;
@@ -129,4 +129,4 @@ p0=[gamma;alfaS;deltaS;all_taus;a;k;aC;all_gammasU;all_betas;all_gammasR];
 %% Método iterativo desacoplado
 %main_new_vacunacion_iter
 
-disp('CARGADO ... some_blocks_params_model')
+disp('CARGADO .x.. some_blocks_params_model')

@@ -1,4 +1,4 @@
-global grafica_data 
+%global grafica_data 
 %close all
 %% Ajustes ad-hoc para primeros meses de pandemia
 % Inicio periodo de ajuste

@@ -1,3 +1,4 @@
+global nTau
 %% ** Script para Optimizaci�n por m�nimos cuadrados **
 %% Opciones para el solver de optimizaci�n
 %maxiters=5;
@@ -12,7 +13,7 @@ options = optimset('Algorithm','trust-region-reflective','Display','iter','MaxIt
 %options = optimset('Algorithm','trust-region-reflective','Display','iter','MaxIter',1000,'TolFun',1e-17,'TolX',9.7e-08,'MaxFunEvals',20000);
 %% Inicializaci�n de cotas para los par�metros
 Lb=zeros(size(p0));
-Ub=inf*ones(size(p0));
+Ub=ones(size(p0));
 %Ub=N*ones(size(p0));
 %% ** Seg�n informe conjunto China-OMS, tau1 var�a entre 1 y 14 d�as, con un promedio de 5-6 dias
 %% mientras que tau2 var�a entre 7 y 56 d�as, con un promedio de 14 d�as
@@ -77,7 +78,7 @@ r=0.3;
 it=0;
 maxit=5;
 while (abs(r-resnormref)/r>tol)&&(it<maxit)
-    [p,r,~,~,~,~,jac]=lsqnonlin(@(p) ESIR_rel(p,tc,Data,x0,N),p0,Lb,Ub,options);
+    [p,r,~,~,~,~,jac]=lsqnonlin(@(p) ESIR_rel_some(p,tc,Data,x0,N),p0,Lb,Ub,options);
     p0=p;
     it=it+1;
 end

@@ -1,6 +1,6 @@
 stringPath = '.\data';
 
-global globalPais grafica_data
+global globalPais
 grafica=grafica_data;
 %% Desde github ANID
 %% INFECTADOS desde 30 marzo 2020 - Selección

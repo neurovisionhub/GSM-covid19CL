@@ -1,11 +1,10 @@
-<<<<<<< HEAD
 %% -------- Description of the programa params ---------
 % --- grafica_data : muestra graficos de datos cargados (no:0. yes:1)
 % ej. grafica_data = 0;
 % --- grafica_ajustes : muestra graficos de datos ajustados (no:0. yes:1)
 % ej. grafica_ajustes = 0;
 
-global grafica_data grafica_ajustes
+%global grafica_data grafica_ajustes
 
 %% data_config : file data config (see file for more details)   
 %  region selection / type UCI / smoothing / 
@@ -22,8 +21,8 @@ global grafica_data grafica_ajustes
 
 clear
 close all
-option_model = 2
-grafica_data = 1;
+option_model = 1
+grafica_data = 0;
 grafica_ajustes = 0;
 
 data_config % call data_config
