@@ -25,12 +25,12 @@ addpath (genpath('exps/'))
 
 clear
 close all
-cont=0;
+
 option_model = 2
 grafica_data = 0;
 grafica_ajustes = 0;
 
-%id_log = 1; % id_log:<id> of index experiments --> on file ej: log_file_p0_values.<1>.dat 
+id_log = 1; % id_log:<id> of index experiments --> on file ej: log_file_p0_values.<1>.dat 
 
 data_config % call data_config
 model_solver_config % call model_solver_config
@@ -41,12 +41,11 @@ model_solver_config % call model_solver_config
 % or 
 
 %main_some_block  % (model 1 - proposed 1 "M1.ESIR_Rel.Aclouped.0.1")
-%save_log('main_some_block',p0)
 % main_some_block_iter (model 1 - extension.proposed 1 "M1.ESIR_W_Rel.Desacoupled.0.1") 
-%save_log('main_some_block_iter',p0)
 
-% main_all_blocks_1
-% save_log('main_all_blocks_1',p0)
+
+main_all_blocks_1
+
 
 
 
