@@ -21,7 +21,8 @@ taus = p(4:4+nTau-1)'; %de posicion donde se encuentran los taus
 %options = ddeset('Jumps',5);
 %%menor tol mayor tiempo - para experimentos inciciales usar error alto
 %tic
-vectorInicial = [N-xd(1,1);xd(1,1);xd(1,2);xd(1,3)];
+%vectorInicial = [N-xd(1,1);xd(1,1);xd(1,2);xd(1,3)];
+vectorInicial = [N-xd(1,1)-xd(1,2)-xd(1,3);xd(1,1);xd(1,2);xd(1,3)];
 %options = ddeset('RelTol',1e-2,'AbsTol',1e-4,...
 %                 'InitialY',[N;1;1;1]);
 options = ddeset('RelTol',1e-2,'AbsTol',1e-4,...

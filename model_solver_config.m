@@ -1,8 +1,6 @@
 global numThetas nGammas
 addpath (genpath('calls/models'))
 
-maxiters = 10;
-numThetas=5;
 nGammas = numThetas;
 
 %% Model with unique gamma, alfaS and deltaS (constant)
@@ -22,7 +20,7 @@ if option_model == 1
 
 elseif option_model == 2
     sprintf('Go all_blocks_params_model')
-   all_blocks_params_model
+    all_blocks_params_model
    
 elseif option_model == 3
    example_all_blocks_params_model

@@ -12,7 +12,7 @@ cont=0;
 %% Datos de la predicción
 
 %% ventana 7 errores relativos inicial (12000.0)
-region = 'Metropolitana'; % 
+%region = 'Metropolitana'; % 
 %region = 'Atacama'
 %region = 'Arica y Parinacota'
 %region = 'Biobío'
@@ -38,7 +38,7 @@ interpolacion = 1;
 percentPrunning = 1; %   1 > values > 0 is percentage of data 
 
 %% Aproximacion sobre curva acumulada
-acumulada = 0;
+acumulada = 1;
 
 %% TRAZA OPTIMIZER
 traza = 0;
@@ -47,6 +47,9 @@ traza = 0;
 ventana_general=14;
 diaInicio = 280;
 diaFinEstudio = 530;
+nF=84;
+diaInicio = 280;
+diaFinEstudio = 540;
 nF=84;
 diaFin=diaFinEstudio-nF;
 

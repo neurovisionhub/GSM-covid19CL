@@ -15,7 +15,7 @@ options = optimset('Algorithm','trust-region-reflective','Display','iter','MaxIt
 %options = optimset('Algorithm','trust-region-reflective','Display','iter','MaxIter',1000,'TolFun',1e-17,'TolX',9.7e-08,'MaxFunEvals',20000);
 %% Inicializaci�n de cotas para los par�metros
 Lb=ones(size(p0))*1e-5;
-Ub=inf*ones(size(p0));
+Ub=ones(size(p0));
 %Ub=N*ones(size(p0));
 %% ** Seg�n informe conjunto China-OMS, tau1 var�a entre 1 y 14 d�as, con un promedio de 5-6 dias
 %% mientras que tau2 var�a entre 7 y 56 d�as, con un promedio de 14 d�as
@@ -93,7 +93,7 @@ Lb(9)=7; Ub(9)=42; %tau6 -> recuperacion UCI
 % Ub(9)=1; %tau6
 % for i=4:4+nTau-1
 %     
-%     Lb(i)=3; Ub(i)=10; 
+%     Lb(i)=0.001; Ub(i)=10; 
 % end
 %%%%%% RECORDAR HABILITAR p=p0
 p=p0;

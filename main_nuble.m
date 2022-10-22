@@ -45,33 +45,6 @@ option_model = 2
 grafica_data = 0;
 grafica_ajustes = 0;
 
-%id_log = 1; % id_log:<id> of index experiments --> on file ej: log_file_p0_values.<1>.dat 
-% region = 'Metropolitana';
-% data_config % call data_config
-% maxiters = 10;
-% numThetas=20;
-% model_solver_config % call model_solver_config
-% 
-% % example 1
-% main_all_blocks_1
-% save_log('main_all_blocks_1-v20',p0)
-% save_log('error_1-v20',r)
-% compute_curves
-% save_log('curves_1-v20',salida)
-% 
-% % example 2
-% maxiters = 10;
-% numThetas=10;
-% 
-% model_solver_config 
-% main_all_blocks_1
-% save_log('main_all_blocks_1-v10',p0)
-% save_log('error_1-v10',r)
-% compute_curves
-% save_log('curves_1-v10',salida)
-
-
-
 % example 2
 maxiters = 10;
 numThetas=3;
@@ -94,7 +67,7 @@ save_log('error_1-Valparaiso-v3',r)
 compute_curves
 save_log('curves_1-Valparaiso-v3',salida)
 
-region = 'Biobío'
+region = 'Ñuble'
 data_config
 model_solver_config 
 main_all_blocks_1
@@ -104,26 +77,7 @@ compute_curves
 save_log('curves_1-nuble-v3',salida)
 
 
-numThetas=10;
-data_config
-model_solver_config 
-main_all_blocks_1
-save_log('main_all_blocks_1-nuble-v10',p0)
-save_log('error_1-nuble-v10',r)
-compute_curves
-save_log('curves_1-nuble-v10',salida)
-% call_solver % call numeric method & optimizer
-% alfa, gamma y delta -> S of model=1
-% alfa, gamma y delta -> S(t) of model=2
-% or 
 
-%main_some_block  % (model 1 - proposed 1 "M1.ESIR_Rel.Aclouped.0.1")
-%save_log('main_some_block',p0)
-%main_some_block_iter (model 1 - extension.proposed 1 "M1.ESIR_W_Rel.Desacoupled.0.1") 
-%save_log('main_some_block_iter',p0)
-
-% main_all_blocks_1
-% save_log('main_all_blocks_1',p0)
 
 
 

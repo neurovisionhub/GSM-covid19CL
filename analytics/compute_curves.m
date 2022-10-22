@@ -1,5 +1,5 @@
 
-%% Gr·fico para modelo con retardos (tiempos de incubaciÛn y de remociÛn)
+%% Gr√°fico para modelo con retardos (tiempos de incubaci√≥n y de remoci√≥n)
 %% Para datos de la RM hasta entre el 15-03-21 al 12-06-21
 %p=p0;
 %% all_taus = [tau1,tau2,tau3,tau4,tau5]';
@@ -12,20 +12,23 @@ tau5=p(8);
 %% Para la variante que incluye el paso de UCI a R
 tau6=p(9);
 all_taus = [tau1,tau2,tau3,tau4,tau5,tau6]';
-% %% Para variante donde gammaUCI est· directamente en la fc. obj.
+
+%taus = p(4:4+nTau-1)'; %de posicion donde se encuentran los taus
+%all_taus = taus;
+% %% Para variante donde gammaUCI est√° directamente en la fc. obj.
 % all_taus = [tau1,tau2,tau3,tau4]';
 nTau=length(all_taus);
 tg=tc;
 %sol = dde23('sir_ret_fun_21',[tau1,tau2],'sir_ret_hist',[tg(1),tg(end)],[],p,N,x0);
-%% Variante con vacunaciÛn (la funciÛn de historia no cambia)
-%% Para variante con vacunaciÛn se agregan dos retardos
+%% Variante con vacunaci√≥n (la funci√≥n de historia no cambia)
+%% Para variante con vacunaci√≥n se agregan dos retardos
 % tau3=p(12);
 % tau4=p(13);
 % sol = dde23('sir_ret_fun_vac',[tau1,tau2,tau3,tau4],'sir_ret_hist',[tg(1),tg(end)],[],p,N,x0);
-%% Para versiÛn con UCI
+%% Para versi√≥n con UCI
 sol = dde23('sir_ret_fun_vac_all',all_taus,'sir_ret_hist',[tg(1),tg(end)],[],p,N,x0);
 y = deval(sol,tg);
-%% C·lculo de los infectados acumulados
+%% C√°lculo de los infectados acumulados
 Inf = y(2,:);
 UCI = y(4,:);
 fr=sigmoide_all(p,y(2,:),nTau);
@@ -40,10 +43,42 @@ InfDa=Data(:,1);
 UCIDa=Data(:,3);
 %figure
 salida = [InfDa,InfR',UCIDa,UCI'];
-%plot(salida)
+
+if acumulada == 1
+UCIc = diff(UCI);
+UCIr = diff(UCIDa);
+Infac = diff(InfR);
+InfDar = diff(InfDa);
+Infc = diff(Inf);
+UCI = [UCIc,UCIc(1,end)];
+UCIDa = [UCIr',UCIr(1,end)];
+InfR = [Infac,Infac(1,end)];
+InfDa =[InfDar',InfDar(1,end)]; 
+Inf =[Infc,Infc(1,end)];
+else
+UCIc = UCI;
+UCIr = UCIDa;
+Infac = InfR;
+InfDar =InfDa;    
+end
+figure
+hold on
+plot(UCIc)
+hold on
+plot(UCIr)
+figure
+hold on
+plot(Infac)
+hold on
+plot(InfDar)
+figure
+
+formatSpec = " -%d thetas";
+str = compose(formatSpec,numThetas);
+titulo = region + str;
 %UCIDa=xd(tc+round(tau5),3);
-%% Gr·ficos
-%% Para muchos datos graficarlos sÛlo cada 6 dÌas
+%% Gr√°ficos
+%% Para muchos datos graficarlos s√≥lo cada 6 d√≠as
 I=find( mod(tc,4)==0 );
 % I=[1 I length(tc)];
 % I=find( mod(tc,2)==0 );
@@ -68,6 +103,7 @@ ylabel('Cases number')
 axis([tg(1)-2 tg(end)+2 0.01*min(minInfR,mindata) 1.05*max(maxdata,maxInf)])
 %% Para datos acumulados de la RM
 %% Cuando no se grafica ya
+title(titulo)
 lgd=legend('$I$ fitted','$I$ actual','Data I');
 set(lgd,'Location','northwest','Interpreter','latex','FontSize',10)
 subplot(122)
@@ -75,6 +111,7 @@ plot(tg,UCI,'-.k','LineWidth',2.3)
 hold on
 plot(texp,UCIDa(I),'sb','MarkerEdgeColor','b',...
     'MarkerFaceColor',[0 0.4470 0.7410],'MarkerSize',5);
+title(titulo)
 maxdata=max(UCIDa);
 mindata=min(UCIDa);
 maxUCI=max(UCI);

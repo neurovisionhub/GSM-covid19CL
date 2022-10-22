@@ -1,17 +1,24 @@
-
 %% Gráfico para modelo con retardos (tiempos de incubación y de remoción)
 %% Para datos de la RM hasta entre el 15-03-21 al 12-06-21
 %p=p0;
+nTau = 6;
+figure
 %% all_taus = [tau1,tau2,tau3,tau4,tau5]';
+taus = p(4:4+nTau-1)'; %de posicion donde se encuentran los taus
 %% p0=[gamma;alfaS;deltaS;all_taus;a;k;aC;all_gammasU;all_betas];
-tau1=p(4);
-tau2=p(5);
-tau3=p(6);
-tau4=p(7);
-tau5=p(8);
-%% Para la variante que incluye el paso de UCI a R
-tau6=p(9);
-all_taus = [tau1,tau2,tau3,tau4,tau5,tau6]';
+% % tau1=13*taus(1);
+% % tau2=20*taus(2);
+% % tau3=19*taus(3);
+% % tau4=239*taus(4);
+% % tau5=42*taus(5);
+% % % all_betas   = p(end-nGammas-nBetas+1:end-nGammas);
+% % % all_gammasU = p(end-2*nGammas-nBetas+1:end-nBetas-nGammas);
+% % % all_gammasR = p(end-nGammas+1:end);
+% % %% Para la variante que incluye el paso de UCI a R
+% % tau6=21*taus(6);
+%% all_taus = [tau1,tau2,tau3,tau4,tau5,tau6]';
+
+all_taus = taus;
 % %% Para variante donde gammaUCI está directamente en la fc. obj.
 % all_taus = [tau1,tau2,tau3,tau4]';
 nTau=length(all_taus);
@@ -23,12 +30,14 @@ tg=tc;
 % tau4=p(13);
 % sol = dde23('sir_ret_fun_vac',[tau1,tau2,tau3,tau4],'sir_ret_hist',[tg(1),tg(end)],[],p,N,x0);
 %% Para versión con UCI
-sol = dde23('sir_ret_fun_vac_all',all_taus,'sir_ret_hist',[tg(1),tg(end)],[],p,N,x0);
+sol = dde23('sir_ret_fun_vac',all_taus,'sir_ret_hist',[tg(1),tg(end)],[],p,N,x0);
 y = deval(sol,tg);
 %% Cálculo de los infectados acumulados
 Inf = y(2,:);
 UCI = y(4,:);
-fr=sigmoide_all(p,y(2,:),nTau);
+
+
+fr=sigmoide(p,y(2,:),nTau);
 % %% Para la variante donde los UCI van en el target
 % gammasU= p(12:12+nGammas-1)'; %de posicion 4 a nTau
 % tUCI = linspace(tc(1),tc(end),numel(gammasU)) ;
@@ -38,9 +47,32 @@ fr=sigmoide_all(p,y(2,:),nTau);
 InfR = fr.*Inf;
 InfDa=Data(:,1);
 UCIDa=Data(:,3);
-%figure
-salida = [InfDa,InfR',UCIDa,UCI'];
-%plot(salida)
+
+figure
+if acumulada == 1
+UCIc = diff(UCI);
+UCIr = diff(UCIDa);
+Infac = diff(InfR);
+InfDar = diff(InfDa);
+else
+UCIc = UCI;
+UCIr = UCIDa;
+Infac = InfR;
+InfDar =InfDa;    
+end
+
+hold on
+plot(UCIc)
+hold on
+plot(UCIr)
+figure
+hold on
+plot(Infac)
+hold on
+plot(InfDar)
+
+figure
+
 %UCIDa=xd(tc+round(tau5),3);
 %% Gráficos
 %% Para muchos datos graficarlos sólo cada 6 días
@@ -79,7 +111,7 @@ maxdata=max(UCIDa);
 mindata=min(UCIDa);
 maxUCI=max(UCI);
 minUCI=min(UCI);
-axis([tg(1)-2 tg(end)+2 0.01*min(minUCI,mindata) 1.05*max(maxdata,maxInf)])
+%axis([tg(1)-2 tg(end)+2 0.01*min(minUCI,mindata) 1.05*max(maxdata,maxInf)])
 lgd=legend('$UCI$ fitted','Data UCI');
 set(lgd,'Location','northwest','Interpreter','latex','FontSize',10)
-shg
+%shg

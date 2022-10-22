@@ -89,13 +89,18 @@ all_gammas = gamma*ones(nGammas,1);
 all_alfaS = alfaS*ones(nGammas,1);
 all_deltaS = deltaS*ones(nGammas,1);
 
+if primero == 0
 %p0=[gamma;alfaS;deltaS;all_taus;a;k;aC;all_gammasU;all_betas;all_gammasR];
 p0=[a;k;aC;all_taus;all_gammas;all_alfaS;all_deltaS;all_gammasU;all_betas;all_gammasR];
+else
+p0=pUltimo;
 
+end
 disp('CARGADO... all_blocks_params_model')
 
-main_all_blocks_1
-save_log('main_all_blocks_1',p0)
+
+
+
 
 % if expTradicional==1
 %     if experimento == 2
