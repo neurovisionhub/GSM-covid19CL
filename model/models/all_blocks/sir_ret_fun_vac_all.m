@@ -97,11 +97,11 @@ v = zeros(4,1);
 
 %% OSCAR
 
-v(1,1) = - beta*y(1)*ylag1(2)/N - alfaS*ylag3(1) + deltaS*ylag4(1) + 1e-5;
-v(2,1) = beta*y(1)*ylag1(2)/N - gamma*ylag2(2) - gammasUCI*ylag5(2)  + 1e-5;%*( 1 + (a-1)/( 1+exp( -k*(ylag5(2)-aC) ) ) ); Di
+v(1,1) = - beta*y(1)*ylag1(2)/N - alfaS*ylag3(1) + deltaS*ylag4(1) ;
+v(2,1) = beta*y(1)*ylag1(2)/N - gamma*ylag2(2) - gammasUCI*ylag5(2);%*( 1 + (a-1)/( 1+exp( -k*(ylag5(2)-aC) ) ) ); Di
 %v(2) = beta*y(1)*ylag1(2)/N - gamma*ylag2(2); %di
-v(3,1) = gamma*ylag2(2)+alfaS*ylag3(1)-deltaS*ylag4(1)+ 1e-5+gammasR*ylag6(4)  ;%dr
-v(4,1) = gammasUCI*ylag5(2)+ 1e-5-gammasR*ylag6(4) + 1e-2; %du
+v(3,1) = gamma*ylag2(2)+alfaS*ylag3(1)-deltaS*ylag4(1)+gammasR*ylag6(4)  ;%dr
+v(4,1) = gammasUCI*ylag5(2)-gammasR*ylag6(4) ; %du
 
 % v(1,1) = - beta*log10(gammasUCI*ylag5(2)+1)*(1+gammasR)-alfaS*ylag3(1)+deltaS*ylag4(1)+ 1e-5;
 % %v(2,1) = beta*y(1)*ylag1(2)/N - gamma*ylag2(2) - gammasUCI*ylag5(2)  + 1e-5;%*( 1 + (a-1)/( 1+exp( -k*(ylag5(2)-aC) ) ) ); Di

@@ -9,5 +9,5 @@ aIC(1,iniAjuste:finAjuste) = y;
 % error on humans
 [y0] = diferenciasDiarias(IC);
 [y1] = diferenciasDiarias(aIC);
-error_aIC=abs(sum(y0)-sum(y1));
+error_aIC=abs(sum(y0)-sum(y1))
 end

@@ -4,7 +4,7 @@
 % Inicio periodo de ajuste
 iniAjuste=30;
 % Fin periodo de ajuste
-finAjuste=108;
+finAjuste=150;
 ventana = 3;
 % Ajuste básico con media movil sobre funcion acumulada
 % para suavizar distribución donde se presenta salto discreto grande
@@ -36,6 +36,7 @@ diaPrimerRecs = 14; % dia en que se presenta primer recuperado
 % Ajuste y suavizamiento de curvas acumuladas de fallecidos
 ventana = ventana_general;
 [aFC] = mediamovil(FC,ventana);
+F = diferenciasDiarias(FC);
 [aFC_day] = diferenciasDiarias(aFC);
 %U(1,end) = U(1,end-1);
 
@@ -49,8 +50,8 @@ Tdays = array2table(v_ajuste_outlers);
 Tdays.Properties.VariableNames = {'IC','IC_day','RC','RC_day','FC','F','aIC','aIC_day','aRC','aRC_day','aFC','aFC_day','U'};
 %Tdays.Properties.RowNames = {'RC','aRC','IC','aIC'};
 Tdays.Properties.Description = 'Tasas de recuperación y acumulación de casos';
-% figure
-% stackedplot(Tdays)
+figure
+stackedplot(Tdays)
 
 % Ajustes a todos con media movil
 

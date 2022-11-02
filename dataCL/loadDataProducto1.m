@@ -10,7 +10,7 @@ Dtable=0;
 Ddouble=0;
 pData = strcat(pathDATA,'\producto1\Covid-19.csv');
 [Dstring,Dtable,Ddouble] = D1(pData);
-
+Ddouble(isnan(Ddouble))=0;
 %% I-Covid
     dataTable = Dtable(string(Dtable.Region)==regionA, :);
     T=dataTable;
@@ -24,9 +24,10 @@ pData = strcat(pathDATA,'\producto1\Covid-19.csv');
     
     idist = [dataTest1(1:end,1),test1];
     
-    iTotalesComunasRegion =test1;% [sum(dataTest1(1:end,1)),sum(test1)];
+    %iTotalesComunasRegion =test1;% [sum(dataTest1(1:end,1)),sum(test1)];
     iRegion = sum([dataTest1(1:end,1),test1]);
-    ipais = sum(Ddouble(2:end,4:end));
+
+    ipais = sum(Ddouble(:,6:end-1));
     
         if grafica == 1
         createfigure(dataTest1,dataTest1)   
@@ -43,8 +44,6 @@ pData = strcat(pathDATA,'\producto1\Covid-19.csv');
         end
 
 %end
-
-
 
 %% Data Product 38 - Casos fallecidos por comuna: Este producto da cuenta del número de casos fallecidos en cada una de las comunas de Chile según su residencia, y concatena la historia de los informes epidemiológicos publicados por el Ministerio de Salud del país. Ver más
 %% Data Product 50 - Defunciones notificadas por el Departamento de Estadísticas e Información Sanitaria (DEIS) por comuna: Data product que da cuenta de los datos correspondientes a los fallecidos en cada una de las comunas de Chile, según residencia y fecha Ver más

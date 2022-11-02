@@ -1,10 +1,12 @@
 stringPath = '';
 
-global globalPais
+global globalPais grafica_data
 grafica=grafica_data;
 %% Desde github ANID
 %% INFECTADOS desde 30 marzo 2020 - Selección
 [Poblaciones,iRegion,ipais,idist,iT,iDstring,iDtable,iDdouble] = loadDataProducto1(region,grafica,stringPath);
+
+% iDouble: infectados nacionales por comuna / iT como tabla <-,id_region,-,id_comuna, N , I=(6:end-1) >
 
 N=sum(Poblaciones);
 
@@ -12,10 +14,11 @@ if globalPais == 1
 N = 19212362;
 end
 
+if grafica==1
+
 [Iregion, idx] = sort(idist);
 sorted_data = idist((idx));
 
-if grafica==1
 figure 
 surf(Iregion)
 figure 
@@ -46,11 +49,13 @@ N1 = sum(Poblaciones);
 %% Desde 03-03-2020 Hasta 19-06-2022 (no se da más soporte desde dicha fecha)
 %% Además, ya no se mapea recuperados
 
-%% Hasta el 19-06-2022   (15 abril 2020 - fila 732)
+%% 03-03-2020 Hasta el 19-06-2022   
 [covid19chile,I,R,F,U,T,IC,RC,FC] = loadDataIvanGit(region,grafica,stringPath,globalPais);
 
 %% considerando desde 15 de abril Hasta el 19-06-2022 - hasta fila 898 de producto 91 a nivel nacional
-IngresosUCIt = importP91("\producto91\Ingresos_UCI_t.csv", [2, 898]);
+IngresosUCIt = importP91("\producto91\Ingresos_UCI_t.csv", [2, ]);
+
+%% On research paper using time uci permanence health ....
 
 %% Para experimento ad-hoc con uci movil de ingresos pero en contexto nacional
 %uTmp = U(1,44:end);
@@ -65,6 +70,10 @@ uTmp = [zeros(1,14),uDev',vTmp];
 if globalUCImovil == 1
    U = uTmp; 
 end
+
+%% Here new version with heuristic algoritm smooth curve
+
+
 
 UOriginal = U;
 I = I+1e-0;

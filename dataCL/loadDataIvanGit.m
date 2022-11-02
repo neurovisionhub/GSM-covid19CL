@@ -18,7 +18,7 @@ dataLines = [2, Inf];
 
 
 %end
-filename = strcat(pathDATA,'\git-ivanMSC\Covid19_chile.csv')
+filename = strcat(pathDATA,'\git-ivanMSC\Covid19_chile.csv');
 %% Set up the Import Options and import the data
 opts = delimitedTextImportOptions("NumVariables", 9);
 
@@ -40,7 +40,7 @@ opts = setvaropts(opts, ["Fecha", "Region"], "EmptyFieldRule", "auto");
 % Import the data
 covid19chile = readtable(filename, opts);
 
-[f,c] = size(covid19chile)
+[f,c] = size(covid19chile);
 if globalPais==1  
     salto=17; % regiones + no informado
     inicio=1;

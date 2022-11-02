@@ -1,6 +1,7 @@
 %% cï¿½lculo de la funciï¿½n error para el modelo SIR con retardo
 function E = ESIR_rel_all(p,tc,xd,x0,N)
 global nTau 
+global h Mv contF
 %% funciï¿½n de error para modelo SIR con retardo
 % % Para beta lineal por tramos
 %V = otras;
@@ -30,7 +31,38 @@ options = ddeset('RelTol',1e-2,'AbsTol',1e-4,...
 sol = dde23('sir_ret_fun_vac_all',taus,'sir_ret_hist',[tc(1),tc(end)],options,p,N,x0);
 y = deval(sol,tc);
 %y(isnan(y))=1e+6
-alfa=sigmoide_all(p,y(2,:),nTau);
+%alfa=sigmoide_all(p,y(2,:),nTau);
+
+
+a=p(1);
+k=p(2);
+aC=p(3);
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% ** Modificación considerando 2 cuarentenas en la RA **
+% a=p(8);
+% k=p(9);
+% aC=p(end);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+alfa=1-(1-a)./( 1+exp( -k*(y(2,:)-aC) ) );
+
+
+plot(alfa.*y(2,:))
+hold on
+%plot(y(2,:))
+%hold on
+plot(xd(:,1))
+plot(y(4,:))
+plot(xd(:,3))
+
+%drawnow
+Mv(contF) = getframe(gcf);
+contF=contF+1;
+pause(0.0001)
+clf
+
+
+
 %toc
 %alfa
 
@@ -58,7 +90,10 @@ end
 %% Error relativo al modelo considera
 %E= [  ( alfa.*y(2,:)-xd(:,1)' )./( alfa.*y(2,:)) +numRel',  ( y(4,:)-xd(:,3)' )./y(4,:) ];
 %E= [  ( alfa.*y(2,:)-xd(:,1)' )./( alfa.*y(2,:))   ( y(4,:)-xd(:,3)' )./y(4,:) ];
-E= [  ( alfa.*y(2,:)-xd(:,1)' )./( alfa.*y(2,:))   ( y(4,:)-xd(:,3)' )./y(4,:) ];
+%E= [  ( alfa.*y(2,:)-xd(:,1)' )./( alfa.*y(2,:))   ( y(4,:)-xd(:,3)' )./y(4,:) ];
+E= [  ( alfa.*y(2,:)-xd(:,1)' )./(alfa.*y(2,:))   ( y(4,:)-xd(:,3)' )./y(4,:) ];
+E= [  ( y(2,:)-xd(:,1)' )./(y(2,:))   ( y(4,:)-xd(:,3)' )./y(4,:) ];
+%E= [  ( y(2,:)-xd(:,1)' )./(xd(:,1))   ( y(4,:)-xd(:,3)' )./xd(:,3) ];
 %salidaTest = mean(E)
 
 %E= [ sum( ( alfa.*y(2,:)-xd(:,1)' )./( alfa.*y(2,:)))/size(xd,1) sum(( y(4,:)-xd(:,3)' )./y(4,:))/size(xd,1)];

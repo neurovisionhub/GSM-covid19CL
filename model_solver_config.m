@@ -1,6 +1,6 @@
-global numThetas nGammas
+global numThetas nGammas 
 addpath (genpath('calls/models'))
-
+option_model
 nGammas = numThetas;
 
 %% Model with unique gamma, alfaS and deltaS (constant)

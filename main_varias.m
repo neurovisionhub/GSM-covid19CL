@@ -1,7 +1,16 @@
+clear
 addpath (genpath('calls/'))
 addpath (genpath('model/'))
 addpath (genpath('dataCL/'))
 addpath (genpath('exps/'))
+addpath (genpath('analytics/'))
+addpath (genpath('config/'))
+global numThetas grafica_data nCiclos%maxiters option_model grafica_ajustes primero
+global h Mv funEvals contF
+contF=1
+funEvals = 20000;
+Mv = struct('cdata', [], 'colormap', []);  %predeclare struct array
+
 %% -------- Description of the programa params ---------
 % --- grafica_data : muestra graficos de datos cargados (no:0. yes:1)
 % ej. grafica_data = 0;
@@ -22,86 +31,45 @@ addpath (genpath('exps/'))
 % option_model = 1 => some_blocks_params_model;
 % --- Model with multiple gamma, alfaS and deltaS (vectors)
 % "option_model = 2" => all_blocks_params_model;
-%region = 'Metropolitana'; % 
-%region = 'Atacama'
-%region = 'Arica y Parinacota'
-%region = 'Biobío'
-%region = 'Valparaíso'
-%region = 'Araucanía'
-%region = 'Los Ríos'
-%region = 'Los Lagos'
-%region = 'Aysén'
-%region = 'Magallanes'
-%region = 'Ñuble'
-%region = 'all_test'
+%region = 'Arica y Parinacota'; % 1
+%region = 'Tarapacá' % 2
+%region = 'Antofagasta' % 3
+%region = 'Atacama' % 4
+%region = 'Coquimbo' % 5
+%region = 'Valparaíso' % 6
+%region = 'Metropolitana' % 7 
+%region = 'O Higgins' % 8
+%region = 'Maule' % 9 
+%region = 'Ñuble' % 10 
+%region = 'Biobío' % 11
+%region = 'Araucanía' % 12
+%region = 'Los Ríos' % 13
+%region = 'Los Lagos' % 14
+%region = 'Aysén' % 15 
+%region = 'Magallanes' % 16
+
+regiones = {'Arica y Parinacota','Tarapacá','Antofagasta','Atacama','Coquimbo','Valparaíso','Metropolitana','O Higgins','Maule','Ñuble','Biobío','Araucanía','Los Ríos','Los Lagos','Aysén','Magallanes'};
 
 
-clear
-
-global numThetas
 close all
 cont=0;
 option_model = 2
-grafica_data = 0;
+grafica_data = 1;
 grafica_ajustes = 0;
 primero = 0
 % example 2
-maxiters = 10;
-numThetas=10;
+maxiters = 3;
+numThetas=20;
+nCiclos = 3 % veces que se reduce beta a la mitad
+primera_ola=0
+region = 'Metropolitana'
 
-% %ok
-% region = 'Metropolitana'
-% data_config
-% model_solver_config 
-% main_all_blocks_1
-% save_log('main_all_blocks_1_Metropolitana-v3b',p0)
-% save_log('error_1-Metropolitana-v3b',r)
-% compute_curves
-% save_log('curves_1-Metropolitana-v3b',salida)
-% pUltimo=p0;
-% primero = 1
-% 
-% %ok
-% region = 'Valparaíso'
-% data_config
-% model_solver_config 
-% main_all_blocks_1
-% save_log('main_all_blocks_1-Valparaiso-v3b',p0)
-% save_log('error_1-Valparaiso-v3b',r)
-% compute_curves
-% save_log('curves_1-Valparaiso-v3b',salida)
-% pUltimo=p0;
+% pre_config_1
+% callProcessing
 
-%fallo sobre diff - ok sobre acumulada
-region = 'Biobío'
-data_config
-model_solver_config 
+pre_config_1
+callPre_Processing
 main_all_blocks_1
-save_log('main_all_blocks_1-Biobío-v3b',p0)
-save_log('error_1-Biobío-v3b',r)
-compute_curves
-save_log('curves_1-ultimo-v3b',salida)
-pUltimo=p0;
 
-
-% %fallo sobre diff - ok sobre acumulada
-% region = 'Arica y Parinacota'
-% data_config
-% model_solver_config 
-% main_all_blocks_1
-% save_log('main_all_blocks_1-Araucan-v3b',p0)
-% save_log('error_1-Araucan-v3b',r)
-% compute_curves
-% save_log('curves_1-Araucan-v3b',salida)
-% pUltimo=p0;
-%fallo sobre diff - ok sobre acumulada
-% region = 'Araucanía'
-% data_config
-% model_solver_config 
-% main_all_blocks_1
-% save_log('main_all_blocks_1-Araucan-v3b',p0)
-% save_log('error_1-Araucan-v3b',r)
-% compute_curves
-% save_log('curves_1-Araucan-v3b',salida)
-% pUltimo=p0;
+save_log_data
 

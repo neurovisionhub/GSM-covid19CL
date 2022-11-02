@@ -40,7 +40,7 @@ for i=1:columns-5
 baseTags = [baseTags,int2str(i)];
 baseTagsType = [baseTagsType,"double"];
 end
-baseTags = [baseTags,"Tasa"]
+baseTags = [baseTags,"Tasa"];
 baseTagsType = [baseTagsType,"double"];
 
 opts.VariableNames = baseTags;

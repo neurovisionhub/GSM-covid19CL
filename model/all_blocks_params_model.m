@@ -9,13 +9,15 @@ global all_betas;
 global all_gammasU;
 global all_gammasR;
 global all_gammas all_alfaS all_deltaS
-global numThetas;
+global numThetas nCiclos;
+
+%global Data primero
 %global pMatrix;
 nBetas=numThetas;
 %global globalPais interpolacion;
 
 %% Optimizaci�n se realiza con datos desde el 04 de marzo (hab�a 1 casos acumulado) hasta el 07 de sept
-
+global diaInicio diaFin
 tc=diaInicio:diaFin;
 %tc=t(1):t(end);
 time_range = tc;
@@ -26,12 +28,17 @@ x0=[tc' Data];
 
 % % % %==========================================================================
 % % % % ----Valores iniciales propuesto para los parametros beta y gamma---
-beta=0.194;
-%beta=beta/2;
+beta=0.194
+%beta=beta/2; % buen beta en all blocks
 %beta=beta/3;
-beta=0.5*(0.5+1/3)*beta;
+%beta=0.5*(0.5+1/3)*beta;
 %beta=beta/4;
+%nCiclos = 10
+for i=1:nCiclos
+    beta=0.5*(0.5+1/3)*beta;
 
+end
+beta
 
 %beta=0.124
 %% Beta para variante donde los UCI van directamente en el target
@@ -48,7 +55,9 @@ tau5=35;
 %% Nueva variante con paso de UCI a R
 tau6=32;
 
-all_taus = [tau1,tau2,tau3,tau4,tau5,tau6]';
+%global primera_ola; % en caso de modelar primera ola se usan diferentes taus
+
+
 %% Normalización
 % tau1n=(tau1-1)/13;
 % tau2n=(tau2-1)/20;
@@ -73,28 +82,103 @@ a=0.5;
 %% en el modelo de optimizaci�n y estabilidad
 %i=find(tc==(tc(end)-3)/5);
 i=find(tc==tc(end));
-aC=mean(Data(1:i));
-%aC=mean(xd(1:i,1));
+indice=tc(1,end)
+%aC=mean(Data(1:i)); % ---- OJO ----
+aC=mean(xd(1:diaFin,1));
+%aC=mean(xd(1:indice,1));
 k=1e-3;
 alfaS=0.00194; % 0.194 funcionan
 deltaS=0.011; % 0.194
+
+
+
+
+
+if primera_ola==1
+    disp('Configurando primera ola')
+    tau1=5;
+    tau2=14;
+    tau3=7;
+    tau4=1; % tiempo de inmunidad lo reducimos a 1
+    tau5=35;
+    %% Nueva variante con paso de UCI a R
+    tau6=32;
+    beta=0.99;
+    k=1e-3;
+    alfaS=0.00194; % 0.194 funcionan
+    deltaS=0.011; % 0.194
+
+
+
+
+
+    if acumulada == 1
+
+       k=1e-3;
+    alfaS=0.194; % 0.194 funcionan
+    deltaS=0.11; % 0.194
+
+    end
+
+
+    for i=1:nCiclos
+    beta=0.9*beta;
+    end
+end
+
+all_taus = [tau1,tau2,tau3,tau4,tau5,tau6]';
+
 all_betas = ones(beta_qty,1)*beta ;
 GammasUCI_qty = nGammas;
 % all_gammasU = beta*0.001;
 %% Estos valores funcionan excelente, tomar m�nimo 70 iteraciones (gR)
 all_gammasU = ones(GammasUCI_qty,1)*beta*0.001*10*5 ; %Mismo n�mero de betas en gammas Uci (experimental)
+%all_gammasU = ones(GammasUCI_qty,1)*beta/10; 
 %% Nueva variante con gamma de UCI a R
 all_gammasR = 5*0.1*all_gammasU;
+
+if primera_ola==1
+aumento_tasas = 1;    
+all_gammasU = ones(GammasUCI_qty,1)*beta*0.001*10*5; 
+all_gammasR = 10*0.1*all_gammasU;
+k=1e-3;
+alfaS=0.00194*aumento_tasas; % 0.194 funcionan
+deltaS=0.0194*aumento_tasas; % 0.194
+% all_gammasU = ones(GammasUCI_qty,1)*beta*0.01; funcionan bien para
+% segunda ola + uci diario
+% all_gammasR = 0.1*all_gammasU;
+
+
+  if acumulada == 1
+
+       k=1e-3;
+    alfaS=0.194; % 0.194 funcionan
+    deltaS=0.11; % 0.194
+aumento_tasas = 1;    
+all_gammasU = ones(GammasUCI_qty,1)*beta*0.01; 
+all_gammasR = 0.1*all_gammasU;
+k=1e-3;
+alfaS=0.00194*aumento_tasas; % 0.194 funcionan
+deltaS=0.0194*aumento_tasas; % 0.194
+    end
+
+
+end
+
+
+
+
+%all_gammasR = all_gammasU/2;
 all_gammas = gamma*ones(nGammas,1);
 all_alfaS = alfaS*ones(nGammas,1);
 all_deltaS = deltaS*ones(nGammas,1);
-
 if primero == 0
 %p0=[gamma;alfaS;deltaS;all_taus;a;k;aC;all_gammasU;all_betas;all_gammasR];
 p0=[a;k;aC;all_taus;all_gammas;all_alfaS;all_deltaS;all_gammasU;all_betas;all_gammasR];
+%primero=1;
+%pUltimo=p0;
 else
 p0=pUltimo;
-
 end
 disp('CARGADO... all_blocks_params_model')
 

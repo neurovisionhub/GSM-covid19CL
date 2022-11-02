@@ -4,10 +4,10 @@ function [salidas] = ajusteRecuperados(tasas,infec,recup,finAjuste,tramoTasaRecu
 % medianaRecuperacion=median(tasasRecuperados(1:end/2));
 %tramoTasaRecuperados
 %% Como la data es más robusta a partir del cuarto mes considerar de alli en adelante ej: 120
-mediaCR=mean(tasas(tramoTasaRecuperados));
+mediaCR=mean(tasas(tramoTasaRecuperados))
 % medianaRecuperacion=0.96 %experimental
 %diaPrimerFallecido = 19; %experimental
-diaPrimerDatoRecuperado = 111; %experimental {'21-06-2020'}
+diaPrimerDatoRecuperado = 119; %experimental {'21-06-2020'}
 diasPromedioSintomas = diaPrimerRecs; %experimental ->  tiempo de recuperacion 2 semanas segun china
 estimacionRecuperados = ceil(infec.*mediaCR);
 %estimacionRecuperadosAjuste = ceil(infec.*mediaCR);

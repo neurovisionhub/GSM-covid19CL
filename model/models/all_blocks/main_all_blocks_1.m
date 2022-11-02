@@ -1,4 +1,5 @@
-global nTau
+global nTau contF
+
 %% ** Script para Optimizaci�n por m�nimos cuadrados **
 %% Opciones para el solver de optimizaci�n
 %maxiters=5;
@@ -84,14 +85,27 @@ Lb(6)=7; Ub(6)=21; %tau3 -> suceptible a recuperado (inmunidad) ojo hay reincide
 Lb(7)=180; Ub(7)=240; %tau4 -> duracion inmunidad
 Lb(8)=14; Ub(8)=56; %tau5 -> en UCI
 Lb(9)=7; Ub(9)=42; %tau6 -> recuperacion UCI
-%% Normalización
-% Ub(4)=1; %tau1
-% Ub(5)=1; %tau2
-% Ub(6)=1; %tau3
-% Ub(7)=1; %tau4
-% Ub(8)=1; %tau5
-% Ub(9)=1; %tau6
-% for i=4:4+nTau-1
+
+
+
+% % %% No normalizados
+Lb(4)=3; Ub(4)=7; %tau1 -> incubacion
+Lb(5)=7; Ub(5)=21; %tau2 -> recuperacion
+% % %% Debemos encontrar un buen rango pata tau3 (comienzo de la inmunidad desde la vacunación)
+Lb(6)=7; Ub(6)=21; %tau3 -> suceptible a recuperado (inmunidad) ojo hay reincidencia pero leve - menos casos UCI?
+% % %% Probare un rango de 1-20 días para tau3
+% % % Lb(6)=1; Ub(6)=20; %tau3 
+Lb(7)=100; Ub(7)=140; %tau4 -> duracion inmunidad
+Lb(8)=14; Ub(8)=56; %tau5 -> en UCI
+Lb(9)=7; Ub(9)=42; %tau6 -> recuperacion UCI
+%% test
+% Lb(4)=1; %tau1
+% Lb(5)=1; %tau2
+% Lb(6)=1; %tau3
+% Lb(7)=1; %tau4
+% Lb(8)=1; %tau5
+% Lb(9)=1; %tau6
+% % for i=4:4+nTau-1
 %     
 %     Lb(i)=3; Ub(i)=10; 
 % end
@@ -126,10 +140,14 @@ for it=0:maxit
        break;
    end
 
-   if abs(r)<=0.05
+   if abs(r)<=0.001
        break;
    end
 
+   if funEvals<=contF
+       break;
+   end
+contF
 %while (abs(r-resnormref)/r>tol)&&(it<maxit)
     %[p,r,~,~,~,~,jac]=lsqnonlin(@(p) ESIR_rel(p,tc,Data,x0,N),p0,Lb,Ub,options);
    [p,r,~,~,~,~,jac]=lsqnonlin(@(p) ESIR_rel_all(p,tc,Data,x0,N),p0,Lb,Ub,options);

@@ -4,7 +4,7 @@ F=aF_day_movil';
 %[aF_day_movil] = mediamovil(F,ventana);
 U=aU_day_movil';
 %global grafica_data 
-
+ 
 %if interpolacion == 1
     vn = size(I,1);
     %percentPrunning = 0.01;
@@ -35,24 +35,24 @@ U=aU_day_movil';
  grafica_data
     if grafica_data == 1
     figure;
-    plot(x,aR_day_movil,'--',xV,R,'o')
+    plot(x,R,'--',xV,R,'o')
     hold on
-    plot(x,aI_day_movil,'--',xV,I,'o')
-    plot(x,aF_day_movil,'--',xV,F,'x')
-    plot(x,aU_day_movil,'--',xV,U,'o')
+    plot(x,I,'--',xV,I,'o')
+    plot(x,F,'--',xV,F,'x')
+    plot(x,U,'--',xV,U,'o')
    
     
     
     if globalPais == 1 
         figure;
-        plot(x,aF_day_movil,'--',xV,F,'x','DisplayName','Fallecidos Pais')
+        plot(x,F,'--',xV,F,'x','DisplayName','Fallecidos Pais')
         hold on
-        plot(x,aU_day_movil,'--',xV,U,'o','DisplayName','UCI País')
+        plot(x,U,'--',xV,U,'o','DisplayName','UCI País')
     else
         figure;
-        plot(x,aF_day_movil,'--',xV,F,'x','DisplayName','Fallecidos Región')
+        plot(x,F,'--',xV,F,'x','DisplayName','Fallecidos Región')
         hold on
-        plot(x,aU_day_movil,'--',xV,U,'o','DisplayName','UCI País')  
+        plot(x,U,'--',xV,U,'o','DisplayName','UCI País')  
     end
     legend() 
     end
