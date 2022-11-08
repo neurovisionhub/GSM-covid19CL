@@ -2,7 +2,7 @@
 grafica_data=0;
 warning('off')
 stringPath = '';
-global globalPais grafica_data
+global globalPais grafica_data ventana_general
 grafica=grafica_data;
 if globalPais == 1
 N = 19212362;
@@ -272,7 +272,7 @@ figure;plot(log(data_region_diff),'DisplayName','diff_days')
 figure;plot(log(data_pais_diff),'DisplayName','data_total_pais')
 
 %figure;plot(log(diff_days),'DisplayName','diff_days')
-[salida] = mediamovil(data_total_pais,14);
+[salida] = mediamovil(data_total_pais,21);
 hold on
 plot(log(diff(salida)),'DisplayName','salida')
 hold on
@@ -292,7 +292,7 @@ ventana = 3;
 [aIC,IC_day,aIC_day,error_aIC] = ajusteI(IC,iniAjuste,finAjuste,ventana);
 [aIC_pais,IC_pais_day,aIC_pais_day,error_aIC_pais] = ajusteI(IC_pais,iniAjuste,finAjuste,ventana);
 
-ventana = 21;
+ventana = ventana_general;
 [aIC_pais_day_fit] = mediamovil(aIC_pais_day,ventana);
 [aIC_day_fit] = mediamovil(aIC_day,ventana);
 
@@ -301,12 +301,12 @@ hold on
 figure;plot(aIC_pais_day_fit)
 plot(aIC_day)
 %%% ______________ Fin ajuste infectados  ________________________
-ventana = 21;
+ventana = ventana_general;
 diaPrimerRecs = 21; % dia en que se presenta primer recuperado
 [aRC,RC_day,aRC_day,error_aRC] = ajusteR(aIC,RC,diaPrimerRecs);
 [aRC_day_fit] = mediamovil(aRC_day,ventana);
 
-ventana = 21;
+ventana = ventana_general;
 [aRC_pais,RC_pais_day,aRC_pais_day,error_aRC_pais] = ajusteR(aIC_pais,RC_pais,diaPrimerRecs);
 [aRC_pais_day_fit] = mediamovil(aRC_pais_day,ventana);
 
@@ -344,7 +344,7 @@ FC_test_pais = [FC_pais(1,1:nn),f_confirmed_pais(end,:)];
 
 %%% ______________ Fin ajuste fallecidos  ________________________
 
-ventana = 60; %% las olas se presentan en periodos en tre 2.5 a 4 meses - se suavisara la curva pero se mantendra tendencia
+ventana = ventana_general; %% las olas se presentan en periodos en tre 2.5 a 4 meses - se suavisara la curva pero se mantendra tendencia
 
 [aFC2] = mediamovil(FC_test,ventana);
 F = diferenciasDiarias(FC_test);
@@ -363,14 +363,20 @@ figure;plot(log(aFC_pais_day_fit_2))
 I_analysis = aIC_day_fit;
 R_analysis = aRC_day_fit;
 F_analysis = aFC_day_fit_2;
-U_analysis = U;
+[U_analysis] = mediamovil(U,ventana);
+%U_analysis = U;
 
 % DATOS experimento país
 
 I_analysis_pais = aIC_pais_day_fit
 R_analysis_pais = aRC_pais_day_fit;
 F_analysis_pais = aFC_pais_day_fit_2;
-U_analysis_pais = U_pais;
+[U_analysis_pais] = mediamovil(U_pais,ventana);
+%U_analysis_pais = U_pais;
+
+%% Datos usados para aproximar curvas SIER - luego transformar a curvas epidemiologicas diarias.
+
+
 
 %%Que la grafica sea por pais, y mientras preparao informe lanzo
 %%expeirmentos
@@ -403,28 +409,35 @@ xds=[Is Rs Fs+Us];
 xd=[I R U+F];
 
 
+
+if acumulada ==1
+xd=xds;
+end
+xd_test = [];
+if variante_sier == 1
+   S = N - Is - Rs -(Us+Fs);
+   xd = [Is Rs Us+Fs S (Is+Rs+Us+Fs)];
+   
+end
+
 if grafica_data == 1
 figure;plot(xds,'DisplayName','xds')
 figure;plot(xd,'DisplayName','xd')
 end
 
-if acumulada ==1
-xd=xds;
-end
 
 
-
-
-% all_data = [data_region_diff,data,F',i_uci'];
-% graficaDatos(all_data)
-% 
-% 
+% % all_data = [data_region_diff,data,F',i_uci'];
+% % graficaDatos(all_data)
+% % 
+% % 
 % all_data = [data_pais,data_region,i_uci'];
 % graficaDatos(all_data)
 
-figure
-plot(data_pais)
-grafica_data=1
+
+
+
+%grafica_data=1
 
 
 

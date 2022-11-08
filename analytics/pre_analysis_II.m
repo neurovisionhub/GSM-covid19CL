@@ -1,11 +1,12 @@
+clear
 addpath (genpath('calls/'))
 addpath (genpath('model/'))
 addpath (genpath('dataCL/'))
 addpath (genpath('exps/'))
 addpath (genpath('analytics/'))
-
+addpath (genpath('img_trace/'))
 addpath (genpath('config/'))
-global numThetas grafica_data nCiclos%maxiters option_model grafica_ajustes primero
+global numThetas grafica_data nCiclos ventana_general%maxiters option_model grafica_ajustes primero
 global traza nGammas globalPais globalUCImovil interpolacion cont grafica_data nCiclos
 
 global h Mv funEvals contF
@@ -38,26 +39,29 @@ acumulada =0;
 % TRAZA OPTIMIZER
 traza = 0;
 primero = 0
-primero = 0
+%primero = 0
 % example 2
-maxiters = 100;
-numThetas=20;
-nCiclos = 3% veces que se reduce beta a la mitad
+maxiters = 3;
+numThetas=10;
+nCiclos =1% veces que se reduce beta a la mitad
 primera_ola=0
 %data_config
-diaInicio = 50
-diaFinEstudio = 360;
+diaInicio = 240
+diaFinEstudio = 580;
+I00=diaInicio;
+I10=diaFinEstudio;
 nF=0;
 diaFin=diaFinEstudio-nF;
+ventana_general=60;
 
 %% data_times_processing: analitics and processing of the data covid oficial and not covid oficial repositories
 data_times_processing
 
 
-% INTERVALO DE ESTUDIO
-ventana_general=14;
-diaInicio = 20
-diaFinEstudio = 360;
+% INTERVALO DE ESTUDIO 
+
+diaInicio = I00
+diaFinEstudio = I10;
 nF=0;
 % diaInicio = 280;
 %diaFinEstudio = 835;
@@ -66,12 +70,98 @@ diaFin=diaFinEstudio-nF;
 %aj = 1/diaFinEstudio;
 
 
-%% ----------------------
-model_solver_config
-main_all_blocks_1
+%% ------ejemplo 1 ----------------
+%option_model = 2
+%model_solver_config
+%main_all_blocks_1
+
+
+%% ----- ejemplo 2 -------
+option_model = 3 
+traza = 0;
+format long
+beta = 0.3
+gamma = 0.01
+%all_blocks_params_model_analytics
+
+%p=p0
+
+delta_beta = 0.001
+value_beta = [];
+errores = [];
+select_beta = 10000;
+cota_error = 10000;
+for i=1:1000
+    i
+    all_blocks_params_model_analytics    
+    p=p0;
+    compute_curves_error
+    if isnan(E)
+    E=9999999999
+        break
+    end
+    errores = [errores,E];
+    if E < cota_error && E > 0
+       cota_error = E;
+       select_beta = beta;
+    end
+    value_beta = [value_beta,beta];
+    if beta <= delta_beta
+        break
+    end
+    E
+    beta = beta - delta_beta;
+end
+
+errores
+cota_error
+beta = select_beta;
+all_blocks_params_model_analytics
+p=p0;
+
+compute_curves_error
+compute_curves
+
+gamma = 0.08
+delta_gamma = 0.00025
+value_gamma = [];
+errores_gamma = [];
+select_gamma = 10000;
+cota_error = 10000;
+for i=1:1000
+    i
+all_blocks_params_model_analytics_I    
+p=p0;
+compute_curves_error
+ if isnan(E)
+     E=9999999999
+     break
+ end
+errores_gamma = [errores_gamma,E];
+if E < cota_error && E > 0
+   cota_error = E;
+   select_gamma= gamma;
+end
+value_gamma = [value_gamma,gamma];
+if gamma <= delta_gamma
+break
+end
+E
+gamma = gamma - delta_gamma;
+end
+gamma = select_gamma;
+all_blocks_params_model_analytics
+p=p0;
+
+compute_curves_error
+compute_curves
+
+%main_all_blocks_1
+% 
+%
 
 %% ----------------------
-save_log_data
+%save_log_data
 
 
 

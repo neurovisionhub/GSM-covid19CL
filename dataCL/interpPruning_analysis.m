@@ -32,7 +32,7 @@ U=U';
     y = R;
     px = spline(x,y,xV);
     R = px';
- grafica_data
+% grafica_data
     if grafica_data == 1
     figure;
     plot(x,R,'--',xV,R,'o')

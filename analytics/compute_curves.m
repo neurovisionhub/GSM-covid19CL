@@ -1,4 +1,4 @@
-
+%numThetas
 %% Gráfico para modelo con retardos (tiempos de incubación y de remoción)
 %% Para datos de la RM hasta entre el 15-03-21 al 12-06-21
 %p=p0;
@@ -31,18 +31,60 @@ y = deval(sol,tg);
 %% Cálculo de los infectados acumulados
 Inf = y(2,:);
 UCI = y(4,:);
+f_tmp = 0;
+InfDa=Data(:,1);
+UCIDa=Data(:,3);
+
+Inf_t = Inf;
+UCI_t = UCI;
+InfDa_t=InfDa;
+UCIDa_t=UCIDa;
+
+fr=0;
+Inf_tmp=0;
+
+test_data_covid = Data;
+test_data_covid_estimate = y'; 
+
+
+if acumulada == 1
+
+    Inf_tmp = y(2,:);
+    Idays = diferenciasDiarias(Inf_tmp);
+    fr=sigmoide_all(p,Idays,nTau);
+    fr = ceil(fr); %% ajuste relevante
+    InfR = fr.*Inf;
+    f_tmp = cumsum(InfR);
+else
+fr = ceil(fr); %% ajuste relevante
+InfR = fr.*Inf;
 fr=sigmoide_all(p,y(2,:),nTau);
+
+end
 % %% Para la variante donde los UCI van en el target
 % gammasU= p(12:12+nGammas-1)'; %de posicion 4 a nTau
 % tUCI = linspace(tc(1),tc(end),numel(gammasU)) ;
 % gammasUCI = interp1(tUCI,gammasU,tc);
 % UCI = gammasUCI.*fr.*Inf;
 %%
-InfR = fr.*Inf;
-InfDa=Data(:,1);
-UCIDa=Data(:,3);
+
+
 %figure
 salida = [InfDa,InfR',UCIDa,UCI'];
+
+%E_days= mean ([ ( InfR-InfDa' )./(InfR) ( y(4,:)-UCIDa' )./y(4,:) ]);
+%E= mean ([ ( test_data_covid_estimate(:,2)-test_data_covid(:,1) )./(test_data_covid_estimate(:,2))  ( y(4,:)-UCIDa' )./y(4,:)' ]);
+
+
+ss = ( test_data_covid_estimate(:,1)-test_data_covid(:,4) )./(test_data_covid_estimate(:,1));
+ii = ( test_data_covid_estimate(:,2)-test_data_covid(:,1) )./(test_data_covid_estimate(:,2));
+uu = ( test_data_covid_estimate(:,4)-test_data_covid(:,3) )./(test_data_covid_estimate(:,4));
+%ee = ( test_data_covid_estimate(:,3)-test_data_covid(:,3) )./(test_data_covid_estimate(:,3));
+tx_dt = [ ss ; ii ; uu ];
+rmse_t=  sqrt(mse(tx_dt))
+E=  mean(tx_dt)
+
+
 
 if acumulada == 1
 UCIc = diff(UCI);
@@ -71,8 +113,62 @@ hold on
 plot(Infac)
 hold on
 plot(InfDar)
-figure
 
+
+
+if acumulada == 1
+
+figure
+formatSpec = " -%d thetas";
+str = compose(formatSpec,numThetas);
+titulo = region + str;
+%UCIDa=xd(tc+round(tau5),3);
+%% Gráficos
+%% Para muchos datos graficarlos sólo cada 2 días
+I=find( mod(tc,2)==0 );
+% I=[1 I length(tc)];
+% I=find( mod(tc,2)==0 );
+% I=[1 I];
+%I=find(tc);
+texp=tc(I);
+clf
+subplot(121)
+plot(tg,test_data_covid_estimate(:,2),'--k','LineWidth',2.3)
+hold on
+plot(tg,f_tmp,'r','LineWidth',0.7)
+plot(texp,test_data_covid(I,2),'sb','MarkerEdgeColor','b',...
+    'MarkerFaceColor',[0 0.4470 0.7410],'MarkerSize',5);
+maxdata=max([test_data_covid(:,1);f_tmp']);
+mindata=min([test_data_covid(:,1);f_tmp']);
+maxInf=max(Inf);
+minInfR=min(InfR);
+maxInfR=max(InfR);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+xlabel('Time (days)')
+ylabel('Cases number')
+axis([tg(1)-2 tg(end)+2 0.01*min(minInfR,mindata) 1.05*max(maxdata,maxInf)])
+%% Para datos acumulados de la RM
+%% Cuando no se grafica ya
+title(titulo)
+lgd=legend('$I$ fitted','$I$ actual','Data I');
+set(lgd,'Location','northwest','Interpreter','latex','FontSize',10)
+subplot(122)
+plot(tg,UCI,'-.k','LineWidth',2.3)
+hold on
+plot(texp,test_data_covid(I,3),'sb','MarkerEdgeColor','b',...
+    'MarkerFaceColor',[0 0.4470 0.7410],'MarkerSize',5);
+title(titulo)
+maxdata=max(test_data_covid(:,3));
+mindata=min(test_data_covid(:,3));
+maxUCI=max(UCI_t);
+minUCI=min(UCI_t);
+axis([tg(1)-2 tg(end)+2 0.01*min(minUCI,mindata) 1.05*max(maxdata,maxInf)])
+lgd=legend('$UCI$ fitted','Data UCI');
+set(lgd,'Location','northwest','Interpreter','latex','FontSize',10)
+shg
+end
+
+figure
 formatSpec = " -%d thetas";
 str = compose(formatSpec,numThetas);
 titulo = region + str;

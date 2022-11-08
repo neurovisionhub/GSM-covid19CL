@@ -23,7 +23,7 @@ elseif option_model == 2
     all_blocks_params_model
    
 elseif option_model == 3
-   example_all_blocks_params_model
+   all_blocks_params_model_analytics 
 %% add others models with ours params
 %elseif option modell == X
 %    ad_hoc_params_model % personal test model

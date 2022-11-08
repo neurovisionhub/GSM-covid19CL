@@ -24,9 +24,10 @@ taus = p(4:4+nTau-1)'; %de posicion donde se encuentran los taus
 %tic
 %vectorInicial = [N-xd(1,1);xd(1,1);xd(1,2);xd(1,3)];
 vectorInicial = [N-xd(1,1)-xd(1,2)-xd(1,3);xd(1,1);xd(1,2);xd(1,3)];
+vectorInicial = [xd(1,4);xd(1,1);xd(1,2);xd(1,3)];
 %options = ddeset('RelTol',1e-2,'AbsTol',1e-4,...
 %                 'InitialY',[N;1;1;1]);
-options = ddeset('RelTol',1e-2,'AbsTol',1e-4,...
+options = ddeset('RelTol',1e-4,'AbsTol',1e-8,...
                  'InitialY',vectorInicial);
 sol = dde23('sir_ret_fun_vac_all',taus,'sir_ret_hist',[tc(1),tc(end)],options,p,N,x0);
 y = deval(sol,tc);
@@ -45,21 +46,35 @@ aC=p(3);
 % aC=p(end);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 alfa=1-(1-a)./( 1+exp( -k*(y(2,:)-aC) ) );
-
-
-plot(alfa.*y(2,:))
+alfa = ceil(alfa);
+contF=contF+1;
+if mod(contF,10)==0 
+figure('visible','off');
+%plot(log(alfa.*y(2,:)))
 hold on
-%plot(y(2,:))
+%plot(log(y(2,:)))
 %hold on
-plot(xd(:,1))
-plot(y(4,:))
-plot(xd(:,3))
+plot(xd(:,:))
+plot(y(1,:)) % S
+plot(y(2,:)) % U
+%plot(log(xd(:,3)))
+
+
 
 %drawnow
-Mv(contF) = getframe(gcf);
-contF=contF+1;
-pause(0.0001)
+%Mv(contF) = getframe(gcf);
+%y(1,:)
+%pause 
+
+t = datetime;
+t.Format = 'yyyymmddHHMMSS';
+text_log = datestr(t,t.Format);
+
+sLogpng = strcat('img_trace/',text_log,'_',string(contF),'.png');
+saveas(gcf, sLogpng);
+%pause(0.0001)
 clf
+end
 
 
 
@@ -91,8 +106,15 @@ end
 %E= [  ( alfa.*y(2,:)-xd(:,1)' )./( alfa.*y(2,:)) +numRel',  ( y(4,:)-xd(:,3)' )./y(4,:) ];
 %E= [  ( alfa.*y(2,:)-xd(:,1)' )./( alfa.*y(2,:))   ( y(4,:)-xd(:,3)' )./y(4,:) ];
 %E= [  ( alfa.*y(2,:)-xd(:,1)' )./( alfa.*y(2,:))   ( y(4,:)-xd(:,3)' )./y(4,:) ];
-E= [  ( alfa.*y(2,:)-xd(:,1)' )./(alfa.*y(2,:))   ( y(4,:)-xd(:,3)' )./y(4,:) ];
-E= [  ( y(2,:)-xd(:,1)' )./(y(2,:))   ( y(4,:)-xd(:,3)' )./y(4,:) ];
+%%%E= [ ( alfa.*y(2,:)-xd(:,1)' )./(alfa.*y(2,:))   ( y(4,:)-xd(:,3)' )./y(4,:) ];
+
+%E= [ ( y(1,:)-xd(:,4)' )./y(1,:) ( y(2,:)-xd(:,1)')./y(2,:)];
+% E= [ ( y(1,:)-xd(:,4)' )./y(1,:) ( y(4,:)-xd(:,3)')./y(4,:) ( alfa.*y(2,:)-xd(:,1)' )./(alfa.*y(2,:))];
+ E= [ ( y(1,:)-xd(:,4)' )./y(1,:)];
+
+%E= [  ( y(2,:)-xd(:,1)' )./(y(2,:))   ( y(4,:)-xd(:,3)' )./y(4,:) ];
+
+%E= [  ( y(2,:)-xd(:,1)' )./(y(2,:))   ( y(4,:)-xd(:,3)' )./y(4,:) ];
 %E= [  ( y(2,:)-xd(:,1)' )./(xd(:,1))   ( y(4,:)-xd(:,3)' )./xd(:,3) ];
 %salidaTest = mean(E)
 

@@ -62,8 +62,8 @@ tr2 = linspace(min(time_range),max(time_range),numel(all_gammasU)) ;
 if t<=time_range(end)
    gammasUCI = interp1(tr2,all_gammasU,t);
 else
-   gammasUCI = interp1(tr2,all_gammasU,time_range(end));
-  % gammasUCI = interp1(tr2,all_gammasU,t);
+     gammasUCI = interp1(tr2,all_gammasU,time_range(end));
+ %gammasUCI = interp1(tr2,all_gammasU,t);
 end
 %% Nueva variante con gamma de UCI a R
 tr3 = linspace(min(time_range),max(time_range),numel(all_gammasR)) ;

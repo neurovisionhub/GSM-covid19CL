@@ -3,7 +3,7 @@ global nTau contF
 %% ** Script para Optimizaci�n por m�nimos cuadrados **
 %% Opciones para el solver de optimizaci�n
 %maxiters=5;
-options = optimset('Algorithm','trust-region-reflective','Display','iter','MaxIter',maxiters,'TolFun',1e-6,'TolX',1e-10,'MaxFunEvals',20000);
+options = optimset('Algorithm','trust-region-reflective','Display','iter','MaxIter',maxiters,'TolFun',1e-6,'TolX',1e-10,'MaxFunEvals',40000);
 %delete(gcp)
 %parpool('local')
 %options = optimset('FinDiffRelStep',1e-4,'Algorithm','trust-region-reflective','Display','iter-detailed','MaxIter',maxiters,'TolFun',1e-17,'TolX',1e-21,'MaxFunEvals',50000);
@@ -60,7 +60,7 @@ Lb(pos_a)=1e-5; Ub(pos_a)=1; %a
 Lb(pos_k)=1e-5; Ub(pos_k)=1; %a
 Lb(pos_aC)=1e-5; Ub(pos_aC)=max(Data(:,1)); %aC
 
-
+%Lb(pos_aC)=1; Ub(pos_aC)=max(Data(:,1)); %aC
 
 %% Observacion los tiempos de tau grandes afectan el calculo de derivadas y la estabilidad
 %% adfemás en algunos casos se realiza extrapolacion ejmplo con pcchip y se sale de los rangos
@@ -71,33 +71,35 @@ Lb(pos_aC)=1e-5; Ub(pos_aC)=max(Data(:,1)); %aC
 % Lb(1)=1e-5; Ub(1)=1; 
 % Lb(2)=1e-5; Ub(2)=1; 
 % Lb(3)=1e-5; Ub(3)=1;
-for i=4:4+nTau-1
-    
-    Lb(i)=0.001; Ub(i)=10; 
+% for i=4:4+nTau-1
+%     
+%     Lb(i)=0.001; Ub(i)=10; 
+% end
+% % %% No normalizados
+Lb(4)=3; Ub(4)=7; %tau1 -> incubacion
+Lb(5)=7; Ub(5)=21; %tau2 -> recuperacion
+% % %% Debemos encontrar un buen rango pata tau3 (comienzo de la inmunidad desde la vacunación)
+Lb(6)=7; Ub(6)=21; %tau3 -> suceptible a recuperado (inmunidad) ojo hay reincidencia pero leve - menos casos UCI?
+% % %% Probare un rango de 1-20 días para tau3
+% % % Lb(6)=1; Ub(6)=20; %tau3 
+Lb(7)=140; Ub(7)=240; %tau4 -> duracion inmunidad
+Lb(8)=14; Ub(8)=56; %tau5 -> en UCI
+Lb(9)=7; Ub(9)=42; %tau6 -> recuperacion UCI
+
+if primera_ola ==1
+
+% % %% No normalizados
+Lb(4)=3; Ub(4)=7; %tau1 -> incubacion
+Lb(5)=7; Ub(5)=21; %tau2 -> recuperacion
+% % %% Debemos encontrar un buen rango pata tau3 (comienzo de la inmunidad desde la vacunación)
+Lb(6)=7; Ub(6)=21; %tau3 -> suceptible a recuperado (inmunidad) ojo hay reincidencia pero leve - menos casos UCI?
+% % %% Probare un rango de 1-20 días para tau3
+% % % Lb(6)=1; Ub(6)=20; %tau3 
+Lb(7)=1; Ub(7)=240; %tau4 -> duracion inmunidad
+Lb(8)=14; Ub(8)=56; %tau5 -> en UCI
+Lb(9)=7; Ub(9)=42; %tau6 -> recuperacion UCI
 end
-% % %% No normalizados
-Lb(4)=3; Ub(4)=7; %tau1 -> incubacion
-Lb(5)=7; Ub(5)=21; %tau2 -> recuperacion
-% % %% Debemos encontrar un buen rango pata tau3 (comienzo de la inmunidad desde la vacunación)
-Lb(6)=7; Ub(6)=21; %tau3 -> suceptible a recuperado (inmunidad) ojo hay reincidencia pero leve - menos casos UCI?
-% % %% Probare un rango de 1-20 días para tau3
-% % % Lb(6)=1; Ub(6)=20; %tau3 
-Lb(7)=180; Ub(7)=240; %tau4 -> duracion inmunidad
-Lb(8)=14; Ub(8)=56; %tau5 -> en UCI
-Lb(9)=7; Ub(9)=42; %tau6 -> recuperacion UCI
 
-
-
-% % %% No normalizados
-Lb(4)=3; Ub(4)=7; %tau1 -> incubacion
-Lb(5)=7; Ub(5)=21; %tau2 -> recuperacion
-% % %% Debemos encontrar un buen rango pata tau3 (comienzo de la inmunidad desde la vacunación)
-Lb(6)=7; Ub(6)=21; %tau3 -> suceptible a recuperado (inmunidad) ojo hay reincidencia pero leve - menos casos UCI?
-% % %% Probare un rango de 1-20 días para tau3
-% % % Lb(6)=1; Ub(6)=20; %tau3 
-Lb(7)=100; Ub(7)=140; %tau4 -> duracion inmunidad
-Lb(8)=14; Ub(8)=56; %tau5 -> en UCI
-Lb(9)=7; Ub(9)=42; %tau6 -> recuperacion UCI
 %% test
 % Lb(4)=1; %tau1
 % Lb(5)=1; %tau2
@@ -124,7 +126,7 @@ tol=5e-2;
 %tol=0.214;
 r=0.3;
 it=0;
-maxit=20;
+maxit=100;
 %abs(r-resnormref)/r
 vectorR = [];
 
@@ -135,16 +137,27 @@ contGlobal=0;
 %% observara si son cercanos o varias, en que entre olas con o sin vacuna deberian ser diferentes
 %p0=[a;k;aC;all_gammas;all_alfaS;all_deltaS;all_taus;all_gammasU;all_betas;all_gammasR]
 %r0 = 100000;
+
+if traza == 1
+disp(p0)
+
+
+%pause
+end
+
 for it=0:maxit
    if abs(r-resnormref)/r<tol
+       disp('abs(r-resnormref)/r<tol');
        break;
    end
 
-   if abs(r)<=0.001
+   if abs(r)<=0.01
+      disp('abs(r)<=0.01');
        break;
    end
 
    if funEvals<=contF
+       disp('funEvals<=contF');
        break;
    end
 contF
@@ -180,4 +193,5 @@ format short e
 %disp(p')
 disp('Valor mínimo del error:');
 disp(r)
+
 
