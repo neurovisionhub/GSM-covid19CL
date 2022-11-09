@@ -50,17 +50,17 @@ primero = 0
 %primero = 0
 % example 2
 maxiters = 10;
-numThetas=10;
+numThetas=5;
 nCiclos =1% veces que se reduce beta a la mitad
 primera_ola=0
 %data_config
-diaInicio = 200
-diaFinEstudio = 900;
+diaInicio = 300
+diaFinEstudio = 400;
 I00=diaInicio;
 I10=diaFinEstudio;
 nF=0;
 diaFin=diaFinEstudio-nF;
-ventana_general=21;
+ventana_general=14;
 %% data_times_processing: analitics and processing of the data covid oficial and not covid oficial repositories
 
 variante_sier = 1; % para uso de funciones combinadas (diaria infectado % acum(R,U+F) )
@@ -133,12 +133,11 @@ type vectorized_fitness
 
 
 p_op = [beta;gamma;alfaS;deltaS;all_test_gammasR;all_test_gammasU;a_test];
-
+%P=p0
 numberOfVariables=size(p_op,1);
 % Pass fixed parameters to objfun
 objfun5 = @(p_op)vectorized_fitness(p_op,p,N,acumulada,test_data_covid,...
     diaInicio,diaFinEstudio,numThetas);
-
 % Set nondefault solver options
 options6 = optimoptions("ga","PlotFcn",["gaplotdistance","gaplotgenealogy",...
     "gaplotselection","gaplotscorediversity","gaplotscores","gaplotstopping",...
@@ -148,12 +147,14 @@ options6.PopulationSize = 5;
 options6.MaxGenerations  = 150;
 %options6.MutationFcn ={@mutationgaussian,1,.5};
 % Solve
-[solution,objectiveValue] = ga(objfun5,numberOfVariables,[],[],[],[],lb,ub,[],...
+% [solution,objectiveValue] = ga(objfun5,numberOfVariables,[],[],[],[],lb,ub,[],...
+%     [],options6);
+
+[solution,objectiveValue,exitflag,output,population,scores]=ga(objfun5,numberOfVariables,[],[],[],[],lb,ub,[],...
     [],options6);
 
 % Clear variables
 clearvars objfun5 options6
-[x,fval] = ga(FitnessFunction,numberOfVariables,[],[],[],[],lb,ub)
 toc
 %simulations brute force
 %while(estado_op)
@@ -234,10 +235,10 @@ disp(rmse_t);
 E
 % 
 % 
-tic
-main_all_blocks_1
-toc
-save_log_data_ck_point
+% tic
+% main_all_blocks_1
+% toc
+% save_log_data_ck_point
 t_total=toc(global_time_op)
 p=p0;
 compute_curves_error

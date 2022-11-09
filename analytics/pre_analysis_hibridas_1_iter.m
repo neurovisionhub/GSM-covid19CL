@@ -50,8 +50,8 @@ numThetas=5;
 nCiclos =1% veces que se reduce beta a la mitad
 primera_ola=0
 %data_config
-diaInicio = 400
-diaFinEstudio = 600;
+diaInicio = 600
+diaFinEstudio = 900;
 I00=diaInicio;
 I10=diaFinEstudio;
 nF=0;
@@ -152,7 +152,7 @@ clearvars objfun5 options6
 %simulations brute force
 %while(estado_op)
 
-%solution=solution_buena;
+solution=solution_buena;
 
 beta = solution(1,1);
 gamma = solution(1,2);
@@ -223,9 +223,9 @@ disp(rmse_t);
 E
 % 
 % 
-tic
-main_all_blocks_1
-toc
+% tic
+% main_all_blocks_1
+% toc
 p=p0;
 compute_curves_error
 compute_curves

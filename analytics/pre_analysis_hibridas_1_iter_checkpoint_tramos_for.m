@@ -19,7 +19,7 @@ regiones = {'Arica y Parinacota','Tarapacá','Antofagasta','Atacama','Coquimbo',
 
 global_time_op=tic;
 
-regiones_in=[7]
+regiones_in=[1,2,7]
 for i=regiones_in
 region = regiones{i}
 
@@ -50,11 +50,11 @@ primero = 0
 %primero = 0
 % example 2
 maxiters = 10;
-numThetas=10;
+numThetas=5;
 nCiclos =1% veces que se reduce beta a la mitad
 primera_ola=0
 %data_config
-diaInicio = 400
+diaInicio = 600
 diaFinEstudio = 900;
 I00=diaInicio;
 I10=diaFinEstudio;
@@ -164,7 +164,7 @@ tic
 %% Solucion padre - RM por densidad - contiene a casi todas las demas. 2° año
 solution_buena = [0.005292324185371,0.001197693705559,0.000621007213593,0.000284389982224,0.000348566269875,0.003403111946897,0.710175727827394];
 %% tercer año ...
-solution_buena = [0.0796489277570966,0.115283860197751,0.210886423700311,0.375000000000000,0.0100000000000000,0.00398304749338827,0.177705424988678];
+%solution_buena = [0.0796489277570966,0.115283860197751,0.210886423700311,0.375000000000000,0.0100000000000000,0.00398304749338827,0.177705424988678];
 
 solution=solution_buena;
 
