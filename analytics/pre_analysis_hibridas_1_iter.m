@@ -6,6 +6,7 @@ addpath (genpath('dataCL/'))
 addpath (genpath('exps/'))
 addpath (genpath('analytics/'))
 addpath (genpath('config/'))
+addpath (genpath('img_trace/'))
 global numThetas grafica_data nCiclos ventana_general%maxiters option_model grafica_ajustes primero
 global traza nGammas globalPais globalUCImovil interpolacion cont grafica_data nCiclos
 global h Mv funEvals contF
@@ -13,10 +14,10 @@ contF=1
 funEvals = 40000;
 Mv = struct('cdata', [], 'colormap', []);  %predeclare struct array
 regiones = {'Arica y Parinacota','Tarapacá','Antofagasta','Atacama','Coquimbo','Valparaíso','Metropolitana','O Higgins','Maule','Ñuble','Biobío','Araucanía','Los Ríos','Los Lagos','Aysén','Magallanes'};
-region = 'Metropolitana'
+region = 'Arica y Parinacota'
 
 
-
+solution_buena = [0.005292324185371,0.001197693705559,0.000621007213593,0.000284389982224,0.000348566269875,0.003403111946897,0.710175727827394];
 
 close all
 cont=0;
@@ -94,12 +95,12 @@ option_model = 3
 traza = 0;
 format long
 % En primera ola el beta más grande
-beta = 0.4; beta_lb_up_op = [1e-1,0.5];
-gamma = 0.01; gamma_lb_up_op = [1e-3,0.1];
+beta = 0.4; beta_lb_up_op = [1e-3,0.5];
+gamma = 0.01; gamma_lb_up_op = [1e-3,0.3];
 % alfaS=0.01;
 % deltaS=0.01;
-alfaS=0.00194; alfaS_lb_up_op = [1e-5,0.01];% gran parte 0.00194 /0.194 funcionan - mientras más pequeño menos variación en las maximas distancias de curvas, atención suceptibles, ese dato define lo demas
-deltaS=0.0011; deltaS_lb_up_op = [1e-5,0.01];% 0.0011/0.194
+alfaS=0.00194; alfaS_lb_up_op = [1e-5,0.5];% gran parte 0.00194 /0.194 funcionan - mientras más pequeño menos variación en las maximas distancias de curvas, atención suceptibles, ese dato define lo demas
+deltaS=0.0011; deltaS_lb_up_op = [1e-5,0.5];% 0.0011/0.194
 a_test = 0.3; a_test_lb_up_op = [0.1,0.9];
 all_test_gammasR=0.0041; all_test_gammasR_lb_up_op = [1e-4,0.01];
 all_test_gammasU=0.00125;all_test_gammasU_lb_up_op = [1e-4,0.01];
@@ -137,8 +138,9 @@ options6 = optimoptions("ga","PlotFcn",["gaplotdistance","gaplotgenealogy",...
     "gaplotselection","gaplotscorediversity","gaplotscores","gaplotstopping",...
     "gaplotmaxconstr","gaplotbestf","gaplotbestindiv","gaplotexpectation",...
     "gaplotrange","gaplotrange"]);
-options6.PopulationSize = 10;
+options6.PopulationSize = 5;
 options6.MaxGenerations  = 150;
+%options6.MutationFcn ={@mutationgaussian,1,.5};
 % Solve
 [solution,objectiveValue] = ga(objfun5,numberOfVariables,[],[],[],[],lb,ub,[],...
     [],options6);
@@ -150,7 +152,7 @@ clearvars objfun5 options6
 %simulations brute force
 %while(estado_op)
 
-solution
+%solution=solution_buena;
 
 beta = solution(1,1);
 gamma = solution(1,2);
@@ -161,6 +163,8 @@ deltaS=solution(1,4);% 0.0011/0.194
 all_test_gammasR=solution(1,5);
 all_test_gammasU=solution(1,6);
 a_test=solution(1,6);
+
+
 
 
 
@@ -193,7 +197,7 @@ compute_curves
 % 
 % p=p0;
 
-compute_curves_error
+% compute_curves_error
 % compute_curves
 % %disp(cota_error)
 disp(E)
@@ -219,7 +223,9 @@ disp(rmse_t);
 E
 % 
 % 
+tic
 main_all_blocks_1
+toc
 p=p0;
 compute_curves_error
 compute_curves

@@ -1,13 +1,10 @@
 function E = vectorized_fitness(p_op,p,N,acumulada,test_data_covid,diaInicio,diaFinEstudio,numThetas)
 %PARAMETERIZED_FITNESS fitness function for GA
-
-
 tc=diaInicio:diaFinEstudio;
 nGammas=numThetas;
 %tc=t(1):t(end);
 time_range = tc;
 %% Los datos son s�lo los infectados activos diarios
-
 %numThetas
 %% Gráfico para modelo con retardos (tiempos de incubación y de remoción)
 %% Para datos de la RM hasta entre el 15-03-21 al 12-06-21
@@ -23,7 +20,7 @@ tau5=p(8);
 tau6=p(9);
 all_taus = [tau1,tau2,tau3,tau4,tau5,tau6]';
 tg=diaInicio:diaFinEstudio;
-x0=[tg',test_data_covid(:,1:3)];
+x0=[tg',test_data_covid];
 %taus = p(4:4+nTau-1)'; %de posicion donde se encuentran los taus
 %all_taus = taus;
 % %% Para variante donde gammaUCI está directamente en la fc. obj.
@@ -59,12 +56,8 @@ k=1e-3;
 all_gammas = p_op(2)*ones(nGammas,1); %(IR)
 all_alfaS = p_op(3)*ones(nGammas,1); %(SR)
 all_deltaS = p_op(4)*ones(nGammas,1);%(RS)
-
 %p0=[gamma;alfaS;deltaS;all_taus;a;k;aC;all_gammasU;all_betas;all_gammasR];
 p0=[a;k;aC;all_taus;all_gammas;all_alfaS;all_deltaS;all_gammasU;all_betas;all_gammasR];
-
-
-
 %sol = dde23('sir_ret_fun_21',[tau1,tau2],'sir_ret_hist',[tg(1),tg(end)],[],p,N,x0);
 %% Variante con vacunación (la función de historia no cambia)
 %% Para variante con vacunación se agregan dos retardos
@@ -80,12 +73,10 @@ UCI = y(4,:);
 f_tmp = 0;
 InfDa=test_data_covid(:,1);
 UCIDa=test_data_covid(:,3);
-
 Inf_t = Inf;
 UCI_t = UCI;
 InfDa_t=InfDa;
 UCIDa_t=UCIDa;
-
 fr=0;
 Inf_tmp=0;
 % 
@@ -94,7 +85,6 @@ Inf_tmp=0;
 % 
 
 if acumulada == 1
-
     Inf_tmp = y(2,:);
     Idays = diferenciasDiarias(Inf_tmp);
     Idays = diferenciasDiarias(Inf_tmp);
@@ -114,28 +104,26 @@ end
 % gammasUCI = interp1(tUCI,gammasU,tc);
 % UCI = gammasUCI.*fr.*Inf;
 %%
-
 test_data_covid_estimate = y'; 
 %figure
 %salida = [InfDa,InfR',UCIDa,UCI'];
-
 %E_days= mean ([ ( InfR-InfDa' )./(InfR) ( y(4,:)-UCIDa' )./y(4,:) ]);
 %E= mean ([ ( test_data_covid_estimate(:,2)-test_data_covid(:,1) )./(test_data_covid_estimate(:,2))  ( y(4,:)-UCIDa' )./y(4,:)' ]);
-
-
 ss = ( test_data_covid_estimate(:,1)-test_data_covid(:,4) )./(test_data_covid_estimate(:,1));
 ii = ( test_data_covid_estimate(:,2)-test_data_covid(:,1) )./(test_data_covid_estimate(:,2));
 uu = ( test_data_covid_estimate(:,4)-test_data_covid(:,3) )./(test_data_covid_estimate(:,4));
 %ee = ( test_data_covid_estimate(:,3)-test_data_covid(:,3) )./(test_data_covid_estimate(:,3));
-tx_dt = [ ss ; ii ; uu ];
-%tx_dt = [ ss ];
+%tx_dt = [ ss ; ii ; uu ];
+tx_dt = [ ss ];
+%tx_dt = [ uu ];
 
-%tx_dt(isnan(tx_dt))=9999999999;
-%tx_dt(tx_dt<0)=9999999;
+tx_dt(isnan(tx_dt))=9999999999;
+tx_dt(tx_dt<0)=999999999;
 %rmse_t=  sqrt(mse(test_data_covid_estimate(:,2)-test_data_covid(:,1)))
 
 rmse_t=  sqrt(mse(tx_dt));
 E=  mean(tx_dt);
-p_op
+%p_op
 E=rmse_t  
+%E=  mean(tx_dt)
 %end

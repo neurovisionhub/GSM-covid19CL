@@ -12,7 +12,7 @@ tau5=p(8);
 %% Para la variante que incluye el paso de UCI a R
 tau6=p(9);
 all_taus = [tau1,tau2,tau3,tau4,tau5,tau6]';
-
+load("solucionbuena_calibracion.mat")
 %taus = p(4:4+nTau-1)'; %de posicion donde se encuentran los taus
 %all_taus = taus;
 % %% Para variante donde gammaUCI está directamente en la fc. obj.
@@ -50,7 +50,9 @@ test_data_covid_estimate = y';
 if acumulada == 1
 
     Inf_tmp = y(2,:);
-    Idays = diferenciasDiarias(Inf_tmp);
+    Idays = diff(Inf_tmp);
+    Idays = [Idays,Idays(end)];
+
     fr=sigmoide_all(p,Idays,nTau);
     fr = ceil(fr); %% ajuste relevante
     InfR = fr.*Inf;
