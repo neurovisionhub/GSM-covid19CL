@@ -24,9 +24,9 @@ time_range = tc;
 Data=xd(tc,:);
 x0=[tc' Data];
 
-if acumulada == 2
+if acumulada == 1
 
-tc_a=diaInicio-1:diaFin-1;
+tc_a=diaInicio-1:diaFin;
 Data=xd(tc_a,:);
 
 

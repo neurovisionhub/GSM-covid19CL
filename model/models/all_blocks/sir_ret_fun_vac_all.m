@@ -15,7 +15,7 @@ nGammas = (size(p,1)-9)/6;
 % t = ceil(t);
 
 % if mod(t,1)==0
-% t
+ t
 % end
 ylag1 = Z(:,1);
 ylag2 = Z(:,2);

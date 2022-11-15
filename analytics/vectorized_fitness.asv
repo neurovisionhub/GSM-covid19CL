@@ -66,7 +66,7 @@ vectorInicial = [N-Data(1,1)-Data(1,2)-Data(1,3);Data(1,1);Data(1,2);Data(1,3)];
 %vectorInicial = [N-Data(1,1)-Data(1,2);Data(1,1);Data(1,2);Data(1,3)];
 %disp('en vectorized fittness')
 %pause
-options = ddeset('RelTol',1e-3,'AbsTol',1e-4,...
+options = ddeset('RelTol',1e-8,'AbsTol',1e-12,...
                  'InitialY',vectorInicial);
 
 % options = ddeset('RelTol',1e-6,'AbsTol',1e-16,...
@@ -155,13 +155,13 @@ ss_t = ( test_data_covid_estimate_t(tg_test,1)-test_data_covid(tg_test,4) )./(te
 ii_t = ( test_data_covid_estimate_t(tg_test,2)-test_data_covid(tg_test,1) )./(test_data_covid(tg_test,1) );
 uu_t = ( test_data_covid_estimate_t(tg_test,4)-test_data_covid(tg_test,3) )./(test_data_covid(tg_test,3) );
 %ee = ( test_data_covid_estimate(:,3)-test_data_covid(:,3) )./(test_data_covid_estimate(:,3));
-tx_dt_t = [  ii_t ; uu_t ]; %recordar probar el solo ss
+tx_dt_t = [ ss_t ; ii_t ; uu_t ]; %recordar probar el solo ss
 sum_nan_t = sum(isnan(tx_dt_t));
 
 
 
 %ee = ( test_data_covid_estimate(:,3)-test_data_covid(:,3) )./(test_data_covid_estimate(:,3));
-tx_dt = [ ii ; uu ]; %recordar probar el solo ss
+tx_dt = [ ss ; ii ; uu ]; %recordar probar el solo ss
  %tx_dt = [ uu ];
 %tx_dt = [ ii ];
 %tx_dt = [ ii ; uu ]; %recordar probar el solo ss
@@ -169,8 +169,8 @@ tx_dt = [ ii ; uu ]; %recordar probar el solo ss
  tx_0 = tx_dt;
 
 sum_nan = sum(isnan(tx_dt));
-tx_dt(isnan(tx_dt))=10e+8;
-tx_dt(tx_dt<0)=10e+8;
+% tx_dt(isnan(tx_dt))=10e+6;
+% tx_dt(tx_dt<0)=10e+6;
 E_nan=mean(tx_dt)+sum_nan*10e+6
 rmse_t=  sqrt(mse(test_data_covid_estimate(:,2)-test_data_covid(:,1)))
 %integration_t = int 

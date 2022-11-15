@@ -55,11 +55,11 @@ if acumulada == 1
     Idays = [Idays,Idays(end)];
 
     fr=sigmoide_all(p,Idays,nTau);
-    fr = ceil(fr); %% ajuste relevante
+    fr = fr; %% ajuste relevante
     InfR = fr.*Inf;
     f_tmp = cumsum(InfR);
 else
-fr = ceil(fr); %% ajuste relevante
+fr = fr; %% ajuste relevante
 InfR = fr.*Inf;
 fr=sigmoide_all(p,y(2,:),nTau);
 

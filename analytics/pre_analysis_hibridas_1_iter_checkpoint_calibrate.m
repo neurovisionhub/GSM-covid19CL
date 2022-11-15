@@ -37,7 +37,7 @@ interpolacion = 1;
 % for short experiment percentPrunning < 1
 percentPrunning = 1 %  esta versión falla con el 1  > values > 0 is percentage of data 
 % Aproximacion sobre curva acumulada
-acumulada =1;
+acumulada =2;
 % TRAZA OPTIMIZER
 traza = 0;
 primero = 0
@@ -48,13 +48,13 @@ numThetas=  5;
 nCiclos =1% veces que se reduce beta a la mitad
 primera_ola=0
 %data_config
-diaInicio = 100
-diaFinEstudio = 300;
+diaInicio = 300
+diaFinEstudio = 600;
 I00=diaInicio;
 I10=diaFinEstudio;
 nF=0;
 diaFin=diaFinEstudio-nF;
-ventana_general=14;
+ventana_general=60;
 %% data_times_processing: analitics and processing of the data covid oficial and not covid oficial repositories
 format shortg
 variante_sier = 1; % para uso de funciones combinadas (diaria infectado % acum(R,U+F) )
@@ -102,7 +102,7 @@ format shortg
 % (a traves de la tasa gamma) y de manera explicita misma caracteristica (a traves de tau)
 
 a_t = 10e-5;
-b_t = 0.4;
+b_t = 0.6;
 
 % En primera ola el beta más grande
 beta_lb_up_op = [0.1,0.9]; % Mayoria de valores cercanos a 0.2
@@ -114,17 +114,17 @@ all_test_gammasU_lb_up_op = [1e-3,0.5]; %ingreso UCI
 a_test_lb_up_op = [0.01,0.9];
 
 
-% % % En primera ola el beta más grande
-% beta_lb_up_op = [0.01,b_t]; % Mayoria de valores cercanos a 0.2
-% gamma_lb_up_op = [a_t,b_t];
-% alfaS_lb_up_op = [a_t,b_t];% gran parte 0.00194 /0.194 funcionan - mientras más pequeño menos variación en las maximas distancias de curvas, atención suceptibles, ese dato define lo demas
-% deltaS_lb_up_op = [a_t,b_t];% 0.0011/0.194
-% all_test_gammasR_lb_up_op = [a_t,b_t];
-% all_test_gammasU_lb_up_op = [a_t,b_t];
-% a_test_lb_up_op = [0.01,0.9];
+% % En primera ola el beta más grande
+beta_lb_up_op = [0.01,b_t]; % Mayoria de valores cercanos a 0.2
+gamma_lb_up_op = [a_t,b_t];
+alfaS_lb_up_op = [a_t,b_t];% gran parte 0.00194 /0.194 funcionan - mientras más pequeño menos variación en las maximas distancias de curvas, atención suceptibles, ese dato define lo demas
+deltaS_lb_up_op = [a_t,b_t];% 0.0011/0.194
+all_test_gammasR_lb_up_op = [a_t,b_t];
+all_test_gammasU_lb_up_op = [a_t,b_t];
+a_test_lb_up_op = [0.01,0.9];
 
 d_t = diaFin - diaInicio-50;
-tau_4_op_lb_lb =[1,320]; % obs: los taus estimados < periodo (dias de la data)
+tau_4_op_lb_lb =[1,140]; % obs: los taus estimados < periodo (dias de la data)
 
 %% Para acelerar proceso partir de valores bajos
 %% factor 
@@ -166,7 +166,7 @@ compute_curves_error
 % options = optimoptions('ga','PlotFcn',@gaplot1drange);
 % [x,fval] = ga(@ESIR_rel_all,1,[],[],[],[],[],[],[],options)
 
-rng default % For reproducibility
+%rng default % For reproducibility
 FitnessFunction = @vectorized_fitness;
 
 lb = [beta_lb_up_op(1,1);gamma_lb_up_op(1,1);alfaS_lb_up_op(1,1);deltaS_lb_up_op(1,1);all_test_gammasR_lb_up_op(1,1);all_test_gammasU_lb_up_op(1,1);a_test_lb_up_op(1,1)]'; % sin optimizar tau4
@@ -188,7 +188,9 @@ objfun5 = @(p_op)vectorized_fitness(p_op,p,N,acumulada,test_data_covid,...
     diaInicio,diaFinEstudio,numThetas,Data);
 % Set nondefault solver options
 delete(gcp('nocreate'))
-parpool("Processes",20)
+%parpool("Processes",20)
+parpool('local', 10);
+
 % availableGPUs = gpuDeviceCount("available")
 % parpool('Processes',availableGPUs);
 % options6 = optimoptions("ga",'UseParallel', true,'UseVectorized', false);%,"PlotFcn",["gaplotdistance","gaplotgenealogy",...
@@ -197,12 +199,13 @@ parpool("Processes",20)
 %    "gaplotrange","gaplotrange"]); %,'MutationFcn',{@mutationgaussian,1,.5}
 % 
 %'CreationFcn',{ @gacreationnonlinearfeasible,'UseParallel',true,'NumStartPts',20}
-options6 = optimoptions("ga",'UseParallel', true,'UseVectorized', false,"PlotFcn",["gaplotdistance","gaplotgenealogy",...
+options6 = optimoptions("ga",'UseParallel', true,'UseVectorized', false,'CreationFcn',{ @gacreationnonlinearfeasible,'UseParallel',true,'NumStartPts',5}, ...
+    "PlotFcn",["gaplotdistance","gaplotgenealogy",...
     "gaplotselection","gaplotscorediversity","gaplotscores","gaplotstopping",...
     "gaplotmaxconstr","gaplotbestf","gaplotbestindiv","gaplotexpectation",...
     "gaplotrange","gaplotrange"]);%,'MutationFcn',{@mutationuniform, 0.1}); %
 
-options6.PopulationSize = 10;
+options6.PopulationSize = 5;
 options6.MaxGenerations  = 150;
 %options6.MutationFcn ={@mutationgaussian,1,.5};
 % Solve
@@ -244,8 +247,15 @@ deltaS=solution(1,4);% 0.0011/0.194
 all_test_gammasR=solution(1,5);
 all_test_gammasU=solution(1,6);
 a_test=solution(1,7);
-tau_4_op=300% temporal solution(1,8)log()
-
+tau_4_op=100% temporal solution(1,8)log()
+beta = 0.2;
+gamma = 0.01;
+% alfaS=0.01;
+% deltaS=0.01;
+alfaS=0.194;% gran parte 0.00194 /0.194 funcionan - mientras más pequeño menos variación en las maximas distancias de curvas, atención suceptibles, ese dato define lo demas
+deltaS=0.194;% 0.0011/0.194
+all_test_gammasR=solution(1,5);
+all_test_gammasU=solution(1,6);
 all_blocks_params_model_analytics_hibridas
 p=p0
 compute_curves_error
