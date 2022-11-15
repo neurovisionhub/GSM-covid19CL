@@ -121,7 +121,7 @@ if isnan(sum(sum(Z))) & traza == 1
     ylag1
     N
     t
-    time_range(end)
+    range(end)
     pause
 end
 
@@ -155,10 +155,10 @@ v(4,1) = gammasUCI*ylag5(2)-gammasR*ylag6(4)  +0.001; %du
 %     ylag4(1)
 if(isnan(v)|v(1,1)==inf)
  
-   
-    beta
-    alfaS
-    deltaS
+    t
+  %  beta
+%     alfaS
+%     deltaS
   %  pause
 end
 % v(1,1) = - beta*log10(gammasUCI*ylag5(2)+1)*(1+gammasR)-alfaS*ylag3(1)+deltaS*ylag4(1)+ 1e-5;

@@ -66,7 +66,7 @@ vectorInicial = [N-Data(1,1)-Data(1,2)-Data(1,3);Data(1,1);Data(1,2);Data(1,3)];
 %vectorInicial = [N-Data(1,1)-Data(1,2);Data(1,1);Data(1,2);Data(1,3)];
 %disp('en vectorized fittness')
 %pause
-options = ddeset('RelTol',1e-3,'AbsTol',1e-4,...
+options = ddeset('RelTol',1e-2,'AbsTol',1e-3,...
                  'InitialY',vectorInicial);
 
 % options = ddeset('RelTol',1e-6,'AbsTol',1e-16,...
@@ -74,7 +74,7 @@ options = ddeset('RelTol',1e-3,'AbsTol',1e-4,...
 %% Para versión con UCI
 sol = dde23('sir_ret_fun_vac_all',all_taus,'sir_ret_hist',[tg(1),tg(end)],options,p0,N,x0);
 y = deval(sol,tg);
-retroceso=50;
+retroceso=0;
 tg_test = tg(1:end-retroceso,1);
 % probar acá solo aproximar la integral hasta 10 días antes.
 
@@ -147,13 +147,13 @@ ii = ( test_data_covid_estimate(:,2)-test_data_covid(:,1) )./(test_data_covid_es
 uu = ( test_data_covid_estimate(:,4)-test_data_covid(:,3) )./(test_data_covid_estimate(:,4));
 
 
- y_t = deval(sol,tg_test);
- test_data_covid_estimate_t=y_t'; 
+%  y_t = deval(sol,tg_test);
+%  test_data_covid_estimate_t=y_t'; 
 
 
-ss_t = ( test_data_covid_estimate_t(tg_test,1)-test_data_covid(tg_test,4) )./(test_data_covid(tg_test,4) );
-ii_t = ( test_data_covid_estimate_t(tg_test,2)-test_data_covid(tg_test,1) )./(test_data_covid(tg_test,1) );
-uu_t = ( test_data_covid_estimate_t(tg_test,4)-test_data_covid(tg_test,3) )./(test_data_covid(tg_test,3) );
+ss_t = ( test_data_covid_estimate(:,1)-test_data_covid(:,4) )./(test_data_covid(:,4) );
+ii_t = ( test_data_covid_estimate(:,2)-test_data_covid(:,1) )./(test_data_covid(:,1) );
+uu_t = ( test_data_covid_estimate(:,4)-test_data_covid(:,3) )./(test_data_covid(:,3) );
 %ee = ( test_data_covid_estimate(:,3)-test_data_covid(:,3) )./(test_data_covid_estimate(:,3));
 tx_dt_t = [  ii_t ; uu_t ]; %recordar probar el solo ss
 sum_nan_t = sum(isnan(tx_dt_t));
@@ -161,7 +161,7 @@ sum_nan_t = sum(isnan(tx_dt_t));
 
 
 %ee = ( test_data_covid_estimate(:,3)-test_data_covid(:,3) )./(test_data_covid_estimate(:,3));
-tx_dt = [ ii ; uu ]; %recordar probar el solo ss
+tx_dt = [ ss; ii ; uu; ]; %recordar probar el solo ss
  %tx_dt = [ uu ];
 %tx_dt = [ ii ];
 %tx_dt = [ ii ; uu ]; %recordar probar el solo ss
@@ -171,6 +171,11 @@ tx_dt = [ ii ; uu ]; %recordar probar el solo ss
 sum_nan = sum(isnan(tx_dt));
 tx_dt(isnan(tx_dt))=10e+8;
 tx_dt(tx_dt<0)=10e+8;
+
+tx_dt_t(isnan(tx_dt_t))=10e+8;
+%tx_dt_t(tx_dt_t<0)=10e+8;
+
+
 E_nan=mean(tx_dt)+sum_nan*10e+6
 rmse_t=  sqrt(mse(test_data_covid_estimate(:,2)-test_data_covid(:,1)))
 %integration_t = int 
@@ -193,6 +198,6 @@ disp(w_score)
 sum_nan
 sum_nan_t
 E = mean(tx_dt)
-
+%E = mean(tx_dt_t)
 
 %end

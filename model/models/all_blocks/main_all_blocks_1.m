@@ -178,8 +178,8 @@ for it=0:maxit
        break;
    end
 
-   if abs(r)<=0.05
-      disp('abs(r)<=0.05');
+   if abs(r)<=0.01
+      disp('abs(r)<=0.01');
        break;
    end
 

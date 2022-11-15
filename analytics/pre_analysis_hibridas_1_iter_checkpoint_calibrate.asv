@@ -37,14 +37,14 @@ interpolacion = 1;
 % for short experiment percentPrunning < 1
 percentPrunning = 1 %  esta versión falla con el 1  > values > 0 is percentage of data 
 % Aproximacion sobre curva acumulada
-acumulada =1;
+acumulada =2;
 % TRAZA OPTIMIZER
 traza = 0;
 primero = 0
 %primero = 0
 % example 2
 maxiters = 10;
-numThetas=  5;
+numThetas=  10;
 nCiclos =1% veces que se reduce beta a la mitad
 primera_ola=0
 %data_config
@@ -105,8 +105,8 @@ a_t = 10e-5;
 b_t = 0.6;
 
 % En primera ola el beta más grande
-beta_lb_up_op = [1e-2,0.4]; % Mayoria de valores cercanos a 0.2
-gamma_lb_up_op = [1e-3,1e-1]; % % (1/gamma) tiempo de infección promedio - tasa de remosión media
+beta_lb_up_op = [1e-1,0.4]; % Mayoria de valores cercanos a 0.2
+gamma_lb_up_op = [1e-4,1e-2]; % % (1/gamma) tiempo de infección promedio - tasa de remosión media
 alfaS_lb_up_op = [1e-4,1e-2];%%(SR) gran parte 0.00194 /0.194 funcionan - mientras más pequeño menos variación en las maximas distancias de curvas, atención suceptibles, ese dato define lo demas
 deltaS_lb_up_op = [1e-4,1e-2];% %(RS) 0.0011/0.194
 all_test_gammasR_lb_up_op = [1e-4,1e-2]; %Recuperado UCI
@@ -136,16 +136,27 @@ tau_4_op_lb_lb =[1,140]; % obs: los taus estimados < periodo (dias de la data)
 
 %% Para acelerar proceso partir de valores bajos
 %% factor 
-factor_inicial=1
-beta = mean(beta_lb_up_op)*factor_inicial; %tasa de contato (fabrizzio en algunas partes indica contacto en otra transmision) -- tasa de transmisión! .
-gamma = mean(gamma_lb_up_op)*factor_inicial;% % (1/gamma) tiempo de infección promedio - tasa de remosión media
-alfaS=mean(alfaS_lb_up_op)*factor_inicial;%0.00194; 
-deltaS=mean(deltaS_lb_up_op)*factor_inicial;%0.0011; 
-all_test_gammasR=mean(all_test_gammasR_lb_up_op)*factor_inicial;%0.0041;
-all_test_gammasU=mean(all_test_gammasU_lb_up_op)*factor_inicial;%0.00125;
-a_test = mean(a_test_lb_up_op);%0.3; 
-tau_4_op = mean(tau_4_op_lb_lb);
+% factor_inicial=1
+% beta = mean(beta_lb_up_op)*factor_inicial; %tasa de contato (fabrizzio en algunas partes indica contacto en otra transmision) -- tasa de transmisión! .
+% gamma = mean(gamma_lb_up_op)*factor_inicial;% % (1/gamma) tiempo de infección promedio - tasa de remosión media
+% alfaS=mean(alfaS_lb_up_op)*factor_inicial;%0.00194; 
+% deltaS=mean(deltaS_lb_up_op)*factor_inicial;%0.0011; 
+% all_test_gammasR=mean(all_test_gammasR_lb_up_op)*factor_inicial;%0.0041;
+% all_test_gammasU=mean(all_test_gammasU_lb_up_op)*factor_inicial;%0.00125;
+% a_test = mean(a_test_lb_up_op);%0.3; 
+% tau_4_op = mean(tau_4_op_lb_lb);
+% 
 
+
+factor_inicial=1
+beta = max(beta_lb_up_op)*factor_inicial; %tasa de contato (fabrizzio en algunas partes indica contacto en otra transmision) -- tasa de transmisión! .
+gamma = max(gamma_lb_up_op)*factor_inicial;% % (1/gamma) tiempo de infección promedio - tasa de remosión media
+alfaS=max(alfaS_lb_up_op)*factor_inicial;%0.00194; 
+deltaS=max(deltaS_lb_up_op)*factor_inicial;%0.0011; 
+all_test_gammasR=max(all_test_gammasR_lb_up_op)*factor_inicial;%0.0041;
+all_test_gammasU=max(all_test_gammasU_lb_up_op)*factor_inicial;%0.00125;
+a_test = max(a_test_lb_up_op);%0.3; 
+tau_4_op = max(tau_4_op_lb_lb);
 % 
 % solution = [0.005292324185371,0.001197693705559,0.000621007213593,0.000284389982224,0.000348566269875,0.003403111946897,0.710175727827394];
 % 
@@ -196,8 +207,8 @@ objfun5 = @(p_op)vectorized_fitness(p_op,p,N,acumulada,test_data_covid,...
     diaInicio,diaFinEstudio,numThetas,Data);
 % Set nondefault solver options
 delete(gcp('nocreate'))
-%parpool("Processes",20)
-parpool('local', 10);
+parpool("Processes",20)
+%parpool('local', 10);
 
 % availableGPUs = gpuDeviceCount("available")
 % parpool('Processes',availableGPUs);
@@ -207,13 +218,13 @@ parpool('local', 10);
 %    "gaplotrange","gaplotrange"]); %,'MutationFcn',{@mutationgaussian,1,.5}
 % 
 %'CreationFcn',{ @gacreationnonlinearfeasible,'UseParallel',true,'NumStartPts',20}
-options6 = optimoptions("ga",'UseParallel', true,'UseVectorized', false,'CreationFcn',{ @gacreationnonlinearfeasible,'UseParallel',true,'NumStartPts',5}, ...
+options6 = optimoptions("ga",'UseParallel', true,'UseVectorized', false,'CreationFcn',{ @gacreationnonlinearfeasible,'UseParallel',true,'NumStartPts',20}, ...
     "PlotFcn",["gaplotdistance","gaplotgenealogy",...
     "gaplotselection","gaplotscorediversity","gaplotscores","gaplotstopping",...
     "gaplotmaxconstr","gaplotbestf","gaplotbestindiv","gaplotexpectation",...
     "gaplotrange","gaplotrange"]);%,'MutationFcn',{@mutationuniform, 0.1}); %
 
-options6.PopulationSize = 5;
+options6.PopulationSize = 40;
 options6.MaxGenerations  = 150;
 %options6.MutationFcn ={@mutationgaussian,1,.5};
 % Solve
