@@ -176,7 +176,7 @@ alfaS=solution(1,3);% gran parte 0.00194 /0.194 funcionan - mientras m√°s peque√
 deltaS=solution(1,4);% 0.0011/0.194
 all_test_gammasR=solution(1,5);
 all_test_gammasU=solution(1,6);
-a_test=solution(1,6);
+a_test=solution(1,7);
 
 
 

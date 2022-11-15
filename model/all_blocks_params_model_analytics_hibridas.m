@@ -155,8 +155,8 @@ x0=[tc' Data];
 % tau2=14;
 tau1=5;
 tau2=14;
-tau3=7;
-tau4=150;
+tau3=7; %tiempo en que comienza el efecto de la vacuna?
+tau4=tau_4_op; % tiempo de inmunidad
 tau5=35;
 %% Nueva variante con paso de UCI a R
 tau6=32;
@@ -175,7 +175,8 @@ a=a_test;
 i=find(tc==tc(end));
 indice=tc(1,end);
 %aC=mean(Data(1:i)); % ---- OJO ----
-aC=mean(xd(1:diaFin,1));
+%aC=mean(xd(1:diaFin,1));
+aC=mean(Data(:,1));
 %aC=mean(xd(1:indice,1));
 %aC=mean(xd(:,1));
 % k=1e-3;
@@ -209,4 +210,16 @@ else
 p0=pUltimo;
 end
 
+d_t_tmp = diaFin - diaInicio;
+sampling_t = ceil(1:d_t_tmp/(nGammas-1):d_t_tmp);
 
+size_t_int =  [sampling_t,size(x0,1)]';
+S_t = N-x0(1,1)-x0(1,2)-x0(1,3);
+
+S_t = N-x0(size_t_int,2)-x0(size_t_int,3)-x0(size_t_int,4);
+RE_SIR = (all_betas.*S_t)./(all_gammas*N);
+t_taus = all_taus;
+R_I = x0(size_t_int,2);
+%compute_curves
+% all_betas/100
+% 1./all_gammas

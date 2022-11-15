@@ -44,12 +44,12 @@ primero = 0
 %primero = 0
 % example 2
 maxiters = 10;
-numThetas=10;
+numThetas=  5;
 nCiclos =1% veces que se reduce beta a la mitad
 primera_ola=0
 %data_config
-diaInicio = 300
-diaFinEstudio = 600;
+diaInicio = 100
+diaFinEstudio = 300;
 I00=diaInicio;
 I10=diaFinEstudio;
 nF=0;
@@ -93,45 +93,63 @@ params_ini = [];
 %% ----- ejemplo 2 -------
 cota_error = 10000;
 option_model = 3 
-traza = 0;
-format long
+traza =0;
+format shortg
 %% Obs: el tiempo de infección promedio si se establece en por ejemplo 0.07, dara aprox 14 dias como masivamente se cree
 % pero en el contexto matemática tenemos a 1/gamma y por otro lado a los
 % taus que buscan el periodo de tiempo, se producen multiples minimos
 % locales debido a que ambas variables buscan de manera implicita el tiempo
 % (a traves de la tasa gamma) y de manera explicita misma caracteristica (a traves de tau)
 
-% En primera ola el beta más grande
-beta_lb_up_op = [1e-3,0.5]; % Mayoria de valores cercanos a 0.2
-gamma_lb_up_op = [1e-5,0.2];
-alfaS_lb_up_op = [1e-5,0.002];% gran parte 0.00194 /0.194 funcionan - mientras más pequeño menos variación en las maximas distancias de curvas, atención suceptibles, ese dato define lo demas
-deltaS_lb_up_op = [1e-5,0.022];% 0.0011/0.194
-all_test_gammasR_lb_up_op = [1e-5,0.03];
-all_test_gammasU_lb_up_op = [1e-5,0.03];
-
 a_t = 10e-5;
 b_t = 0.4;
+
 % En primera ola el beta más grande
-beta_lb_up_op = [a_t,b_t]; % Mayoria de valores cercanos a 0.2
-gamma_lb_up_op = [a_t,b_t/2];
-alfaS_lb_up_op = [a_t,b_t/2];% gran parte 0.00194 /0.194 funcionan - mientras más pequeño menos variación en las maximas distancias de curvas, atención suceptibles, ese dato define lo demas
-deltaS_lb_up_op = [a_t,b_t/2];% 0.0011/0.194
-all_test_gammasR_lb_up_op = [a_t,b_t/4];
-all_test_gammasU_lb_up_op = [a_t,b_t/4];
-a_test_lb_up_op = [0.01,0.6];
-
-d_t = diaFin - diaInicio-5;
-tau_4_op_lb_lb =[14,d_t]; % obs: los taus estimados < periodo (dias de la data)
+beta_lb_up_op = [0.1,0.9]; % Mayoria de valores cercanos a 0.2
+gamma_lb_up_op = [0.01,0.9]; % % (1/gamma) tiempo de infección promedio - tasa de remosión media
+alfaS_lb_up_op = [1e-3,0.2];%%(SR) gran parte 0.00194 /0.194 funcionan - mientras más pequeño menos variación en las maximas distancias de curvas, atención suceptibles, ese dato define lo demas
+deltaS_lb_up_op = [1e-3,0.2];% %(RS) 0.0011/0.194
+all_test_gammasR_lb_up_op = [1e-3,0.5]; %Recuperado UCI
+all_test_gammasU_lb_up_op = [1e-3,0.5]; %ingreso UCI
+a_test_lb_up_op = [0.01,0.9];
 
 
-beta = mean(beta_lb_up_op); %tasa de contato (fabrizzio en algunas partes indica contacto en otra transmision) -- tasa de transmisión! .
-gamma = mean(gamma_lb_up_op);% % (1/gamma) tiempo de infección promedio - tasa de remosión media
-alfaS=mean(alfaS_lb_up_op);%0.00194; 
-deltaS=mean(deltaS_lb_up_op);%0.0011; 
-all_test_gammasR=mean(all_test_gammasR_lb_up_op);%0.0041;
-all_test_gammasU=mean(all_test_gammasU_lb_up_op);%0.00125;
+% % % En primera ola el beta más grande
+% beta_lb_up_op = [0.01,b_t]; % Mayoria de valores cercanos a 0.2
+% gamma_lb_up_op = [a_t,b_t];
+% alfaS_lb_up_op = [a_t,b_t];% gran parte 0.00194 /0.194 funcionan - mientras más pequeño menos variación en las maximas distancias de curvas, atención suceptibles, ese dato define lo demas
+% deltaS_lb_up_op = [a_t,b_t];% 0.0011/0.194
+% all_test_gammasR_lb_up_op = [a_t,b_t];
+% all_test_gammasU_lb_up_op = [a_t,b_t];
+% a_test_lb_up_op = [0.01,0.9];
+
+d_t = diaFin - diaInicio-50;
+tau_4_op_lb_lb =[1,320]; % obs: los taus estimados < periodo (dias de la data)
+
+%% Para acelerar proceso partir de valores bajos
+%% factor 
+factor_inicial=1
+beta = mean(beta_lb_up_op)*factor_inicial; %tasa de contato (fabrizzio en algunas partes indica contacto en otra transmision) -- tasa de transmisión! .
+gamma = mean(gamma_lb_up_op)*factor_inicial;% % (1/gamma) tiempo de infección promedio - tasa de remosión media
+alfaS=mean(alfaS_lb_up_op)*factor_inicial;%0.00194; 
+deltaS=mean(deltaS_lb_up_op)*factor_inicial;%0.0011; 
+all_test_gammasR=mean(all_test_gammasR_lb_up_op)*factor_inicial;%0.0041;
+all_test_gammasU=mean(all_test_gammasU_lb_up_op)*factor_inicial;%0.00125;
 a_test = mean(a_test_lb_up_op);%0.3; 
 tau_4_op = mean(tau_4_op_lb_lb);
+
+% 
+% solution = [0.005292324185371,0.001197693705559,0.000621007213593,0.000284389982224,0.000348566269875,0.003403111946897,0.710175727827394];
+% 
+% beta = solution(1,1);
+% gamma = solution(1,2);
+% % alfaS=0.01;
+% % deltaS=0.01;
+% alfaS=solution(1,3);% gran parte 0.00194 /0.194 funcionan - mientras más pequeño menos variación en las maximas distancias de curvas, atención suceptibles, ese dato define lo demas
+% deltaS=solution(1,4);% 0.0011/0.194
+% all_test_gammasR=solution(1,5);
+% all_test_gammasU=solution(1,6);
+% a_test=solution(1,7);
 
 %% id NAN 3.467500000000000e+02 -- 371
 
@@ -148,35 +166,50 @@ compute_curves_error
 % options = optimoptions('ga','PlotFcn',@gaplot1drange);
 % [x,fval] = ga(@ESIR_rel_all,1,[],[],[],[],[],[],[],options)
 
-%rng default % For reproducibility
+rng default % For reproducibility
 FitnessFunction = @vectorized_fitness;
 
-lb = [beta_lb_up_op(1,1);gamma_lb_up_op(1,1);alfaS_lb_up_op(1,1);deltaS_lb_up_op(1,1);all_test_gammasR_lb_up_op(1,1);all_test_gammasU_lb_up_op(1,1);a_test_lb_up_op(1,1);tau_4_op_lb_lb(1,1)]';
-ub = [beta_lb_up_op(1,2);gamma_lb_up_op(1,2);alfaS_lb_up_op(1,2);deltaS_lb_up_op(1,2);all_test_gammasR_lb_up_op(1,2);all_test_gammasU_lb_up_op(1,2);a_test_lb_up_op(1,2);tau_4_op_lb_lb(1,2)]';
+lb = [beta_lb_up_op(1,1);gamma_lb_up_op(1,1);alfaS_lb_up_op(1,1);deltaS_lb_up_op(1,1);all_test_gammasR_lb_up_op(1,1);all_test_gammasU_lb_up_op(1,1);a_test_lb_up_op(1,1)]'; % sin optimizar tau4
+ub = [beta_lb_up_op(1,2);gamma_lb_up_op(1,2);alfaS_lb_up_op(1,2);deltaS_lb_up_op(1,2);all_test_gammasR_lb_up_op(1,2);all_test_gammasU_lb_up_op(1,2);a_test_lb_up_op(1,2)]';
+%lb = [beta_lb_up_op(1,1);gamma_lb_up_op(1,1);alfaS_lb_up_op(1,1);deltaS_lb_up_op(1,1);all_test_gammasR_lb_up_op(1,1);all_test_gammasU_lb_up_op(1,1);a_test_lb_up_op(1,1);tau_4_op_lb_lb(1,1)]';
+%ub = [beta_lb_up_op(1,2);gamma_lb_up_op(1,2);alfaS_lb_up_op(1,2);deltaS_lb_up_op(1,2);all_test_gammasR_lb_up_op(1,2);all_test_gammasU_lb_up_op(1,2);a_test_lb_up_op(1,2);tau_4_op_lb_lb(1,2)]';
 
 %type parameterized_fitness
-type vectorized_fitness
+%type vectorized_fitness
+ConstraintFunction = @simple_constraint;
+%p_op = solution'
+p_op = [beta;gamma;alfaS;deltaS;all_test_gammasR;all_test_gammasU;a_test]; % sin tau 4
 
-
-p_op = [beta;gamma;alfaS;deltaS;all_test_gammasR;all_test_gammasU;a_test;tau_4_op];
+%p_op = [beta;gamma;alfaS;deltaS;all_test_gammasR;all_test_gammasU;a_test;tau_4_op];
 %P=p0
 numberOfVariables=size(p_op,1);
 % Pass fixed parameters to objfun
 objfun5 = @(p_op)vectorized_fitness(p_op,p,N,acumulada,test_data_covid,...
     diaInicio,diaFinEstudio,numThetas,Data);
 % Set nondefault solver options
-options6 = optimoptions("ga","PlotFcn",["gaplotdistance","gaplotgenealogy",...
+delete(gcp('nocreate'))
+parpool("Processes",20)
+% availableGPUs = gpuDeviceCount("available")
+% parpool('Processes',availableGPUs);
+% options6 = optimoptions("ga",'UseParallel', true,'UseVectorized', false);%,"PlotFcn",["gaplotdistance","gaplotgenealogy",...
+%    "gaplotselection","gaplotscorediversity","gaplotscores","gaplotstopping",...
+%    "gaplotmaxconstr","gaplotbestf","gaplotbestindiv","gaplotexpectation",...
+%    "gaplotrange","gaplotrange"]); %,'MutationFcn',{@mutationgaussian,1,.5}
+% 
+%'CreationFcn',{ @gacreationnonlinearfeasible,'UseParallel',true,'NumStartPts',20}
+options6 = optimoptions("ga",'UseParallel', true,'UseVectorized', false,"PlotFcn",["gaplotdistance","gaplotgenealogy",...
     "gaplotselection","gaplotscorediversity","gaplotscores","gaplotstopping",...
     "gaplotmaxconstr","gaplotbestf","gaplotbestindiv","gaplotexpectation",...
-    "gaplotrange","gaplotrange"]);
-options6.PopulationSize = 5;
+    "gaplotrange","gaplotrange"]);%,'MutationFcn',{@mutationuniform, 0.1}); %
+
+options6.PopulationSize = 10;
 options6.MaxGenerations  = 150;
 %options6.MutationFcn ={@mutationgaussian,1,.5};
 % Solve
 % [solution,objectiveValue] = ga(objfun5,numberOfVariables,[],[],[],[],lb,ub,[],...
 %     [],options6);
 
-[solution,objectiveValue,exitflag,output,population,scores]=ga(objfun5,numberOfVariables,[],[],[],[],lb,ub,[],...
+[solution,objectiveValue,exitflag,output,population,scores]=ga(objfun5,numberOfVariables,[],[],[],[],lb,ub,ConstraintFunction,...
     [],options6);
 
 matrix_optimus=[matrix_optimus;solution];
@@ -196,7 +229,9 @@ tic
 %% para experimento largo
 %solution_buena = [0.0796489277570966,0.115283860197751,0.210886423700311,0.375000000000000,0.0100000000000000,0.00398304749338827,0.177705424988678]
 
-%solution=population(5,:);
+%solution_buena = [ 0.395200932025909	,0.236059570312500,0.0792665315628052,0.129762060952011,	0.0512080062719018,	0.187050665175685,	0.102894449830055]
+
+%solution=solution_buena;
 
 
 
@@ -209,7 +244,7 @@ deltaS=solution(1,4);% 0.0011/0.194
 all_test_gammasR=solution(1,5);
 all_test_gammasU=solution(1,6);
 a_test=solution(1,7);
-tau_4_op=solution(1,8)
+tau_4_op=300% temporal solution(1,8)log()
 
 all_blocks_params_model_analytics_hibridas
 p=p0
@@ -265,9 +300,9 @@ x_t_chip_end = 0;
 E
 % 
 % 
-% tic
-% main_all_blocks_1
-% toc
+ tic
+%  main_all_blocks_1
+ toc
 % save_log_data_ck_point
 t_total=toc(global_time_op)
 format shortg

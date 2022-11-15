@@ -302,7 +302,7 @@ figure;plot(aIC_pais_day_fit)
 plot(aIC_day)
 %%% ______________ Fin ajuste infectados  ________________________
 ventana = ventana_general;
-diaPrimerRecs = 21; % dia en que se presenta primer recuperado
+diaPrimerRecs = 7; % dia en que se presenta primer recuperado
 [aRC,RC_day,aRC_day,error_aRC] = ajusteR(aIC,RC,diaPrimerRecs);
 [aRC_day_fit] = mediamovil(aRC_day,ventana);
 

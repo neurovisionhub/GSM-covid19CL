@@ -1,7 +1,11 @@
 %% cï¿½lculo de la funciï¿½n error para el modelo SIR con retardo
 function E = ESIR_rel_all(p,tc,xd,x0,N)
-global nTau 
+% global nTau 
 global h Mv contF
+nTau = 6;
+% xd
+% x0
+% pause
 %% funciï¿½n de error para modelo SIR con retardo
 % % Para beta lineal por tramos
 %V = otras;
@@ -22,16 +26,16 @@ taus = p(4:4+nTau-1)'; %de posicion donde se encuentran los taus
 %options = ddeset('Jumps',5);
 %%menor tol mayor tiempo - para experimentos inciciales usar error alto
 %tic
-%vectorInicial = [N-xd(1,1);xd(1,1);xd(1,2);xd(1,3)];
+vectorInicial = [N-xd(1,1);xd(1,1);xd(1,2);xd(1,3)];
 vectorInicial = [N-xd(1,1)-xd(1,2)-xd(1,3);xd(1,1);xd(1,2);xd(1,3)];
-vectorInicial = [xd(1,4);xd(1,1);xd(1,2);xd(1,3)];
+%vectorInicial = [xd(1,4);xd(1,1);xd(1,2);xd(1,3)];
 %options = ddeset('RelTol',1e-2,'AbsTol',1e-4,...
 %                 'InitialY',[N;1;1;1]);
-options = ddeset('RelTol',1e-4,'AbsTol',1e-8,...
+options = ddeset('RelTol',1e-2,'AbsTol',1e-4,...
                  'InitialY',vectorInicial);
 sol = dde23('sir_ret_fun_vac_all',taus,'sir_ret_hist',[tc(1),tc(end)],options,p,N,x0);
 y = deval(sol,tc);
-%y(isnan(y))=1e+6
+%y(isnan(y))=1e+20;
 %alfa=sigmoide_all(p,y(2,:),nTau);
 
 
@@ -46,7 +50,12 @@ aC=p(3);
 % aC=p(end);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 alfa=1-(1-a)./( 1+exp( -k*(y(2,:)-aC) ) );
-alfa = ceil(alfa);
+
+% alfa
+% size(xd)
+% size(y)
+
+%alfa = ceil(alfa);
 %alfa = alfa;
 contF=contF+1;
 if mod(contF,10)==0 
@@ -60,8 +69,6 @@ plot(y(1,:)) % S
 plot(y(2,:)) % U
 %plot(log(xd(:,3)))
 
-
-
 %drawnow
 %Mv(contF) = getframe(gcf);
 %y(1,:)
@@ -73,6 +80,7 @@ text_log = datestr(t,t.Format);
 
 sLogpng = strcat('img_trace/',text_log,'_',string(contF),'.png');
 saveas(gcf, sLogpng);
+
 %pause(0.0001)
 clf
 end
@@ -107,10 +115,10 @@ end
 %E= [  ( alfa.*y(2,:)-xd(:,1)' )./( alfa.*y(2,:)) +numRel',  ( y(4,:)-xd(:,3)' )./y(4,:) ];
 %E= [  ( alfa.*y(2,:)-xd(:,1)' )./( alfa.*y(2,:))   ( y(4,:)-xd(:,3)' )./y(4,:) ];
 %E= [  ( alfa.*y(2,:)-xd(:,1)' )./( alfa.*y(2,:))   ( y(4,:)-xd(:,3)' )./y(4,:) ];
-%%%E= [ ( alfa.*y(2,:)-xd(:,1)' )./(alfa.*y(2,:))   ( y(4,:)-xd(:,3)' )./y(4,:) ];
+E= [ ( alfa.*y(2,:)-xd(:,1)' )./(alfa.*y(2,:))   ( y(4,:)-xd(:,3)' )./y(4,:) ];
 
 %E= [ ( y(1,:)-xd(:,4)' )./y(1,:) ( y(2,:)-xd(:,1)')./y(2,:)];
- E= [ ( y(1,:)-xd(:,4)' )./y(1,:) ( y(4,:)-xd(:,3)')./y(4,:) ( alfa.*y(2,:)-xd(:,1)' )./(alfa.*y(2,:))];
+%%% E= [ ( y(1,:)-xd(:,4)' )./y(1,:) ( y(4,:)-xd(:,3)')./y(4,:) ( alfa.*y(2,:)-xd(:,1)' )./(alfa.*y(2,:))];
 % E= [ ( y(1,:)-xd(:,4)' )./y(1,:)];
 
 %E= [  ( y(2,:)-xd(:,1)' )./(y(2,:))   ( y(4,:)-xd(:,3)' )./y(4,:) ];

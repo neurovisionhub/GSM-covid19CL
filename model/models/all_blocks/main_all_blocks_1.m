@@ -1,9 +1,12 @@
 global nTau contF
+% delete(gcp('nocreate'))
+% parpool("Processes",16)
 
 %% ** Script para Optimizaci�n por m�nimos cuadrados **
 %% Opciones para el solver de optimizaci�n
 %maxiters=5;
-options = optimset('Algorithm','trust-region-reflective','Display','iter','MaxIter',maxiters,'TolFun',1e-6,'TolX',1e-10,'MaxFunEvals',40000);
+options = optimset('UseParallel',true,'Algorithm','trust-region-reflective','Display','iter','MaxIter',maxiters,'TolFun',1e-6,'TolX',1e-10,'MaxFunEvals',40000,'Diagnostics','on');
+
 %delete(gcp)
 %parpool('local')
 %options = optimset('FinDiffRelStep',1e-4,'Algorithm','trust-region-reflective','Display','iter-detailed','MaxIter',maxiters,'TolFun',1e-17,'TolX',1e-21,'MaxFunEvals',50000);
@@ -16,7 +19,7 @@ options = optimset('Algorithm','trust-region-reflective','Display','iter','MaxIt
 %options = optimset('Algorithm','trust-region-reflective','Display','iter','MaxIter',1000,'TolFun',1e-17,'TolX',9.7e-08,'MaxFunEvals',20000);
 %% Inicializaci�n de cotas para los par�metros
 Lb=ones(size(p0))*1e-5;
-Ub=inf*ones(size(p0));
+Ub=360*ones(size(p0));
 %Ub=N*ones(size(p0));
 %% ** Seg�n informe conjunto China-OMS, tau1 var�a entre 1 y 14 d�as, con un promedio de 5-6 dias
 %% mientras que tau2 var�a entre 7 y 56 d�as, con un promedio de 14 d�as
@@ -82,8 +85,8 @@ Lb(5)=7; Ub(5)=21; %tau2 -> recuperacion
 Lb(6)=7; Ub(6)=21; %tau3 -> suceptible a recuperado (inmunidad) ojo hay reincidencia pero leve - menos casos UCI?
 % % %% Probare un rango de 1-20 días para tau3
 % % % Lb(6)=1; Ub(6)=20; %tau3 
-Lb(7)=140; Ub(7)=240; %tau4 -> duracion inmunidad
-Lb(8)=14; Ub(8)=56; %tau5 -> en UCI
+Lb(7)=1; Ub(7)=140; %tau4 -> duracion inmunidad
+Lb(8)=7; Ub(8)=56; %tau5 -> en UCI
 Lb(9)=7; Ub(9)=42; %tau6 -> recuperacion UCI
 
 if primera_ola ==1
@@ -145,14 +148,24 @@ disp(p0)
 %pause
 end
 
+tc=diaInicio:diaFin;
+nGammas=numThetas;
+%tc=t(1):t(end);
+time_range = tc;
+%% Los datos son s�lo los infectados activos diarios
+Data=xd(tc,:);
+x0=[tc' Data];
+
+tc_t=1:size(x0,1);
+
 for it=0:maxit
    if abs(r-resnormref)/r<tol
        disp('abs(r-resnormref)/r<tol');
        break;
    end
 
-   if abs(r)<=0.01
-      disp('abs(r)<=0.01');
+   if abs(r)<=0.05
+      disp('abs(r)<=0.05');
        break;
    end
 
@@ -163,7 +176,9 @@ for it=0:maxit
 contF
 %while (abs(r-resnormref)/r>tol)&&(it<maxit)
     %[p,r,~,~,~,~,jac]=lsqnonlin(@(p) ESIR_rel(p,tc,Data,x0,N),p0,Lb,Ub,options);
-   [p,r,~,~,~,~,jac]=lsqnonlin(@(p) ESIR_rel_all(p,tc,Data,x0,N),p0,Lb,Ub,options);
+disp(p')
+disp(x0);
+   [p,r,~,~,~,~,jac]=lsqnonlin(@(p) ESIR_rel_all(p,tc_t,Data,x0,N),p0,Lb,Ub,options);
    %  [p,r,~,~,~,~,jac]=fmincon(@(p) ESIR_rel(p,tc,Data,x0,N),p0,Lb,Ub,options);
     p0=p;
     r0=r;
