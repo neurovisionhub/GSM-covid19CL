@@ -24,18 +24,19 @@ time_range = tc;
 Data=xd(tc,:);
 x0=[tc' Data];
 
-if acumulada == 2
-
-tc_a=diaInicio-1:diaFin-1;
-Data=xd(tc_a,:);
-
-
-Data(:,1)= diferenciasDiarias(Data(:,1)');
-Data(:,2)= diferenciasDiarias(Data(:,2)');
-Data(:,3)= diferenciasDiarias(Data(:,3)');
-x0=[tc' Data];
-
-end
+% if acumulada == 2
+% 
+% tc_a=diaInicio-1:diaFin-1;
+% Data=xd(tc_a,:);
+% 
+% 
+% Data(:,1)= diferenciasDiarias(Data(:,1)');
+% Data(:,2)= diferenciasDiarias(Data(:,2)');
+% Data(:,3)= diferenciasDiarias(Data(:,3)');
+% x0=[tc' Data];
+% figure
+% plot(Data(:,1:3))
+% end
 
 
 

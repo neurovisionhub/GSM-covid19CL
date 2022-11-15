@@ -15,7 +15,7 @@ nGammas = (size(p,1)-9)/6;
 % t = ceil(t);
 
 % if mod(t,1)==0
- t
+ %t
 % end
 ylag1 = Z(:,1);
 ylag2 = Z(:,2);
@@ -55,32 +55,32 @@ all_gammasR = p(posIni+nTau+nGammas*5:posIni+nTau+nGammas*6-1);
 %t=ceil(t); %% --- %%
 tr = linspace(min(range),max(range),numel(all_betas));
 %beta = piecewise_interpolator(t,all_betas,tr) ;
-%if t<=time_range(end)
+if t<=range(end)
     beta   = interp1(tr,all_betas,t);
     alfaS  = interp1(tr,all_alfaS,t);
     deltaS = interp1(tr,all_deltaS,t);
     gamma  = interp1(tr,all_gammas,t); 
-% else
-%     beta   = interp1(tr,all_betas,time_range(end));
-%     alfaS  = interp1(tr,all_alfaS,time_range(end));
-%     deltaS = interp1(tr,all_deltaS,time_range(end));
-%     gamma  = interp1(tr,all_gammas,time_range(end));
-% end
+ else
+    beta   = interp1(tr,all_betas,range);
+    alfaS  = interp1(tr,all_alfaS,range);
+    deltaS = interp1(tr,all_deltaS,range);
+    gamma  = interp1(tr,all_gammas,range);
+end
 tr2 = linspace(min(range),max(range),numel(all_gammasU));
 %gammasUCI = piecewise_interpolator(t,all_gammasU,tr2);
-% if t<=time_range(end)
+ if t<=range(end)
    gammasUCI = interp1(tr2,all_gammasU,t);
-% else
-%      gammasUCI = interp1(tr2,all_gammasU,time_range(end));
-%  %gammasUCI = interp1(tr2,all_gammasU,t);
-% end
+ else
+      gammasUCI = interp1(tr2,all_gammasU,range);
+%  gammasUCI = interp1(tr2,all_gammasU,t);
+ end
 %% Nueva variante con gamma de UCI a R
 tr3 = linspace(min(range),max(range),numel(all_gammasR));
-% if t<=time_range(end)
+ if t<=range(end)
    gammasR   = interp1(tr3,all_gammasR,t);
-% else
-%    gammasR   = interp1(tr3,all_gammasR,time_range(end));
-% end
+ else
+    gammasR   = interp1(tr3,all_gammasR,range);
+ end
 %fr=sigmoide(p,y(2,:),nTau);
 %frd=interp1(time_range,fr,t-tau5,'pchip','extrap');
 %%

@@ -66,7 +66,7 @@ if acumulada == 1
     InfR = fr.*Inf;
     f_tmp = cumsum(InfR);
 else
-fr = ceil(fr); %% ajuste relevante
+%fr = ceil(fr); %% ajuste relevante
 InfR = fr.*Inf;
 fr=sigmoide_all(p,y(2,:),nTau);
 

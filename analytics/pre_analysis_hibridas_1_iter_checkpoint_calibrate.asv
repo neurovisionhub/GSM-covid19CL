@@ -196,8 +196,8 @@ objfun5 = @(p_op)vectorized_fitness(p_op,p,N,acumulada,test_data_covid,...
     diaInicio,diaFinEstudio,numThetas,Data);
 % Set nondefault solver options
 delete(gcp('nocreate'))
-parpool("Processes",20)
-%parpool('local', 10);
+%parpool("Processes",20)
+parpool('local', 10);
 
 % availableGPUs = gpuDeviceCount("available")
 % parpool('Processes',availableGPUs);
@@ -213,7 +213,7 @@ options6 = optimoptions("ga",'UseParallel', true,'UseVectorized', false,'Creatio
     "gaplotmaxconstr","gaplotbestf","gaplotbestindiv","gaplotexpectation",...
     "gaplotrange","gaplotrange"]);%,'MutationFcn',{@mutationuniform, 0.1}); %
 
-options6.PopulationSize = 20;
+options6.PopulationSize = 5;
 options6.MaxGenerations  = 150;
 %options6.MutationFcn ={@mutationgaussian,1,.5};
 % Solve

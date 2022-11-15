@@ -55,14 +55,14 @@ if acumulada == 1
     Idays = [Idays,Idays(end)];
 
     fr=sigmoide_all(p,Idays,nTau);
-    fr = fr; %% ajuste relevante
+  %  fr = fr; %% ajuste relevante
     InfR = fr.*Inf;
     f_tmp = cumsum(InfR);
 else
-fr = fr; %% ajuste relevante
-InfR = fr.*Inf;
-fr=sigmoide_all(p,y(2,:),nTau);
 
+fr=sigmoide_all(p,y(2,:),nTau);
+%fr = fr; %% ajuste relevante
+InfR = fr.*Inf;
 end
 % %% Para la variante donde los UCI van en el target
 % gammasU= p(12:12+nGammas-1)'; %de posicion 4 a nTau
