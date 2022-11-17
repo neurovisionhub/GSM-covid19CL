@@ -415,11 +415,11 @@ xd=xds;
 end
 xd_test = [];
 if variante_sier == 1
-   %S = N - Is - Rs -(Us+Fs);
+   S = N - Is - Rs -(Us+Fs);
    %xd = [Is Rs Us+Fs S (Is+Rs+Us+Fs)];
-   S = N - Is - Rs - Fs; % sacando uci movil internado
+   %S = N - Is - Rs - Fs; % sacando uci movil internado
    xd = [Is Rs Us+Fs S (Is+Rs+Fs) (Is+Rs+Fs+Us)]; % sacando uci movil internado
-  % xd = [Is Rs Fs S (Is+Rs+Fs) (Is+Rs+Fs+Us)]; % para test de consistencia en intervalo
+   %xd = [Is Rs Fs S (Is+Rs+Fs) (Is+Rs+Fs+Us)]; % para test de consistencia en intervalo
 end
 
 if grafica_data == 1

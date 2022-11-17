@@ -1,9 +1,3 @@
-%numThetas
-%% Gráfico para modelo con retardos (tiempos de incubación y de remoción)
-%% Para datos de la RM hasta entre el 15-03-21 al 12-06-21
-%p=p0;
-%% all_taus = [tau1,tau2,tau3,tau4,tau5]';
-%% p0=[gamma;alfaS;deltaS;all_taus;a;k;aC;all_gammasU;all_betas];
 tau1=p(4);
 tau2=p(5);
 tau3=p(6);
@@ -13,20 +7,15 @@ tau5=p(8);
 tau6=p(9);
 all_taus = [tau1,tau2,tau3,tau4,tau5,tau6]';
 %load("solucionbuena_calibracion.mat")
-%taus = p(4:4+nTau-1)'; %de posicion donde se encuentran los taus
-%all_taus = taus;
-% %% Para variante donde gammaUCI está directamente en la fc. obj.
-% all_taus = [tau1,tau2,tau3,tau4]';
+% p(1)=0.6
+% p(2)=1e-1
+% p(3)=150000
+
+
 nTau=length(all_taus);
 tg=(1:max(size(Data)))';
 tc=tg;
-%sol = dde23('sir_ret_fun_21',[tau1,tau2],'sir_ret_hist',[tg(1),tg(end)],[],p,N,x0);
-%% Variante con vacunación (la función de historia no cambia)
-%% Para variante con vacunación se agregan dos retardos
-% tau3=p(12);
-% tau4=p(13);
-% sol = dde23('sir_ret_fun_vac',[tau1,tau2,tau3,tau4],'sir_ret_hist',[tg(1),tg(end)],[],p,N,x0);
-%% Para versión con UCI
+
 v_ini = [N-xd(diaInicio,1)-xd(diaInicio,2)-xd(diaInicio,3);
     Data(1,1);Data(1,2);Data(1,3)];
 vectorInicial = v_ini;
@@ -57,8 +46,8 @@ test_data_covid_estimate = y';
 if acumulada == 1
 
     Inf_tmp = y(2,:);
-    Idays = diff(Inf_tmp);
-    Idays = [Idays,Idays(end)];
+    Idays = diferenciasDiarias(Inf_tmp);
+  %  Idays = [Idays,Idays(end)];
 
     fr=sigmoide_all(p,Idays,nTau);
   %  fr = fr; %% ajuste relevante
@@ -88,13 +77,14 @@ salida = [InfDa,InfR',UCIDa,UCI'];
 ss = ( test_data_covid_estimate(:,1)-test_data_covid(:,4) )./(test_data_covid_estimate(:,1));
 ii = ( test_data_covid_estimate(:,2)-test_data_covid(:,1) )./(test_data_covid_estimate(:,2));
 uu = ( test_data_covid_estimate(:,4)-test_data_covid(:,3) )./(test_data_covid_estimate(:,4));
-%ee = ( test_data_covid_estimate(:,3)-test_data_covid(:,3) )./(test_data_covid_estimate(:,3));
+rr = ( test_data_covid_estimate(:,3)-test_data_covid(:,2) )./(test_data_covid_estimate(:,3));
 tx_dt = [ ss ; ii ; uu ];
 rmse_t=  sqrt(mse(tx_dt))
 E=  mean(tx_dt)
-
-
-
+Ess=  mean(ss)
+Eii=  mean(ii)
+Err = mean(rr)
+Euu=  mean(uu)
 if acumulada == 1
 UCIc = diff(UCI);
 UCIr = diff(UCIDa);
@@ -221,7 +211,7 @@ maxdata=max(UCIDa);
 mindata=min(UCIDa);
 maxUCI=max(UCI);
 minUCI=min(UCI);
-axis([tg(1)-2 tg(end)+2 0.01*min(minUCI,mindata) 1.05*max(maxdata,maxInf)])
+axis([tg(1)-2 tg(end)+2 0.01*min(minUCI,mindata) 1.05*max(maxdata,maxUCI)])
 lgd=legend('$UCI$ fitted','Data UCI');
 set(lgd,'Location','northwest','Interpreter','latex','FontSize',10)
 shg

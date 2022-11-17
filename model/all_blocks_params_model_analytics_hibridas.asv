@@ -50,6 +50,12 @@ tau5=35;
 %% Nueva variante con paso de UCI a R
 tau6=32;
 beta_qty = numThetas ; %RM % Ojo aqui con el n�mero de betas
+%beta_qty = 15 ; 
+%nTau = 2;
+%nBetas = beta_qty;
+%% Gamma para variante donde los UCI van directamente en el target
+%all_gammasU = ones(GammasUCI_qty,1)*beta*0.1/2 ;
+%all_gammasU = ones(beta_qty,1)*beta ; %Mismo n�mero de betas en gammas Uci (experimental) 
 a=a_test;
 %all_gammasU = beta*0.001 ; %Mismo n�mero de betas en gammas Uci (experimental) 
 %% Este valor es determinante en los resultados del experimento - considerar su estudio en 
@@ -72,10 +78,15 @@ GammasUCI_qty = nGammas;
 % all_gammasU = beta*0.001;
 %% Estos valores funcionan excelente, tomar m�nimo 70 iteraciones (gR)
 all_gammasU = ones(GammasUCI_qty,1)*all_test_gammasU;%0.004 ; %Mismo n�mero de betas en gammas Uci (experimental)
+%all_gammasU = ones(GammasUCI_qty,1)*beta/10; 
 %% Nueva variante con gamma de UCI a R
 %all_gammasR = 5*0.1*all_gammasU;
 all_gammasR = ones(GammasUCI_qty,1)*all_test_gammasR;
 k=1e-3;
+%gamma=0.01;
+%alfaS=0.01;
+%deltaS=0.01;
+%all_gammasR = all_gammasU/2;
 all_gammas = gamma*ones(nGammas,1); %(IR)
 all_alfaS = alfaS*ones(nGammas,1); %(SR)
 all_deltaS = deltaS*ones(nGammas,1);%(RS)

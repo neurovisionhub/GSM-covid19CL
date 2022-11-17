@@ -52,7 +52,7 @@ primero = 0
 %primero = 0
 % example 2
 maxiters = 10;
-numThetas=  10;   %% Para AG usar un valor bajo para 
+numThetas=  5;   %% Para AG usar un valor bajo para 
 % realizar primera aproximación factible, luego al usal el optimizadro no lineal aumentar su valor para conseguir mejor precisión
 nCiclos =1% veces que se reduce beta a la mitad
 primera_ola=0
@@ -65,8 +65,7 @@ nF=0;
 diaFin=diaFinEstudio-nF;
 ventana_general=60;
 
-%%Ventana movil mayor .... cuando hay cambios abruptos en la curva
-
+%%Ventana mov
 %% data_times_processing: analitics and processing of the data covid oficial and not covid oficial repositories
 format shortg
 variante_sier = 1; % para uso de funciones combinadas (diaria infectado % acum(R,U+F) )
