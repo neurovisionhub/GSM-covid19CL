@@ -2,6 +2,7 @@ function [c, ceq] = simple_constraint(p_op)
 %SIMPLE_CONSTRAINT Nonlinear inequality constraints.
 
 
+
 %    x(1)*x(2) + x(1) - x(2) + 1.5 <= 0  (nonlinear constraint)
 %    10 - x(1)*x(2) <= 0                 (nonlinear constraint)
 %    0 <= x(1) <= 1                      (bound)
@@ -58,7 +59,15 @@ function [c, ceq] = simple_constraint(p_op)
 %      -p_op(1) + p_op(6);
 %      -p_op(6) + p_op(5)]; % recuperados UCI < ingresos UCI
 
-c = [-p_op(1) + p_op(3); 
-    -p_op(1) + p_op(4)]; 
+c = [-p_op(1) + p_op(6)]; 
+%c = [-p_op(1) + 0.001;]; 
 % No nonlinear equality constraints:
 ceq = [];
+
+%Además se pueden utilizar condiciones no lineales en el optimizador para
+%así buscar con mayor presición el espacio factible de parámetros, tales
+%como: (i) que las tasas de infectados es mayor que la tasa de ingreso a
+%UCI; (ii) que las tasas de ingreso a UCI es mayor que la tasa de egreso a
+%UCI; entre otras máa que se quiesieran agregar.
+% 
+

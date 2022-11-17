@@ -19,7 +19,7 @@ options = optimset('UseParallel',true,'Algorithm','trust-region-reflective','Dis
 %options = optimset('Algorithm','trust-region-reflective','Display','iter','MaxIter',1000,'TolFun',1e-17,'TolX',9.7e-08,'MaxFunEvals',20000);
 %% Inicializaci�n de cotas para los par�metros
 Lb=ones(size(p0))*1e-5;
-Ub=360*ones(size(p0));
+Ub=1*ones(size(p0));
 %Ub=N*ones(size(p0));
 %% ** Seg�n informe conjunto China-OMS, tau1 var�a entre 1 y 14 d�as, con un promedio de 5-6 dias
 %% mientras que tau2 var�a entre 7 y 56 d�as, con un promedio de 14 d�as
@@ -156,19 +156,22 @@ time_range = tc;
 Data=xd(tc,:);
 x0=[tc' Data];
 
-% if acumulada == 2
-% 
-% tc_a=diaInicio-1:diaFin-1;
-% Data=xd(tc_a,:);
-% 
-% 
-% Data(:,1)= diferenciasDiarias(Data(:,1)');
-% Data(:,2)= diferenciasDiarias(Data(:,2)');
-% Data(:,3)= diferenciasDiarias(Data(:,3)');
-% x0=[tc' Data];
-% 
-% end
+if acumulada == 2
 
+tc_a=diaInicio-1:diaFin-1;
+Data=xd(tc_a,:);
+
+
+Data(:,1)= diferenciasDiarias(Data(:,1)');
+Data(:,2)= diferenciasDiarias(Data(:,2)');
+Data(:,3)= diferenciasDiarias(Data(:,3)');
+x0=[tc' Data];
+
+end
+
+v_ini = [N-xd(diaInicio,1)-xd(diaInicio,2)-xd(diaInicio,3);
+    Data(1,1);Data(1,2);Data(1,3)];
+vectorInicial = v_ini;
 
 tc_t=1:size(x0,1);
 
@@ -192,7 +195,7 @@ contF
     %[p,r,~,~,~,~,jac]=lsqnonlin(@(p) ESIR_rel(p,tc,Data,x0,N),p0,Lb,Ub,options);
 %disp(p')
 %disp(x0);
-   [p,r,~,~,~,~,jac]=lsqnonlin(@(p) ESIR_rel_all(p,tc_t,Data,x0,N),p0,Lb,Ub,options);
+   [p,r,~,~,~,~,jac]=lsqnonlin(@(p) ESIR_rel_all(p,tc_t,Data,x0,N,v_ini),p0,Lb,Ub,options);
    %  [p,r,~,~,~,~,jac]=fmincon(@(p) ESIR_rel(p,tc,Data,x0,N),p0,Lb,Ub,options);
     p0=p;
     r0=r;

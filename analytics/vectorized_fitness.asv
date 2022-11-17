@@ -1,4 +1,4 @@
-function E = vectorized_fitness(p_op,p,N,acumulada,test_data_covid,diaInicio,diaFinEstudio,numThetas,Data)
+function E = vectorized_fitness(p_op,p,N,acumulada,test_data_covid,diaInicio,diaFinEstudio,numThetas,Data,v_ini)
 %PARAMETERIZED_FITNESS fitness function for GA
 %tc=diaInicio:diaFinEstudio;
 nGammas=numThetas;
@@ -62,11 +62,19 @@ p0=[a;k;aC;all_taus;all_gammas;all_alfaS;all_deltaS;all_gammasU;all_betas;all_ga
 % tau4=p(13);
 % sol = dde23('sir_ret_fun_vac',[tau1,tau2,tau3,tau4],'sir_ret_hist',[tg(1),tg(end)],[],p,N,x0);
 
-vectorInicial = [N-Data(1,1)-Data(1,2)-Data(1,3);Data(1,1);Data(1,2);Data(1,3)];
+if isnan(p0)
+
+    
+
+end
+
+
+% vectorInicial = [N-Data(1,1)-Data(1,2)-Data(1,3);Data(1,1);Data(1,2);Data(1,3)];
 %vectorInicial = [N-Data(1,1)-Data(1,2);Data(1,1);Data(1,2);Data(1,3)];
+vectorInicial = v_ini;
 %disp('en vectorized fittness')
 %pause
-options = ddeset('RelTol',1e-3,'AbsTol',1e-6,...
+options = ddeset('RelTol',1e-3,'AbsTol',1e-4,...
                  'InitialY',vectorInicial);
 
 % options = ddeset('RelTol',1e-6,'AbsTol',1e-16,...
@@ -74,6 +82,9 @@ options = ddeset('RelTol',1e-3,'AbsTol',1e-6,...
 %% Para versión con UCI
 sol = dde23('sir_ret_fun_vac_all',all_taus,'sir_ret_hist',[tg(1),tg(end)],options,p0,N,x0);
 y = deval(sol,tg);
+
+%y(isnan(y))=1e+20;
+
 retroceso=0;
 tg_test = tg(1:end-retroceso,1);
 % probar acá solo aproximar la integral hasta 10 días antes.
@@ -144,36 +155,74 @@ test_data_covid_estimate = y';
 
 ss = ( test_data_covid_estimate(:,1)-test_data_covid(:,4) )./(test_data_covid_estimate(:,1));
 ii = ( test_data_covid_estimate(:,2)-test_data_covid(:,1) )./(test_data_covid_estimate(:,2));
+rr = ( test_data_covid_estimate(:,3)-test_data_covid(:,2) )./(test_data_covid_estimate(:,3));
 uu = ( test_data_covid_estimate(:,4)-test_data_covid(:,3) )./(test_data_covid_estimate(:,4));
+
+%% Cali
+% Para la calibración se pueden utilizar como funciones objetivo 
+% el error del ajuste de I, R o U, donde su uso combinado permite obtener
+% parametros iniciales dentro del espacio factible de valores de
+% parametros . % De utilizar solo un componente de error aumenta la probabilidad de caer
+% en minimos locales, por tanto los ajustes del modelo dependen fuertemente
+% de los datos disponibles, su consitencia y calidad. En particular
+% utilizamos como funcion objetivo utilizamos el error promedio relativo entre las
+% estimaciones y los datos oficiales del COVID.
+
+% En caso que el optimizador con algoritmos genetico no encuentre valores
+% iniciales adecuados, o le tome mucho tiempo optimizar, se sgiere aumentar
+% levemente el numero de tramos TT, ya que una causa común es la aparición
+% de valroes NAN al procesar dd23 con runge Kutta y eso causa que el solver
+% en su proceso iterativo producta divergencia que es acarrerada hacia
+% todos los puntos posteriores a la aparición de NAN
+% adecuados
 
 
 %  y_t = deval(sol,tg_test);
 %  test_data_covid_estimate_t=y_t'; 
 
 
-ss_t = ( test_data_covid_estimate(:,1)-test_data_covid(:,4) )./(test_data_covid(:,4) );
-ii_t = ( test_data_covid_estimate(:,2)-test_data_covid(:,1) )./(test_data_covid(:,1) );
-uu_t = ( test_data_covid_estimate(:,4)-test_data_covid(:,3) )./(test_data_covid(:,3) );
+% ss_t = ( test_data_covid_estimate(:,1)-test_data_covid(:,4) )./(test_data_covid(:,4) );
+% ii_t = ( test_data_covid_estimate(:,2)-test_data_covid(:,1) )./(test_data_covid(:,1) );
+% uu_t = ( test_data_covid_estimate(:,4)-test_data_covid(:,3) )./(test_data_covid(:,3) );
+% rr_t = ( test_data_covid_estimate(:,3)-test_data_covid(:,2) )./(test_data_covid(:,2));
+% tx_dt_t = [ ss_t; ii_t ;rr_t; uu_t ]; %recordar probar el solo ss
+% sum_nan_t = sum(isnan(tx_dt_t));
+
+%% Es necesario aclarara cuales tasas son relativas a la poblacion
+%% y cuales tasas son relativas a cada sub.grupo de la población (esta es)
+%% con estas reglas logicas establecer la condiciones a traves de innecuaciones
+
+%% Cuando se busca en el espacio de suseptibles, el
 %ee = ( test_data_covid_estimate(:,3)-test_data_covid(:,3) )./(test_data_covid_estimate(:,3));
-tx_dt_t = [  ii_t ; uu_t ]; %recordar probar el solo ss
-sum_nan_t = sum(isnan(tx_dt_t));
+tx_dt = [ ii ; rr; uu; ]; % creimiento de uci, decrecimiento de I
+ 
+tx_dt = [ss; ii; rr; uu; ]; % 
 
-
-
-%ee = ( test_data_covid_estimate(:,3)-test_data_covid(:,3) )./(test_data_covid_estimate(:,3));
-tx_dt = [ ii ; uu ]; %recordar probar el solo ss
- %tx_dt = [ uu ];
+%tx_dt = [ uu ];
 %tx_dt = [ ii ];
 %tx_dt = [ ii ; uu ]; %recordar probar el solo ss
-%tx_dt = [ ss];%(1:end-10) ];
+%tx_dt = [ ss];%(1:end-10) ];  FUNCIONA BIEN COMO PARAMETRO GENERAL Y
+%BUSQEUDA RAPIDA, pero aumenta siginificativamente el numero de infectados
+%reales, ya que se ajusta los datos a valores cercanos de la poblacion
+%maxima, lo interesante es qeu se optimiza bastante bien el caso de
+%infectados y UCI - uno de los mejores resultados hasta ahora ...
+%% sera probable que es más cercano de los maximos posibles? y esto implica 
+% que la estimacion la realiza por sobre toda la poblacion
+
+%% 
  tx_0 = tx_dt;
 
 sum_nan = sum(isnan(tx_dt));
-tx_dt(isnan(tx_dt))=10e+8;
-tx_dt(tx_dt<0)=10e+8;
-
-tx_dt_t(isnan(tx_dt_t))=10e+8;
-%tx_dt_t(tx_dt_t<0)=10e+8;
+%tx_dt(isnan(tx_dt))=10e+8;
+%tx_dt(tx_dt<0)=10e+8;
+%
+ 
+% if sum_nan == 0
+%    tx_dt(tx_dt<0)=10e+6;
+% end
+% 
+% tx_dt_t(isnan(tx_dt_t))=10e+8;
+% tx_dt_t(tx_dt_t<0)=10e+8;
 
 
 E_nan=mean(tx_dt)+sum_nan*10e+6
@@ -196,8 +245,14 @@ E=  w_score
 E= E_nan
 disp(w_score)
 sum_nan
-sum_nan_t
-E = mean(tx_dt)
-E = mean(tx_dt_t)
+% sum_nan_t
+maxi = max(abs(tx_dt))
+mini = min(abs(tx_dt))
+E = mean(abs(tx_dt))
+% if isnan(E)
+% 
+%     E = 10e+6
+% end
+%E = mean(tx_dt_t)
 
 %end

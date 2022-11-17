@@ -31,12 +31,16 @@ tg=(1:max(size(Data)))';
 vectorInicial = [N-Data(1,1)-Data(1,2)-Data(1,3);Data(1,1);Data(1,2);Data(1,3)]
 %vectorInicial = [N-Data(1,1)-Data(1,2);Data(1,1);Data(1,2);Data(1,3)];
 
-options = ddeset('RelTol',1e-8,'AbsTol',1e-14,...
-                 'InitialY',vectorInicial,'InitialStep',1e-4);
+v_ini = [N-xd(diaInicio,1)-xd(diaInicio,2)-xd(diaInicio,3);
+    Data(1,1);Data(1,2);Data(1,3)];
+vectorInicial = v_ini;
+
+options = ddeset('RelTol',1e-2,'AbsTol',1e-4,...
+                 'InitialY',vectorInicial,'NormControl','on','InitialStep',1e-1);
 
 
 %% Para versión con UCI
-sol = dde23('sir_ret_fun_vac_all',all_taus,'sir_ret_hist',[tg(1),tg(end)],[],p,N,x0);
+sol = dde23('sir_ret_fun_vac_all',all_taus,'sir_ret_hist',[tg(1),tg(end)],options,p,N,x0);
 y = deval(sol,tg);
 %% Cálculo de los infectados acumulados
 Inf = y(2,:);

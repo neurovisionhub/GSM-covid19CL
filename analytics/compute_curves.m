@@ -27,6 +27,12 @@ tc=tg;
 % tau4=p(13);
 % sol = dde23('sir_ret_fun_vac',[tau1,tau2,tau3,tau4],'sir_ret_hist',[tg(1),tg(end)],[],p,N,x0);
 %% Para versión con UCI
+v_ini = [N-xd(diaInicio,1)-xd(diaInicio,2)-xd(diaInicio,3);
+    Data(1,1);Data(1,2);Data(1,3)];
+vectorInicial = v_ini;
+
+options = ddeset('RelTol',1e-3,'AbsTol',1e-6,...
+                 'InitialY',vectorInicial,'InitialStep',1e-1);
 sol = dde23('sir_ret_fun_vac_all',all_taus,'sir_ret_hist',[tg(1),tg(end)],[],p,N,x0);
 y = deval(sol,tg);
 %% Cálculo de los infectados acumulados

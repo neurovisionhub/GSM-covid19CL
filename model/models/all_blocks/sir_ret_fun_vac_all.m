@@ -2,7 +2,7 @@
 function v = sir_ret_fun_vac_all(t,y,Z,p,N,x0)
 %global time_range 
 %global nBetas
-
+persistent count
 % global all_betas
 % global all_gammasU
 % global all_gammasR
@@ -13,10 +13,10 @@ nTau = 6;
 nGammas = (size(p,1)-9)/6;
 %Z
 % t = ceil(t);
-
-% if mod(t,1)==0
- %t
-% end
+%t
+ if mod(t,100)==0
+ t
+ end
 ylag1 = Z(:,1);
 ylag2 = Z(:,2);
 ylag3 = Z(:,3);
@@ -127,6 +127,10 @@ end
 
 %v = zeros(3,1);
 v = zeros(4,1);
+
+
+
+
 % v(1) = - beta*y(1)*ylag1(2)/N - alfaS*ylag3(1) + deltaS*ylag4(1);
 % v(2) = beta*y(1)*ylag1(2)/N - gamma*ylag2(2);
 % v(3) = gamma*ylag2(2)+alfaS*ylag3(1)-deltaS*ylag4(1);
@@ -147,6 +151,9 @@ v(2,1) = beta*y(1)*ylag1(2)/N - gamma*ylag2(2) - gammasUCI*ylag5(2) +0.001;%*( 1
 %v(2) = beta*y(1)*ylag1(2)/N - gamma*ylag2(2); %di
 v(3,1) = gamma*ylag2(2)+alfaS*ylag3(1)-deltaS*ylag4(1)+gammasR*ylag6(4)   +0.001;%dr
 v(4,1) = gammasUCI*ylag5(2)-gammasR*ylag6(4)  +0.001; %du
+
+%v(isnan(v))=1e+100; %% para que no se bloquee el solver y busque otro punto
+
 % 
 %    y(1)
 % 
@@ -154,12 +161,35 @@ v(4,1) = gammasUCI*ylag5(2)-gammasR*ylag6(4)  +0.001; %du
 %  ylag3(1)
 %     ylag4(1)
 if(isnan(v)|v(1,1)==inf)
- 
+ format shortg
     t
-  %  beta
-%     alfaS
-%     deltaS
-  %  pause
+%     beta
+%      alfaS
+%      deltaS
+%      all_betas
+%      p
+  %   range(end)
+%v
+    [beta,gamma,deltaS,alfaS,gammasUCI,gammasR]
+v
+  %  pause(0.001)
+
+
+if isempty(count)
+  count = 0;
+end
+count = count + 1
+if mod(count,1000) == 0
+  count = 0;
+  t
+  disp('en persistencia')
+  count
+ % pause
+end
+
+
+%pause
+
 end
 % v(1,1) = - beta*log10(gammasUCI*ylag5(2)+1)*(1+gammasR)-alfaS*ylag3(1)+deltaS*ylag4(1)+ 1e-5;
 % %v(2,1) = beta*y(1)*ylag1(2)/N - gamma*ylag2(2) - gammasUCI*ylag5(2)  + 1e-5;%*( 1 + (a-1)/( 1+exp( -k*(ylag5(2)-aC) ) ) ); Di

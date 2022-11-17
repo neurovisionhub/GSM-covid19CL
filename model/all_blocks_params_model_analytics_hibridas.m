@@ -24,6 +24,8 @@ time_range = tc;
 Data=xd(tc,:);
 x0=[tc' Data];
 
+
+ 
 if acumulada == 2
 
 tc_a=diaInicio-1:diaFin-1;
@@ -36,9 +38,12 @@ Data(:,3)= diferenciasDiarias(Data(:,3)');
 x0=[tc' Data];
 figure
 plot(Data(:,1:3))
+
+
 end
 
-
+v_ini = [N-xd(diaInicio,1)-xd(diaInicio,2)-xd(diaInicio,3);
+    Data(1,1);Data(1,2);Data(1,3)];
 
 % % % %==========================================================================
 % % % % ----Valores iniciales propuesto para los parametros beta y gamma---
