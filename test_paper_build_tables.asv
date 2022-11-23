@@ -41,7 +41,7 @@ percentPrunning = 1 %  esta versión falla con el 1  > values > 0 is percentage 
 %acumulada =1;
 
 % 2 Aproximacion sobre diferencias diarias usando la data de curva acumulada
-acumulada =1;
+%acumulada =2;
 
 
 % 0 Aproximacion del dato de origen 
@@ -109,7 +109,7 @@ minThetas = 5;
 % 
 % end
 
-numThetas = 5
+numThetas = 20
   %% Para AG usar un valor bajo para 
 
 
@@ -200,8 +200,16 @@ tau_4_op_lb_lb =[1,240]; % obs: los taus estimados < periodo (dias de la data)
 % tau_4_op = mean(tau_4_op_lb_lb);
 % 
 
+%% mientras mas al inicio de la pandemia este valor es más bajo, a 
+%% medida que vanza se puede aumentar para asegurar convergencia
+if acumulada == 2
+    
+    factor_inicial=0.00001 %(seleccionados: 0.0125,0.002125)
+else
+    factor_inicial=0.0005 %(seleccionados: 0.0125,0.002125)
+end
 
-factor_inicial=0.0001 %(seleccionados: 0.0125,0.002125)
+
 beta = max(beta_lb_up_op)*factor_inicial; %tasa de contato (fabrizzio en algunas partes indica contacto en otra transmision) -- tasa de transmisión! .
 gamma = max(gamma_lb_up_op)*factor_inicial;% % (1/gamma) tiempo de infección promedio - tasa de remosión media
 alfaS=max(alfaS_lb_up_op)*factor_inicial;%0.00194; 

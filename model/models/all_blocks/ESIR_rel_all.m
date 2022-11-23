@@ -70,9 +70,9 @@ alfaMean = mean(alfa);
 %% Error relativo al modelo considera
 %E= [  ( alfa.*y(2,:)-xd(:,1)' )./( alfa.*y(2,:)) +numRel',  ( y(4,:)-xd(:,3)' )./y(4,:) ];
 %E= abs([  ( alfa.*y(2,:)-xd(:,1)' )./( alfa.*y(2,:))   ( y(4,:)-xd(:,3)' )./y(4,:) ]);
-E= [  ( alfa.*y(2,:)-xd(:,1)' )./( alfa.*y(2,:))   ( y(4,:)-xd(:,3)' )./y(4,:) ]; %para curva diaria acumulada=2
-%E= [ ( alfa.*y(2,:)-xd(:,1)' )./(alfa.*y(2,:)) ( y(4,:)-xd(:,3)' )./y(4,:) ( alfa.*y(3,:)-xd(:,2)' )./(alfa.*y(3,:)) ]; %acumulada=1
-%%%E= [ ( alfa.*y(2,:)-xd(:,1)' )./(alfa.*y(2,:)) ( y(4,:)-xd(:,3)' )./y(4,:) ( y(3,:)-xd(:,2)' )./(y(3,:)) ]; %acumulada=1
+%%%E= [  ( alfa.*y(2,:)-xd(:,1)' )./( alfa.*y(2,:))   ( y(4,:)-xd(:,3)' )./y(4,:) ]; %para curva diaria acumulada=2
+%%E= [ ( alfa.*y(2,:)-xd(:,1)' )./(alfa.*y(2,:)) ( y(4,:)-xd(:,3)' )./y(4,:) ( alfa.*y(3,:)-xd(:,2)' )./(alfa.*y(3,:)) ]; %acumulada=1
+E= [ ( alfa.*y(2,:)-xd(:,1)' )./(alfa.*y(2,:)) ( y(4,:)-xd(:,3)' )./y(4,:) ( y(3,:)-xd(:,2)' )./(y(3,:)) ]; %acumulada=1
 %E= [ (y(1,:)-xd(:,5)' )./y(1,:)     ( alfa.*y(2,:)-xd(:,1)' )./(alfa.*y(2,:)) ( y(4,:)-xd(:,3)' )./y(4,:) ( y(3,:)-xd(:,2)' )./(y(3,:)) ]; %acumulada=1
 %E= [ (y(1,:)-xd(:,5)' )./y(1,:)     ( alfa.*y(2,:)-xd(:,1)' )./(alfa.*y(2,:)) ( y(4,:)-xd(:,3)' )./y(4,:) ( alfa.*y(3,:)-xd(:,2)' )./(alfa.*y(3,:)) ]; %acumulada=1
 
@@ -90,7 +90,7 @@ plot(xd(:,1:3));
 %plot(y(1,:)); % S
 plot(alfa.*y(2,:),'-'); % I
 plot(y(2,:),'--'); % I
-%plot(y(3,:),'--'); % R
+plot(y(3,:),'.'); % R
 plot(y(4,:),'-'); % U
 t = datetime;
 t.Format = 'yyyymmddHHMMSS';

@@ -50,7 +50,8 @@ if acumulada == 1 || acumulada == 0
   %  Idays = [Idays,Idays(end)];
     Idays_target = diferenciasDiarias(test_data_covid(:,1)');
     fr=sigmoide_all(p,Idays,nTau);
-    if acumulada == 0
+    if acumulada == 0 || acumulada == 1
+
     fr=sigmoide_all(p,Inf_tmp,nTau);
     end
   %  fr = fr; %% ajuste relevante

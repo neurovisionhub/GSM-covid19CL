@@ -27,22 +27,32 @@ x0=[tc' Data];
  
 if acumulada == 2 
 
-tc_a=diaInicio-1:diaFin-1;
-tc_a_ini=1:diaFin;
-Data=xd(tc_a,:);
-Data_of_ini = xd(tc_a_ini,:);
-Data_of_ini_diff_i = diferenciasDiarias(Data_of_ini(:,1)');
+tc_a=diaInicio-1:diaFin;
+tc_b=diaInicio:diaFin;
 
-Data(:,1)= diferenciasDiarias(Data(:,1)');
-Data(:,2)= diferenciasDiarias(Data(:,2)');
-Data(:,3)= diferenciasDiarias(Data(:,3)');
+tc_a_ini=1:diaFin;
+Datatmp=xd(tc_a,:);
+Data_of_ini = xd(tc_a_ini,:);
+Data_of_ini_diff_i = diferenciasDiarias(Data_of_ini(:,1)'); % ok
+
+Data(:,1)= diff(Datatmp(:,1)');
+Data(:,2)= diff(Datatmp(:,2)');
+Data(:,3)= diff(Datatmp(:,3)');
+
+
 x0=[tc' Data];
 figure
 plot(Data(:,1:3))
 mean_data_ini = mean(Data_of_ini_diff_i);
-else
-    mean_data_ini=mean(xd(1:diaFin,1));
-    max_data_ini = max(xd(1:end,1))
+max_data_ini = max(Data_of_ini_diff_i);
+end
+
+
+if acumulada ==0 % funciona relativamnte bien
+%     mean_data_ini=mean(xd(1:diaFin,1));
+%     max_data_ini = max(xd(1:diaFin,1))
+    mean_data_ini=mean(xd(:,1));
+    max_data_ini = max(xd(:,1))
 end
 
 
@@ -60,8 +70,35 @@ Data_of_ini_diff_i = diferenciasDiarias(Data_of_ini(:,1)');
 % x0=[tc' Data];
 % figure
 % plot(Data(:,1:3))
-max_data_ini = max(Data_of_ini_diff_i);
-mean_data_ini = mean(Data_of_ini_diff_i);
+%% Aca se puede ajustar el valor en diff, donde esta
+%la posicion id
+% max_data_ini = max(Data_of_ini_diff_i);
+% mean_data_ini = mean(Data_of_ini_diff_i);
+
+   mean_data_ini=mean(xd(1:diaFin,1));
+   max_data_ini = max(xd(1:diaFin,1)); 
+   median_data_ini= median(xd(1:diaFin,1));
+if maxGlobal==1
+
+%% El valor maximo o bien diferentes valores en la media y maximo
+%% se pueden utilizar para efectos de simulación ya que en el modelo de
+%% ajuste es quien define el comportomaineto de la curva y el optimizador
+    max_data_ini = max(xd(:,1));
+end
+%% Inlcuso estos valores se pueden utilizar para aumentar levemente en porcentajes los valores hasta la fecha
+%% y de esta manera obtener los valores de parametros en diferentes escenarios
+if meanGlobal==1
+    mean_data_ini= mean(xd(:,1));
+end
+%% Es más la proyección de la primera ola y en especifico el valor de y_Real de olas previas es el valor inicial en la
+%% aproximacion de siguientes olas... asi que profundizar en esto!!!!!!!!
+
+if mediana==1
+    mean_data_ini=median_data_ini;
+
+
+end
+
 end
 
 
@@ -88,8 +125,8 @@ a=a_test;
 i=find(tc==tc(end));
 indice=tc(1,end);
 %aC=mean(Data(1:i)); % ---- OJO ----
-aC=mean(xd(1:diaFin,1));
-%aC=mean(Data(:,1));
+%aC=mean(xd(1:diaFin,1));
+aC=mean_data_ini;
 %aC=mean_data_ini;
 %aC=mean(xd(1:indice,1));
 %aC=mean(xd(:,1));
@@ -123,16 +160,16 @@ else
 p0=pUltimo;
 end
 
-d_t_tmp = diaFin - diaInicio;
-sampling_t = ceil(1:d_t_tmp/(nGammas-1):d_t_tmp);
-
-size_t_int =  [sampling_t,size(x0,1)]';
-S_t = N-x0(1,1)-x0(1,2)-x0(1,3);
-
-S_t = N-x0(size_t_int,2)-x0(size_t_int,3)-x0(size_t_int,4);
-RE_SIR = (all_betas.*S_t)./(all_gammas*N);
-t_taus = all_taus;
-R_I = x0(size_t_int,2);
+% d_t_tmp = diaFin - diaInicio;
+% sampling_t = ceil(1:d_t_tmp/(nGammas-1):d_t_tmp);
+% 
+% size_t_int =  [sampling_t,size(x0,1)]';
+% S_t = N-x0(1,1)-x0(1,2)-x0(1,3);
+% 
+% S_t = N-x0(size_t_int,2)-x0(size_t_int,3)-x0(size_t_int,4);
+% RE_SIR = (all_betas.*S_t)./(all_gammas*N);
+% t_taus = all_taus;
+% R_I = x0(size_t_int,2);
 %compute_curves
 % all_betas/100
 % 1./all_gammas

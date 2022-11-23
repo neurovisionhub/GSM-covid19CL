@@ -1,4 +1,4 @@
-global nTau contF acumulada
+global nTau contF 
 % delete(gcp('nocreate'))
 % parpool("Processes",20)
 
@@ -44,11 +44,20 @@ Lb(pos_k)=1e-5; Ub(pos_k)=1; %k
 
 
 Lb(pos_aC)=1e-5; 
-if acumulada == 1 | acumulada == 0
-Ub(pos_aC)=max_data_ini;%max(Data(:,1)); %aC
-else
-    Ub(pos_aC)=max(Data(:,1)); %aC
+if acumulada == 1 
+    Ub(pos_aC)=max_data_ini;%max(Data(:,1)); %aC
 end
+
+if acumulada == 2 
+    Ub(pos_aC)=max_data_ini; %aC
+end
+
+
+if  acumulada == 0
+    Ub(pos_aC)=max_data_ini;%max(Data(:,1)); %aC
+end
+
+
 %Lb(pos_aC)=1; 
 
 %% Observacion los tiempos de tau grandes afectan el calculo de derivadas y la estabilidad
@@ -115,19 +124,29 @@ nGammas=numThetas;
 %tc=t(1):t(end);
 time_range = tc;
 %% Los datos son s�lo los infectados activos diarios
+if acumulada ~= 2
 Data=xd(tc,:);
 x0=[tc' Data];
-
-if acumulada == 2
-
-tc_a=diaInicio-1:diaFin-1;
-Data=xd(tc_a,:);
-Data(:,1)= diferenciasDiarias(Data(:,1)');
-Data(:,2)= diferenciasDiarias(Data(:,2)');
-Data(:,3)= diferenciasDiarias(Data(:,3)');
-x0=[tc' Data];
-
 end
+% 
+% if acumulada == 2
+% %original
+% % % % tc_a=diaInicio-1:diaFin-1;
+% % % % Data=xd(tc_a,:);
+% % % % Data(:,1)= diferenciasDiarias(Data(:,1)');
+% % % % Data(:,2)= diferenciasDiarias(Data(:,2)');
+% % % % Data(:,3)= diferenciasDiarias(Data(:,3)');
+% 
+% 
+% % tc_a=diaInicio-1:diaFin;
+% % Data=xd(tc_a,:);
+% % Data(:,1)= diferenciasDiarias(Data(:,1)');
+% % Data(:,2)= diferenciasDiarias(Data(:,2)');
+% % Data(:,3)= diferenciasDiarias(Data(:,3)');
+% % 
+% % x0=[tc' Data];
+% 
+% end
 
 v_ini = [N-xd(diaInicio,1)-xd(diaInicio,2)-xd(diaInicio,3);
     Data(1,1);Data(1,2);Data(1,3)];
