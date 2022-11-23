@@ -2,12 +2,14 @@
 clear
 global globalPais grafica_data ventana_general globalUCImovil flagpause numThetas
 grafica_data=0 
-globalPais = 0;
+globalPais = 1;
+%global diaInicio diaFin
 flagpause=0; %for pause on visualization
 % globalUCImovil = 1 <- ingreso movil nacional chileno 
 globalUCImovil = 0; % si se utiliza ingreso movil se ajusta mejor el final de la curva desde el inicio de optimizacion 
-diaInicio = 50
-diaFinEstudio = 440
+diaInicio = 30
+diaFinEstudio = 960/2
+numThetas = 20
 ventana_general=31;
 matrix_results = [];
 regiones = {'Arica y Parinacota','Tarapacá','Antofagasta','Atacama','Coquimbo','Valparaíso','Metropolitana','O Higgins','Maule','Ñuble','Biobío','Araucanía','Los Ríos','Los Lagos','Aysén','Magallanes'};
@@ -18,22 +20,15 @@ size_regiones = size(regiones,2)
 Region = cell(size_regiones,1);
 total_days = [];
 
-% error_aIC_pais_14days = 12; % 2.5e-06 (menor al 1% de error )
-% error_aRC_pais_14days = 7522; % 4.2e-3 (menor al 1% de error)
-% 
-
- % Ess=  mean(ss)
-% Eii=  mean(ii)
-% Err = mean(rr)
-% Euu=  mean(uu)
-
+matrix_resultados = [];
 
 acumulada = 1;
-maxGlobal = 0; % en acumulada 1
+maxGlobal =0 % en acumulada 1
 meanGlobal = 0; % en acumulada 1
 mediana = 0;
+
 test_paper_build_tables
-numThetas = 20
+
 
 errores = [Ess;Eii;Err;Euu];
 % taus_results % TAUS

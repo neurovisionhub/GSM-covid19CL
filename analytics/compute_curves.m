@@ -91,7 +91,7 @@ ii_fr = ( fr'.*test_data_covid_estimate(:,2)-test_data_covid(:,1) )./(fr'.*test_
 rr_fr = ( fr'.*test_data_covid_estimate(:,3)-test_data_covid(:,2) )./(fr'.*test_data_covid_estimate(:,3));
 
 ss = ( test_data_covid_estimate(:,1)-test_data_covid(:,4) )./(test_data_covid(:,1));
-ii = ( test_data_covid_estimate(:,2)-test_data_covid(:,1) )./(test_data_covid(:,2));
+ii = ( fr'.*test_data_covid_estimate(:,2)-test_data_covid(:,1) )./(test_data_covid(:,2));
 rr = ( test_data_covid_estimate(:,3)-test_data_covid(:,2) )./(test_data_covid(:,3));
 uu = ( test_data_covid_estimate(:,4)-test_data_covid(:,3) )./(test_data_covid(:,4));
 

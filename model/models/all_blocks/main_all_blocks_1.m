@@ -1,6 +1,6 @@
 global nTau contF 
-% delete(gcp('nocreate'))
-% parpool("Processes",20)
+%%%delete(gcp('nocreate'))
+%parpool("Processes",20)
 
 %% ** Script para Optimizaci�n por m�nimos cuadrados **
 %% Opciones para el solver de optimizaci�n

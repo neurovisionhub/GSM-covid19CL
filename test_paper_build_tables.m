@@ -12,6 +12,7 @@ addpath (genpath('fig_review/'))
 global numThetas grafica_data nCiclos ventana_general%maxiters option_model grafica_ajustes primero
 global traza nGammas globalPais globalUCImovil interpolacion cont grafica_data nCiclos
 global h Mv funEvals contF
+nGammas=numThetas;
 contF=1
 funEvals = 40000;
 Mv = struct('cdata', [], 'colormap', []);  %predeclare struct array
@@ -203,15 +204,26 @@ tau_4_op_lb_lb =[1,240]; % obs: los taus estimados < periodo (dias de la data)
 %% mientras mas al inicio de la pandemia este valor es más bajo, a 
 %% medida que vanza se puede aumentar para asegurar convergencia
 if acumulada == 2
-    if diaInicio < 200
-    factor_inicial=0.00001 %(seleccionados: 0.0125,0.002125)
+    if diaInicio < 300
+    factor_inicial=0.001 %(seleccionados: 0.0125,0.002125)
     else
     factor_inicial=0.00005
 
     end
-else % si se utilizan diferencias diarias
-    factor_inicial=0.0005 %(seleccionados: 0.0125,0.002125)
 end
+
+if acumulada == 1 || acumulada == 0
+    if diaInicio < 200
+    factor_inicial=0.0001 %(seleccionados: 0.0125,0.002125)
+    else
+    factor_inicial=0.00005
+    end
+
+    if diaFinEstudio - diaInicio > 600
+       factor_inicial=0.00005 %(seleccionados: 0.0125,0.002125)
+    end
+end
+
 
 
 beta = max(beta_lb_up_op)*factor_inicial; %tasa de contato (fabrizzio en algunas partes indica contacto en otra transmision) -- tasa de transmisión! .

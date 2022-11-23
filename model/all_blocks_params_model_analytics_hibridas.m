@@ -15,7 +15,7 @@ global numThetas nCiclos;
 nBetas=numThetas;
 %global globalPais interpolacion;
 %% Optimizaci�n se realiza con datos desde el 04 de marzo (hab�a 1 casos acumulado) hasta el 07 de sept
-global diaInicio diaFin
+%global diaInicio diaFin
 tc=diaInicio:diaFin;
 nGammas=numThetas;
 %tc=t(1):t(end);
@@ -92,17 +92,10 @@ if meanGlobal==1
 end
 %% Es más la proyección de la primera ola y en especifico el valor de y_Real de olas previas es el valor inicial en la
 %% aproximacion de siguientes olas... asi que profundizar en esto!!!!!!!!
-
 if mediana==1
     mean_data_ini=median_data_ini;
-
-
 end
-
 end
-
-
-
 
 
 v_ini = [N-xd(diaInicio,1)-xd(diaInicio,2)-xd(diaInicio,3);
