@@ -21,7 +21,7 @@ v_ini = [N-xd(diaInicio,1)-xd(diaInicio,2)-xd(diaInicio,3);
 vectorInicial = v_ini;
 
 options = ddeset('RelTol',1e-3,'AbsTol',1e-6,...
-                 'InitialY',vectorInicial,'InitialStep',1e-1);
+                 'InitialY',vectorInicial,'InitialStep',10);
 sol = dde23('sir_ret_fun_vac_all',all_taus,'sir_ret_hist',[tg(1),tg(end)],[],p,N,x0);
 y = deval(sol,tg);
 %% Cálculo de los infectados acumulados
@@ -43,13 +43,16 @@ test_data_covid = Data;
 test_data_covid_estimate = y'; 
 
 
-if acumulada == 1
+if acumulada == 1 || acumulada == 0
 
     Inf_tmp = y(2,:);
     Idays = diferenciasDiarias(Inf_tmp);
   %  Idays = [Idays,Idays(end)];
-
+    Idays_target = diferenciasDiarias(test_data_covid(:,1)');
     fr=sigmoide_all(p,Idays,nTau);
+    if acumulada == 0
+    fr=sigmoide_all(p,Inf_tmp,nTau);
+    end
   %  fr = fr; %% ajuste relevante
     InfR = fr.*Inf;
     f_tmp = cumsum(InfR);
@@ -58,6 +61,7 @@ else
 fr=sigmoide_all(p,y(2,:),nTau);
 %fr = fr; %% ajuste relevante
 InfR = fr.*Inf;
+
 end
 % %% Para la variante donde los UCI van en el target
 % gammasU= p(12:12+nGammas-1)'; %de posicion 4 a nTau
@@ -76,26 +80,69 @@ salida = [InfDa,InfR',UCIDa,UCI'];
 
 ss = ( test_data_covid_estimate(:,1)-test_data_covid(:,4) )./(test_data_covid_estimate(:,1));
 ii = ( test_data_covid_estimate(:,2)-test_data_covid(:,1) )./(test_data_covid_estimate(:,2));
-uu = ( test_data_covid_estimate(:,4)-test_data_covid(:,3) )./(test_data_covid_estimate(:,4));
 rr = ( test_data_covid_estimate(:,3)-test_data_covid(:,2) )./(test_data_covid_estimate(:,3));
-tx_dt = [ ss ; ii ; uu ];
+uu = ( test_data_covid_estimate(:,4)-test_data_covid(:,3) )./(test_data_covid_estimate(:,4));
+
+
+
+
+ii_fr = ( fr'.*test_data_covid_estimate(:,2)-test_data_covid(:,1) )./(fr'.*test_data_covid_estimate(:,2));
+rr_fr = ( fr'.*test_data_covid_estimate(:,3)-test_data_covid(:,2) )./(fr'.*test_data_covid_estimate(:,3));
+
+ss = ( test_data_covid_estimate(:,1)-test_data_covid(:,4) )./(test_data_covid(:,1));
+ii = ( test_data_covid_estimate(:,2)-test_data_covid(:,1) )./(test_data_covid(:,2));
+rr = ( test_data_covid_estimate(:,3)-test_data_covid(:,2) )./(test_data_covid(:,3));
+uu = ( test_data_covid_estimate(:,4)-test_data_covid(:,3) )./(test_data_covid(:,4));
+
+
+ii_fr = ( fr'.*test_data_covid_estimate(:,2)-test_data_covid(:,1) )./(fr'.*test_data_covid_estimate(:,2));
+rr_fr = ( fr'.*test_data_covid_estimate(:,3)-test_data_covid(:,2) )./(fr'.*test_data_covid_estimate(:,3));
+
+
+tx_dt = [ ss ; ii_fr; ii ; rr; uu ];
+tx_dt_g_y = [ ss , ii_fr, ii , rr, uu ];
+
+tx_dt_g_y0 = [ ss ,  ii , rr, uu ];
+figure;boxplot(tx_dt_g_y0);
+
+target_y = test_data_covid;
+output_y = test_data_covid_estimate;
+tx_dt_g_target = [ target_y(:,4) , target_y(:,1), target_y(:,2) , target_y(:,3)];
+tx_dt_g_output = [ output_y(:,1) , output_y(:,2), output_y(:,3) , output_y(:,4)];
+
+tx_dt_g_target = [ target_y(:,4) , target_y(:,1), target_y(:,2) , target_y(:,3)];
+tx_dt_g_output = [ output_y(:,1) , output_y(:,2), output_y(:,3) , output_y(:,4)];
+
+
+s_pares = [tx_dt_g_target(:,1),tx_dt_g_output(:,1)];
+
+figure
+plot(tx_dt_g_target)
+hold on
+plot(tx_dt_g_output)
+
+figure
+
 rmse_t=  sqrt(mse(tx_dt))
 E=  mean(tx_dt)
-Ess=  mean(ss)
-Eii=  mean(ii)
-Err = mean(rr)
-Euu=  mean(uu)
-if acumulada == 1
-UCIc = diff(UCI);
-UCIr = diff(UCIDa);
-Infac = diff(InfR);
-InfDar = diff(InfDa);
-Infc = diff(Inf);
-UCI = [UCIc,UCIc(1,end)];
-UCIDa = [UCIr',UCIr(1,end)];
-InfR = [Infac,Infac(1,end)];
-InfDa =[InfDar',InfDar(1,end)]; 
-Inf =[Infc,Infc(1,end)];
+Ess=  mean(abs(ss))
+Eii=  mean(abs(ii))
+Err = mean(abs(rr))
+Euu=  mean(abs(uu))
+Error_rr_fr=  mean(abs(rr_fr))
+Error_ii_fr=  mean(abs(ii_fr))
+
+if acumulada == 1 | acumulada == 0
+UCIc = diferenciasDiarias(UCI);
+UCIr = diferenciasDiarias(UCIDa');
+Infac = diferenciasDiarias(InfR);
+InfDar = diferenciasDiarias(InfDa');
+Infc = diferenciasDiarias(Inf);
+UCI =UCIc;% [UCIc,UCIc(1,end)];
+UCIDa =UCIr; %[UCIr',UCIr(1,end)];
+InfR =Infac; %[Infac,Infac(1,end)];
+InfDa =InfDar;%[InfDar',InfDar(1,end)]; 
+Inf =Infc;%[Infc,Infc(1,end)];
 else
 UCIc = UCI;
 UCIr = UCIDa;
@@ -115,7 +162,7 @@ plot(InfDar)
 
 
 
-if acumulada == 1
+if acumulada == 1 
 
 figure
 formatSpec = " -%d thetas";
@@ -174,7 +221,7 @@ titulo = region + str;
 %UCIDa=xd(tc+round(tau5),3);
 %% Gráficos
 %% Para muchos datos graficarlos sólo cada 6 días
-I=find( mod(tc,4)==0 );
+I=find( mod(tc,2)==0 );
 % I=[1 I length(tc)];
 % I=find( mod(tc,2)==0 );
 % I=[1 I];
@@ -185,6 +232,7 @@ subplot(121)
 plot(tg,InfR,'--k','LineWidth',2.3)
 hold on
 plot(tg,Inf,'r','LineWidth',0.7)
+%% rECORDAR ARREGLAR LO DEL PUNTO
 plot(texp,InfDa(I),'sb','MarkerEdgeColor','b',...
     'MarkerFaceColor',[0 0.4470 0.7410],'MarkerSize',5);
 maxdata=max(InfDa);
@@ -215,3 +263,5 @@ axis([tg(1)-2 tg(end)+2 0.01*min(minUCI,mindata) 1.05*max(maxdata,maxUCI)])
 lgd=legend('$UCI$ fitted','Data UCI');
 set(lgd,'Location','northwest','Interpreter','latex','FontSize',10)
 shg
+
+

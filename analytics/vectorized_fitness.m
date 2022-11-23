@@ -1,4 +1,4 @@
-function E = vectorized_fitness(p_op,p,N,acumulada,test_data_covid,diaInicio,diaFinEstudio,numThetas,Data,v_ini)
+function E = vectorized_fitness(p_op,p,N,acumulada,test_data_covid,diaInicio,diaFinEstudio,numThetas,mean_data_ini,v_ini)
 %PARAMETERIZED_FITNESS fitness function for GA
 %tc=diaInicio:diaFinEstudio;
 nGammas=numThetas;
@@ -28,8 +28,8 @@ beta_qty= numThetas;
 %i=find(tc==tc(end));
 indice=tc(1,end);
 %aC=mean(Data(1:i)); % ---- OJO ----
-aC=mean(test_data_covid(:,1));
-%aC=mean(xd(1:indice,1));
+%aC=mean(test_data_covid(:,1));
+aC=mean_data_ini;%mean(xd(1:indice,2));
 %aC=mean(xd(:,1));
 % k=1e-3;
 % alfaS=0.00194; % 0.194 funcionan
@@ -73,10 +73,10 @@ end
 % vectorInicial = [N-Data(1,1)-Data(1,2)-Data(1,3);Data(1,1);Data(1,2);Data(1,3)];
 %vectorInicial = [N-Data(1,1)-Data(1,2);Data(1,1);Data(1,2);Data(1,3)];
 vectorInicial = v_ini;
-%disp('en vectorized fittness')
+%disp('en vectorized fittness'),'MaxStep',0.1'NormControl','on'
 %pause
 options = ddeset('RelTol',1e-2,'AbsTol',1e-4,...
-                 'InitialY',vectorInicial,'NormControl','on','InitialStep',5);
+                 'InitialY',vectorInicial,'InitialStep',100);
 %% probar un paso mayor saltandose dias, esto podria acelerar el proceso , perdiendo un poco de presicion
 
 % options = ddeset('RelTol',1e-6,'AbsTol',1e-16,...
@@ -85,7 +85,7 @@ options = ddeset('RelTol',1e-2,'AbsTol',1e-4,...
 sol = dde23('sir_ret_fun_vac_all',all_taus,'sir_ret_hist',[tg(1),tg(end)],options,p0,N,x0);
 y = deval(sol,tg);
 
-%y(isnan(y))=1e+20;
+%y(isnan(y))=1e+20; % para castigar resultados NAN, pero el problema que los nan se producen en el solver y alli se cuelga
 
 retroceso=0;
 tg_test = tg(1:end-retroceso,1);
@@ -122,10 +122,10 @@ Inf_tmp=0;
 % test_data_covid_estimate = y'; 
 % 
 
-if acumulada == 1
+if acumulada == 1 || acumulada == 0
     Inf_tmp = y(2,:);
     Idays = diferenciasDiarias(Inf_tmp);
-    Idays = diferenciasDiarias(Inf_tmp);
+    %Idays = diferenciasDiarias(Inf_tmp);
     fr=sigmoide_all(p0,Idays,nTau);
     %fr = ceil(fr); %% ajuste relevante
     InfR = fr.*Inf;
@@ -159,6 +159,9 @@ ss = ( test_data_covid_estimate(:,1)-test_data_covid(:,4) )./(test_data_covid_es
 ii = ( test_data_covid_estimate(:,2)-test_data_covid(:,1) )./(test_data_covid_estimate(:,2));
 rr = ( test_data_covid_estimate(:,3)-test_data_covid(:,2) )./(test_data_covid_estimate(:,3));
 uu = ( test_data_covid_estimate(:,4)-test_data_covid(:,3) )./(test_data_covid_estimate(:,4));
+ii_fr = ( fr'.*test_data_covid_estimate(:,2)-test_data_covid(:,1) )./(fr'.*test_data_covid_estimate(:,2));
+
+rr_fr = ( fr'.*test_data_covid_estimate(:,3)-test_data_covid(:,2) )./(fr'.*test_data_covid_estimate(:,3));
 
 %% Cali
 % Para la calibración se pueden utilizar como funciones objetivo 
@@ -196,13 +199,13 @@ uu = ( test_data_covid_estimate(:,4)-test_data_covid(:,3) )./(test_data_covid_es
 
 %% Cuando se busca en el espacio de suseptibles, el
 %ee = ( test_data_covid_estimate(:,3)-test_data_covid(:,3) )./(test_data_covid_estimate(:,3));
-tx_dt = [ ii ; rr; uu; ]; % creimiento de uci, decrecimiento de I
+%tx_dt = [ ii ; rr; uu; ]; % creimiento de uci, decrecimiento de I
  
-tx_dt = [ ii; rr; ]; % 
+%tx_dt = [ ii; ii_fr; rr; uu;]; % 
 
 %tx_dt = [ uu ];
 %tx_dt = [ ii ];
-%tx_dt = [ ii ; uu ]; %recordar probar el solo ss
+tx_dt = [ ii_fr;rr_fr ; uu ]; %recordar probar el solo ss
 %tx_dt = [ ss];%(1:end-10) ];  FUNCIONA BIEN COMO PARAMETRO GENERAL Y
 %BUSQEUDA RAPIDA, pero aumenta siginificativamente el numero de infectados
 %reales, ya que se ajusta los datos a valores cercanos de la poblacion

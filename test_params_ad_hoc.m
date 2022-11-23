@@ -36,15 +36,15 @@ interpolacion = 1;
 % interpolacion = 1 <- se interpola y luego se aplica modelo SIER de test sobre un subconjunto pequeño de puntos esto para en fase dde experimentación, 
 % for short experiment percentPrunning < 1
 percentPrunning = 1 %  esta versión falla con el 1  > values > 0 is percentage of data 
-% Aproximacion sobre curva acumulada
+% 1 Aproximacion sobre curva acumulada
+%acumulada =1;
+
+% 2 Aproximacion sobre diferencias diarias usando la data de curva acumulada
+acumulada =2;
+
+
+% 0 Aproximacion del dato de origen 
 acumulada =1;
-
-% Aproximacion sobre diferencias diarias usando la curva acumulada
-acumulada =2;
-
-
-% Aproximacion sobre diferencias diarias usando la curva acumulada
-acumulada =2;
 
 % TRAZA OPTIMIZER
 traza = 0;
@@ -57,13 +57,13 @@ numThetas=  10;   %% Para AG usar un valor bajo para
 nCiclos =1% veces que se reduce beta a la mitad
 primera_ola=0
 % %data_config
-diaInicio = 15
-diaFinEstudio = 250
+diaInicio = 500
+diaFinEstudio = 950
 I00=diaInicio;
 I10=diaFinEstudio;
 nF=0;
 diaFin=diaFinEstudio-nF;
-ventana_general=60;
+ventana_general=120;
 
 %%Ventana movil mayor .... cuando hay cambios abruptos en la curva
 
@@ -116,14 +116,16 @@ format shortg
 a_t = 10e-5;
 b_t = 0.5;
  
+% si se utiliza funcion acumulada multiplicar por factor pequeño!
+
 % %En primera ola el beta más grande
-% beta_lb_up_op = [1e-1,0.3]; % Mayoria de valores cercanos a 0.2
-% gamma_lb_up_op = [1e-4,1e-1]; % % (1/gamma) tiempo de infección promedio - tasa de remosión media
-% alfaS_lb_up_op = [1e-4,1e-2];%%(SR) gran parte 0.00194 /0.194 funcionan - mientras más pequeño menos variación en las maximas distancias de curvas, atención suceptibles, ese dato define lo demas
-% deltaS_lb_up_op = [1e-4,1e-2];% %(RS) 0.0011/0.194
-% all_test_gammasR_lb_up_op = [1e-4,1e-2]; %Recuperado UCI
-% all_test_gammasU_lb_up_op = [1e-4,1e-2]; %ingreso UCI
-% a_test_lb_up_op = [0.01,0.9];
+beta_lb_up_op = [1e-1,0.6]; % Mayoria de valores cercanos a 0.2
+gamma_lb_up_op = [1e-5,1e-1]; % % (1/gamma) tiempo de infección promedio (hay que ajustar porque gamma es bajo) - tasa de remosión media
+alfaS_lb_up_op = [1e-5,1e-1];%%(SR) gran parte 0.00194 /0.194 funcionan - mientras más pequeño menos variación en las maximas distancias de curvas, atención suceptibles, ese dato define lo demas
+deltaS_lb_up_op = [1e-4,1e-1];% %(RS) 0.0011/0.194
+all_test_gammasR_lb_up_op = [1e-4,1e-1]; %Recuperado UCI
+all_test_gammasU_lb_up_op = [1e-4,1e-1]; %ingreso UCI
+a_test_lb_up_op = [0.01,0.9];
 
 % beta = 0.2;
 % gamma = 0.01;
@@ -139,16 +141,16 @@ b_t = 0.5;
 % si se utiliza esta opcion se debe aumentar la poblacion inicial - recuros
 % de cpu y utilizar el 100% de threads de la computadora.
 
-beta_lb_up_op = [a_t,b_t]; % Mayoria de valores cercanos a 0.2
-gamma_lb_up_op = [a_t,b_t];
-alfaS_lb_up_op = [a_t,b_t];% gran parte 0.00194 /0.194 funcionan - mientras más pequeño menos variación en las maximas distancias de curvas, atención suceptibles, ese dato define lo demas
-deltaS_lb_up_op = [a_t,b_t];% 0.0011/0.194
-all_test_gammasR_lb_up_op = [a_t,b_t];
-all_test_gammasU_lb_up_op = [a_t,b_t];
-a_test_lb_up_op = [0.01,0.9];
+% beta_lb_up_op = [a_t,b_t]; % Mayoria de valores cercanos a 0.2
+% gamma_lb_up_op = [a_t,b_t];
+% alfaS_lb_up_op = [a_t,b_t];% gran parte 0.00194 /0.194 funcionan - mientras más pequeño menos variación en las maximas distancias de curvas, atención suceptibles, ese dato define lo demas
+% deltaS_lb_up_op = [a_t,b_t];% 0.0011/0.194
+% all_test_gammasR_lb_up_op = [a_t,b_t];
+% all_test_gammasU_lb_up_op = [a_t,b_t];
+% a_test_lb_up_op = [0.01,0.9];
 
 d_t = diaFin - diaInicio;
-tau_4_op_lb_lb =[1,60]; % obs: los taus estimados < periodo (dias de la data)
+tau_4_op_lb_lb =[1,160]; % obs: los taus estimados < periodo (dias de la data)
 
 %% Para acelerar proceso partir de valores bajos
 %% factor 
@@ -164,17 +166,19 @@ tau_4_op_lb_lb =[1,60]; % obs: los taus estimados < periodo (dias de la data)
 % 
 
 
-factor_inicial=0.00125 %(seleccionados: 0.0125,0.002125)
+factor_inicial=0.001 %(seleccionados: 0.0125,0.002125)
 beta = max(beta_lb_up_op)*factor_inicial; %tasa de contato (fabrizzio en algunas partes indica contacto en otra transmision) -- tasa de transmisión! .
 gamma = max(gamma_lb_up_op)*factor_inicial;% % (1/gamma) tiempo de infección promedio - tasa de remosión media
 alfaS=max(alfaS_lb_up_op)*factor_inicial;%0.00194; 
 deltaS=max(deltaS_lb_up_op)*factor_inicial;%0.0011; 
 all_test_gammasR=max(all_test_gammasR_lb_up_op)*factor_inicial;%0.0041;
 all_test_gammasU=max(all_test_gammasU_lb_up_op)*factor_inicial;%0.00125;
-a_test = max(a_test_lb_up_op);%0.3; 
+a_test = max(a_test_lb_up_op);%; 
 tau_4_op = max(tau_4_op_lb_lb);
 
 
+lb = [beta_lb_up_op(1,1);gamma_lb_up_op(1,1);alfaS_lb_up_op(1,1);deltaS_lb_up_op(1,1);all_test_gammasR_lb_up_op(1,1);all_test_gammasU_lb_up_op(1,1);a_test_lb_up_op(1,1)]'; % sin optimizar tau4
+ub = [beta_lb_up_op(1,2);gamma_lb_up_op(1,2);alfaS_lb_up_op(1,2);deltaS_lb_up_op(1,2);all_test_gammasR_lb_up_op(1,2);all_test_gammasU_lb_up_op(1,2);a_test_lb_up_op(1,2)]';
 
 tic
 
@@ -192,6 +196,41 @@ compute_curves_error
 compute_curves
   main_all_blocks_1
 compute_curves
+format shortg
+
+posIni = 4; 
+a_salida = p0(1);
+k_salida = p0(2);
+aC_salida = p0(3);
+tau1_salida = p0(4);
+tau2_salida = p0(5);
+tau3_salida = p0(6);
+tau4_salida = p0(7);
+tau5_salida = p0(8);
+tau6_salida = p0(9);
+
+posIni = 4; 
+
+all_gammas_salida  = p(posIni+nTau:posIni+nTau+nGammas-1);
+all_alfaS_salida    = p(posIni+nTau+nGammas:posIni+nTau+nGammas*2-1);
+all_deltaS_salida   = p(posIni+nTau+nGammas*2:posIni+nTau+nGammas*3-1);
+all_gammasU_salida  = p(posIni+nTau+nGammas*3:posIni+nTau+nGammas*4-1);
+all_betas_salida    = p(posIni+nTau+nGammas*4:posIni+nTau+nGammas*5-1);
+all_gammasR_salida  = p(posIni+nTau+nGammas*5:posIni+nTau+nGammas*6-1);
+
+
+suma_beta = sum(all_betas_salida)
+suma_gamma = sum(all_gammas_salida)
+suma_alfaS = sum(all_alfaS_salida)
+suma_deltaS = sum(all_deltaS_salida)
+suma_gammasU = sum(all_gammasU_salida)
+suma_gammasR = sum(all_gammasR_salida)
+
+
+ro_basico = suma_beta/suma_gamma
+ro_distribucion_bloque = all_betas_salida./all_gammas_salida
+
+
 
 %  p=p0
 %  compute_curves_error

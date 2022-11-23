@@ -16,7 +16,7 @@ funEvals = 40000;
 Mv = struct('cdata', [], 'colormap', []);  %predeclare struct array
 regiones = {'Arica y Parinacota','Tarapacá','Antofagasta','Atacama','Coquimbo','Valparaíso','Metropolitana','O Higgins','Maule','Ñuble','Biobío','Araucanía','Los Ríos','Los Lagos','Aysén','Magallanes'};
 global_time_op=tic;
-region = 'Metropolitana'
+region = 'Ñuble'
 close all
 % % % % % cont=0;
 option_model = 2
@@ -37,7 +37,7 @@ interpolacion = 1;
 % for short experiment percentPrunning < 1
 percentPrunning = 1 %  esta versión falla con el 1  > values > 0 is percentage of data 
 % Aproximacion sobre curva acumulada
-acumulada =2;
+acumulada =1;
 
 
 % TRAZA OPTIMIZER
@@ -46,18 +46,21 @@ primero = 0
 %primero = 0
 % example 2
 maxiters = 10;
-numThetas=  5;   %% Para AG usar un valor bajo para 
+numThetas=  20;   %% Para AG usar un valor bajo para 
 % realizar primera aproximación factible, luego al usal el optimizadro no lineal aumentar su valor para conseguir mejor precisión
 nCiclos =1% veces que se reduce beta a la mitad
 primera_ola=0
 % %data_config
-diaInicio = 400
-diaFinEstudio = 600;
+diaInicio = 270
+diaFinEstudio = 590
 I00=diaInicio;
 I10=diaFinEstudio;
 nF=0;
 diaFin=diaFinEstudio-nF;
-ventana_general=14;
+% Opcion 1: En caso de observar que dd23 avanza lentamente usanon cambios abruptos en la curva
+% aumentar el tamaño de la ventana en escala de semanas ej: 4 a 8 semanas
+% (28 a 56 dias)
+ventana_general=31;
 %% data_times_processing: analitics and processing of the data covid oficial and not covid oficial repositories
 format shortg
 variante_sier = 1; % para uso de funciones combinadas (diaria infectado % acum(R,U+F) )
@@ -95,7 +98,8 @@ params_ini = [];
 %main_all_blocks_1
 %% ----- ejemplo 2 -------
 cota_error = 10000;
-option_model = 3 
+option_model = 2 %% ACA HABIA UN 3
+
 traza =0;
 format shortg
 %% Obs: el tiempo de infección promedio si se establece en por ejemplo 0.07, dara aprox 14 dias como masivamente se cree
@@ -105,17 +109,26 @@ format shortg
 % (a traves de la tasa gamma) y de manera explicita misma caracteristica (a traves de tau)
 
 a_t = 10e-5;
-b_t = 0.6;
+b_t = 0.9;
  
-%En primera ola el beta más grande
-beta_lb_up_op = [1e-1,0.3]; % Mayoria de valores cercanos a 0.2
-gamma_lb_up_op = [1e-4,1e-1]; % % (1/gamma) tiempo de infección promedio - tasa de remosión media
-alfaS_lb_up_op = [1e-4,1e-2];%%(SR) gran parte 0.00194 /0.194 funcionan - mientras más pequeño menos variación en las maximas distancias de curvas, atención suceptibles, ese dato define lo demas
-deltaS_lb_up_op = [1e-4,1e-2];% %(RS) 0.0011/0.194
-all_test_gammasR_lb_up_op = [1e-4,1e-2]; %Recuperado UCI
-all_test_gammasU_lb_up_op = [1e-4,1e-2]; %ingreso UCI
+beta_lb_up_op = [1e-1,0.6]; % Mayoria de valores cercanos a 0.2
+gamma_lb_up_op = [1e-6,9e-1]; % % (1/gamma) tiempo de infección promedio (hay que ajustar porque gamma es bajo) - tasa de remosión media
+alfaS_lb_up_op = [1e-6,9e-1];%%(SR) gran parte 0.00194 /0.194 funcionan - mientras más pequeño menos variación en las maximas distancias de curvas, atención suceptibles, ese dato define lo demas
+deltaS_lb_up_op = [1e-6,9e-1];% %(RS) 0.0011/0.194
+all_test_gammasR_lb_up_op = [1e-6,9e-1]; %Recuperado UCI
+all_test_gammasU_lb_up_op = [1e-6,9e-1]; %ingreso UCI
 a_test_lb_up_op = [0.01,0.9];
 
+% 
+% 
+% %En primera ola el beta más grande
+% beta_lb_up_op = [1e-2,0.9]; % Mayoria de valores cercanos a 0.2
+% gamma_lb_up_op = [1e-5,1e-1]; % % (1/gamma) tiempo de infección promedio - tasa de remosión media
+% alfaS_lb_up_op = [1e-5,1e-1];%%(SR) gran parte 0.00194 /0.194 funcionan - mientras más pequeño menos variación en las maximas distancias de curvas, atención suceptibles, ese dato define lo demas
+% deltaS_lb_up_op = [1e-5,1e-1];% %(RS) 0.0011/0.194
+% all_test_gammasR_lb_up_op = [1e-5,1e-1]; %Recuperado UCI
+% all_test_gammasU_lb_up_op = [1e-5,1e-1]; %ingreso UCI
+% a_test_lb_up_op = [0.01,0.9];
 % beta = 0.2;
 % gamma = 0.01;
 % % alfaS=0.01;
@@ -129,17 +142,25 @@ a_test_lb_up_op = [0.01,0.9];
 % deben dar mayor numero depoblacion y nube de puntos inicial
 % si se utiliza esta opcion se debe aumentar la poblacion inicial - recuros
 % de cpu y utilizar el 100% de threads de la computadora.
+% 
+beta_lb_up_op = [a_t,b_t]; % Mayoria de valores cercanos a 0.2
+gamma_lb_up_op = [a_t,b_t];
+alfaS_lb_up_op = [a_t,b_t];% gran parte 0.00194 /0.194 funcionan - mientras más pequeño menos variación en las maximas distancias de curvas, atención suceptibles, ese dato define lo demas
+deltaS_lb_up_op = [a_t,b_t];% 0.0011/0.194
+all_test_gammasR_lb_up_op = [a_t,b_t];
+all_test_gammasU_lb_up_op = [a_t,b_t];
+a_test_lb_up_op = [0.01,0.9];
 
-% beta_lb_up_op = [0.01,b_t]; % Mayoria de valores cercanos a 0.2
-% gamma_lb_up_op = [a_t,b_t];
-% alfaS_lb_up_op = [a_t,b_t];% gran parte 0.00194 /0.194 funcionan - mientras más pequeño menos variación en las maximas distancias de curvas, atención suceptibles, ese dato define lo demas
-% deltaS_lb_up_op = [a_t,b_t];% 0.0011/0.194
-% all_test_gammasR_lb_up_op = [a_t,b_t];
-% all_test_gammasU_lb_up_op = [a_t,b_t];
+% beta_lb_up_op = [1e-1,0.6]; % Mayoria de valores cercanos a 0.2
+% gamma_lb_up_op = [1e-5,1e-1]; % % (1/gamma) tiempo de infección promedio (hay que ajustar porque gamma es bajo) - tasa de remosión media
+% alfaS_lb_up_op = [1e-5,1e-1];%%(SR) gran parte 0.00194 /0.194 funcionan - mientras más pequeño menos variación en las maximas distancias de curvas, atención suceptibles, ese dato define lo demas
+% deltaS_lb_up_op = [1e-4,1e-1];% %(RS) 0.0011/0.194
+% all_test_gammasR_lb_up_op = [1e-4,1e-1]; %Recuperado UCI
+% all_test_gammasU_lb_up_op = [1e-4,1e-1]; %ingreso UCI
 % a_test_lb_up_op = [0.01,0.9];
 
 d_t = diaFin - diaInicio;
-tau_4_op_lb_lb =[1,140]; % obs: los taus estimados < periodo (dias de la data)
+tau_4_op_lb_lb =[1,160]; % obs: los taus estimados < periodo (dias de la data)
 
 %% Para acelerar proceso partir de valores bajos
 %% factor 
@@ -155,15 +176,15 @@ tau_4_op_lb_lb =[1,140]; % obs: los taus estimados < periodo (dias de la data)
 % 
 
 
-factor_inicial=1
-beta = mean(beta_lb_up_op)*factor_inicial; %tasa de contato (fabrizzio en algunas partes indica contacto en otra transmision) -- tasa de transmisión! .
-gamma = mean(gamma_lb_up_op)*factor_inicial;% % (1/gamma) tiempo de infección promedio - tasa de remosión media
-alfaS=mean(alfaS_lb_up_op)*factor_inicial;%0.00194; 
-deltaS=mean(deltaS_lb_up_op)*factor_inicial;%0.0011; 
-all_test_gammasR=mean(all_test_gammasR_lb_up_op)*factor_inicial;%0.0041;
-all_test_gammasU=mean(all_test_gammasU_lb_up_op)*factor_inicial;%0.00125;
-a_test = mean(a_test_lb_up_op);%0.3; 
-tau_4_op = mean(tau_4_op_lb_lb);
+factor_inicial=0.0001
+beta = max(beta_lb_up_op)*factor_inicial; %tasa de contato (fabrizzio en algunas partes indica contacto en otra transmision) -- tasa de transmisión! .
+gamma = max(gamma_lb_up_op)*factor_inicial;% % (1/gamma) tiempo de infección promedio - tasa de remosión media
+alfaS=max(alfaS_lb_up_op)*factor_inicial;%0.00194; 
+deltaS=max(deltaS_lb_up_op)*factor_inicial;%0.0011; 
+all_test_gammasR=max(all_test_gammasR_lb_up_op)*factor_inicial;%0.0041;
+all_test_gammasU=max(all_test_gammasU_lb_up_op)*factor_inicial;%0.00125;
+a_test = max(a_test_lb_up_op);%0.3; 
+tau_4_op = max(tau_4_op_lb_lb);
 % 
 % solution = [0.005292324185371,0.001197693705559,0.000621007213593,0.000284389982224,0.000348566269875,0.003403111946897,0.710175727827394];
 % 
@@ -192,11 +213,11 @@ compute_curves
 
 
 disp('Continue test ini 0')
-pause
+%pause
 
 
 % 
-% rng default % For reproducibility
+ rng default % For reproducibility
 % options = optimoptions('ga','PlotFcn',@gaplot1drange);
 % [x,fval] = ga(@ESIR_rel_all,1,[],[],[],[],[],[],[],options)
 
@@ -219,7 +240,7 @@ p_op = [beta;gamma;alfaS;deltaS;all_test_gammasR;all_test_gammasU;a_test]; % sin
 numberOfVariables=size(p_op,1);
 % Pass fixed parameters to objfun
 objfun5 = @(p_op)vectorized_fitness(p_op,p,N,acumulada,test_data_covid,...
-    diaInicio,diaFinEstudio,numThetas,Data,v_ini);
+    diaInicio,diaFinEstudio,numThetas,mean_data_ini,v_ini);
 
 %Para acelerar los computos usamos computación paralela, utilizando 10
 %procesadores
@@ -232,7 +253,7 @@ objfun5 = @(p_op)vectorized_fitness(p_op,p,N,acumulada,test_data_covid,...
 %% Utilizamos el toolbox de computacion paralela con las opciones parpool("Processes",20)
 % Set nondefault solver options
 delete(gcp('nocreate'))
-parpool("Processes",20)
+parpool("Processes",16)
 %parpool('local', 10);
 
 % availableGPUs = gpuDeviceCount("available")
@@ -242,6 +263,8 @@ parpool("Processes",20)
 %    "gaplotmaxconstr","gaplotbestf","gaplotbestindiv","gaplotexpectation",...
 %    "gaplotrange","gaplotrange"]); %,'MutationFcn',{@mutationgaussian,1,.5}
 % 
+
+%% prueba hjeuristica 0.728717616119050	0.687983602376209	0.591166653779399	0.734174336268369	0.149860939642366	0.0926411244920624	0.760755650514368
 %'CreationFcn',{ @gacreationnonlinearfeasible,'UseParallel',true,'NumStartPts',20}
 options6 = optimoptions("ga",'UseParallel', true,'UseVectorized', false, 'CreationFcn',{ @gacreationnonlinearfeasible,'UseParallel',true,'NumStartPts',80},...
     "PlotFcn",["gaplotdistance","gaplotgenealogy",...
@@ -253,10 +276,10 @@ options6.PopulationSize = 40;
 options6.MaxGenerations  = 150;
 %options6.MutationFcn ={@mutationgaussian,1,.5};
 % Solve
-% [solution,objectiveValue] = ga(objfun5,numberOfVariables,[],[],[],[],lb,ub,[],...
+% [solution,objectiveValue] = ga(objfun5,numberOfVariables,[],[],[],[],lb,ub,ConstraintFunction,...
 %     [],options6);
 
-[solution,objectiveValue,exitflag,output,population,scores]=ga(objfun5,numberOfVariables,[],[],[],[],lb,ub,ConstraintFunction,...
+[solution,objectiveValue,exitflag,output,population,scores]=ga(objfun5,numberOfVariables,[],[],[],[],lb,ub,[],...
     [],options6);
 
 matrix_optimus=[matrix_optimus;solution];

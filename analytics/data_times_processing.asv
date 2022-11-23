@@ -1,8 +1,8 @@
 %loadData2022_analysis
-grafica_data=0;
+%grafica_data=0;
 warning('off')
 stringPath = '';
-global globalPais grafica_data ventana_general
+global globalPais grafica_data ventana_general globalUCImovil flagpause
 grafica=grafica_data;
 if globalPais == 1
 N = 19212362;
@@ -298,7 +298,7 @@ ventana = ventana_general;
 
 figure;plot(aIC_day_fit)
 hold on
-figure;plot(aIC_pais_day_fit)
+plot(aIC_pais_day_fit)
 plot(aIC_day)
 %%% ______________ Fin ajuste infectados  ________________________
 ventana = ventana_general;
@@ -372,6 +372,7 @@ I_analysis_pais = aIC_pais_day_fit
 R_analysis_pais = aRC_pais_day_fit;
 F_analysis_pais = aFC_pais_day_fit_2;
 [U_analysis_pais] = mediamovil(U_pais,ventana);
+[i_uci_analysis_pais] = mediamovil(i_uci,ventana);
 %U_analysis_pais = U_pais;
 
 %% Datos usados para aproximar curvas SIER - luego transformar a curvas epidemiologicas diarias.
@@ -385,17 +386,41 @@ F_analysis_pais = aFC_pais_day_fit_2;
 % observa en mayor media entre la cantidad de pacientes internado en
 % estado UCI y fallecidos, esto debido a que la mayoria de los fallecidos
 % han pasado por el sistema de atención de emergencia del covid (se presume)
-data_pais = [I_analysis_pais;R_analysis_pais;F_analysis_pais;U_analysis_pais;i_uci]';
+data_pais = [I_analysis_pais;R_analysis_pais;F_analysis_pais;U_analysis_pais;i_uci_analysis_pais]';
 data_region = [I_analysis;R_analysis;F_analysis;U_analysis]';
+tmp = [];
+tmp_G = []
+if globalPais == 1
 
+    if globalUCImovil == 1
+    
+       tmp = [I_analysis_pais;R_analysis_pais;F_analysis_pais;i_uci;U_analysis_pais]'; 
+    else
+       tmp = [I_analysis_pais;R_analysis_pais;F_analysis_pais;U_analysis_pais;i_uci]'; 
+    end
+
+
+
+
+   
+else
 %tmp = data_pais(1:end-1,:);
 tmp = data_region;
+
+end
+
+
+
+
+
+
 
 I=tmp(:,1)';
 R=tmp(:,2)';
 F=tmp(:,3)';
 %[aF_day_movil] = mediamovil(F,ventana);
 U=tmp(:,4)';
+U_extra=tmp(:,5)'
 pruning_tmp = 1;
 interpolacion = 2
 ajuste_pruning
@@ -405,8 +430,17 @@ Is = cumsum(I);
 Rs = cumsum(R);
 Us = cumsum(U);
 Fs = cumsum(F);
+U_extra_s=cumsum(U_extra);
 xds=[Is Rs Fs+Us];
 xd=[I R U+F];
+xds_extra=[Is Rs Fs Us U_extra_s'];
+
+
+
+
+
+
+
 
 
 
@@ -415,11 +449,12 @@ xd=xds;
 end
 xd_test = [];
 if variante_sier == 1
-   %S = N - Is - Rs -(Us+Fs);
+   S = N - Is - Rs -(Us+Fs);
    %xd = [Is Rs Us+Fs S (Is+Rs+Us+Fs)];
-   S = N - Is - Rs - Fs; % sacando uci movil internado
+   %S = N - Is - Rs - Fs; % sacando uci movil internado
    xd = [Is Rs Us+Fs S (Is+Rs+Fs) (Is+Rs+Fs+Us)]; % sacando uci movil internado
-  % xd = [Is Rs Fs S (Is+Rs+Fs) (Is+Rs+Fs+Us)]; % para test de consistencia en intervalo
+   %xd = [Is Rs Fs S (Is+Rs+Fs) (Is+Rs+Fs+Us)]; % para test de consistencia en intervalo
+   xd_grafico = []
 end
 
 if grafica_data == 1
@@ -427,19 +462,35 @@ figure;plot(xds,'DisplayName','xds')
 figure;plot(xd,'DisplayName','xd')
 end
 
+if grafica_data==1 & flagpause==1
+
+    all_data = data_pais;
+%     uci_input = mediamovil(all_data(:,5),ventana);
+    figure;
+   % plot(all_data)
+    curva_nacional_log(all_data);
+
+    [rho,pval] = corr(all_data)
 
 
-% % all_data = [data_region_diff,data,F',i_uci'];
-% % graficaDatos(all_data)
-% % 
-% % 
-% all_data = [data_pais,data_region,i_uci'];
-% graficaDatos(all_data)
 
+figure;
+ %   cdata = [45 60 32; 43 54 76; 32 94 68; 23 95 58];
+xvalues = {'Infected','Recovered','Deceased','ICU Internships','ICU Admission'};
+yvalues = {'Infected','Recovered','Deceased','ICU Internships','ICU Admission'};
+h = heatmap(xvalues,yvalues,rho);
 
+ % figure;
+   % plot(all_data)
+    curva_nacional_log(xds_extra);
+ % figure;
+   % plot(all_data)
+    acumDis(xds_extra);
+    figure
+   % pause
+    %close all
 
-
-%grafica_data=1
+end
 
 
 

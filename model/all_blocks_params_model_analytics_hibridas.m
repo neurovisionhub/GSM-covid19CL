@@ -25,10 +25,13 @@ Data=xd(tc,:);
 x0=[tc' Data];
 
  
-if acumulada == 2
+if acumulada == 2 
 
 tc_a=diaInicio-1:diaFin-1;
+tc_a_ini=1:diaFin;
 Data=xd(tc_a,:);
+Data_of_ini = xd(tc_a_ini,:);
+Data_of_ini_diff_i = diferenciasDiarias(Data_of_ini(:,1)');
 
 Data(:,1)= diferenciasDiarias(Data(:,1)');
 Data(:,2)= diferenciasDiarias(Data(:,2)');
@@ -36,12 +39,39 @@ Data(:,3)= diferenciasDiarias(Data(:,3)');
 x0=[tc' Data];
 figure
 plot(Data(:,1:3))
-
+mean_data_ini = mean(Data_of_ini_diff_i);
+else
+    mean_data_ini=mean(xd(1:diaFin,1));
+    max_data_ini = max(xd(1:end,1))
 end
+
+
+if acumulada ==1 
+
+%tc_a=diaInicio-1:diaFin-1;
+tc_a_ini=1:diaFin;
+%Data=xd(tc_a,:);
+Data_of_ini = xd(tc_a_ini,:);
+Data_of_ini_diff_i = diferenciasDiarias(Data_of_ini(:,1)');
+% 
+% Data(:,1)= diferenciasDiarias(Data(:,1)');
+% Data(:,2)= diferenciasDiarias(Data(:,2)');
+% Data(:,3)= diferenciasDiarias(Data(:,3)');
+% x0=[tc' Data];
+% figure
+% plot(Data(:,1:3))
+max_data_ini = max(Data_of_ini_diff_i);
+mean_data_ini = mean(Data_of_ini_diff_i);
+end
+
+
+
+
 
 v_ini = [N-xd(diaInicio,1)-xd(diaInicio,2)-xd(diaInicio,3);
     Data(1,1);Data(1,2);Data(1,3)];
-
+%v_ini = [N-xd(diaInicio,1)-xd(diaInicio,2);...
+%    Data(1,1);Data(1,2);Data(1,3)];
 tau1=5;
 tau2=14;
 tau3=7; %tiempo en que comienza el efecto de la vacuna?
@@ -58,8 +88,9 @@ a=a_test;
 i=find(tc==tc(end));
 indice=tc(1,end);
 %aC=mean(Data(1:i)); % ---- OJO ----
-%aC=mean(xd(1:diaFin,1));
-aC=mean(Data(:,1));
+aC=mean(xd(1:diaFin,1));
+%aC=mean(Data(:,1));
+%aC=mean_data_ini;
 %aC=mean(xd(1:indice,1));
 %aC=mean(xd(:,1));
 % k=1e-3;
@@ -82,6 +113,10 @@ all_deltaS = deltaS*ones(nGammas,1);%(RS)
 if primero == 0
 %p0=[gamma;alfaS;deltaS;all_taus;a;k;aC;all_gammasU;all_betas;all_gammasR];
 p0=[a;k;aC;all_taus;all_gammas;all_alfaS;all_deltaS;all_gammasU;all_betas;all_gammasR];
+
+ 
+
+
 %primero=1;
 %pUltimo=p0;
 else

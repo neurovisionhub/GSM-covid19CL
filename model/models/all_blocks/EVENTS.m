@@ -6,5 +6,5 @@ end
 count = count + 1;
 VALUE = 0;
 DIRECTION = 0;
-ISTERMINAL = (count == 1e6);
+ISTERMINAL = (count == 1e4);
 end

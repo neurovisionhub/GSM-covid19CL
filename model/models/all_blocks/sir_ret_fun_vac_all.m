@@ -12,7 +12,7 @@ traza=0;
 nTau = 6;
 nGammas = (size(p,1)-9)/6;
 %Z
-% t = ceil(t);
+% t = ceil(t)
 %t
  if mod(t,100)==0
  t
@@ -56,30 +56,30 @@ all_gammasR = p(posIni+nTau+nGammas*5:posIni+nTau+nGammas*6-1);
 tr = linspace(min(range),max(range),numel(all_betas));
 %beta = piecewise_interpolator(t,all_betas,tr) ;
 if t<=range(end)
-    beta   = interp1(tr,all_betas,t);
-    alfaS  = interp1(tr,all_alfaS,t);
-    deltaS = interp1(tr,all_deltaS,t);
-    gamma  = interp1(tr,all_gammas,t); 
+    beta   = interp1(tr,all_betas,t,'pchip');
+    alfaS  = interp1(tr,all_alfaS,t,'pchip');
+    deltaS = interp1(tr,all_deltaS,t,'pchip');
+    gamma  = interp1(tr,all_gammas,t,'pchip'); 
  else
-    beta   = interp1(tr,all_betas,range);
-    alfaS  = interp1(tr,all_alfaS,range);
-    deltaS = interp1(tr,all_deltaS,range);
-    gamma  = interp1(tr,all_gammas,range);
+    beta   = interp1(tr,all_betas,range,'pchip');
+    alfaS  = interp1(tr,all_alfaS,range,'pchip');
+    deltaS = interp1(tr,all_deltaS,range,'pchip');
+    gamma  = interp1(tr,all_gammas,range,'pchip');
 end
 tr2 = linspace(min(range),max(range),numel(all_gammasU));
 %gammasUCI = piecewise_interpolator(t,all_gammasU,tr2);
  if t<=range(end)
-   gammasUCI = interp1(tr2,all_gammasU,t);
+   gammasUCI = interp1(tr2,all_gammasU,t,'pchip');
  else
-      gammasUCI = interp1(tr2,all_gammasU,range);
+      gammasUCI = interp1(tr2,all_gammasU,range,'pchip');
 %  gammasUCI = interp1(tr2,all_gammasU,t);
  end
 %% Nueva variante con gamma de UCI a R
 tr3 = linspace(min(range),max(range),numel(all_gammasR));
  if t<=range(end)
-   gammasR   = interp1(tr3,all_gammasR,t);
+   gammasR   = interp1(tr3,all_gammasR,t,'pchip');
  else
-    gammasR   = interp1(tr3,all_gammasR,range);
+    gammasR   = interp1(tr3,all_gammasR,range,'pchip');
  end
 %fr=sigmoide(p,y(2,:),nTau);
 %frd=interp1(time_range,fr,t-tau5,'pchip','extrap');
@@ -146,21 +146,51 @@ v = zeros(4,1);
 % disp(t)
 %% OSCAR
 %t
-v(1,1) = - beta*y(1)*ylag1(2)/N - alfaS*ylag3(1) + deltaS*ylag4(1) +0.001;
-v(2,1) = beta*y(1)*ylag1(2)/N - gamma*ylag2(2) - gammasUCI*ylag5(2) +0.001;%*( 1 + (a-1)/( 1+exp( -k*(ylag5(2)-aC) ) ) ); Di
-%v(2) = beta*y(1)*ylag1(2)/N - gamma*ylag2(2); %di
-v(3,1) = gamma*ylag2(2)+alfaS*ylag3(1)-deltaS*ylag4(1)+gammasR*ylag6(4)   +0.001;%dr
-v(4,1) = gammasUCI*ylag5(2)-gammasR*ylag6(4)  +0.001; %du
+%alfaS=0;
+%deltaS=0;
+v(1,1) = - beta*y(1)*ylag1(2)/N - alfaS*ylag3(1) + deltaS*ylag4(1) +0.0001;
+v(2,1) = beta*y(1)*ylag1(2)/N - gamma*ylag2(2) - gammasUCI*ylag5(2)  +0.0001;%*( 1 + (a-1)/( 1+exp( -k*(ylag5(2)-aC) ) ) ); Di
+v(3,1) = gamma*ylag2(2)+alfaS*ylag3(1)-deltaS*ylag4(1)+gammasR*ylag6(4)  +0.0001 ;%dr
+v(4,1) = gammasUCI*ylag5(2)-gammasR*ylag6(4) +0.0001 ; %du
+
+% v(1,1) = - beta*y(1)*ylag1(2)/N - 0*ylag3(1) + 0*ylag4(1) +0.0001;
+% v(2,1) = beta*y(1)*ylag1(2)/N - gamma*ylag2(2) - gammasUCI*ylag5(2)  +0.0001;%*( 1 + (a-1)/( 1+exp( -k*(ylag5(2)-aC) ) ) ); Di
+% v(3,1) = gamma*ylag2(2)+0*ylag3(1)-0*ylag4(1)+gammasR*ylag6(4)  +0.0001 ;%dr
+% v(4,1) = gammasUCI*ylag5(2)-gammasR*ylag6(4) +0.0001 ; %du
+% 
+% v(1,1) = - beta*y(1)*ylag1(2)/N  +0.0001;
+% v(2,1) = beta*y(1)*ylag1(2)/N - gamma*ylag2(2) - gammasUCI*ylag5(2)  +0.0001;%*( 1 + (a-1)/( 1+exp( -k*(ylag5(2)-aC) ) ) ); Di
+% v(3,1) = gamma*ylag2(2)+gammasR*ylag6(4) +0.0001 ;%dr
+% v(4,1) = gammasUCI*ylag5(2)-gammasR*ylag6(4) +0.0001 ; %du
+
 
 %v(isnan(v))=1e+100; %% para que no se bloquee el solver y busque otro punto
-
+% if t > 10
+% 
+%     
+% 
+% 
+%    if abs(v(1,1)) < 0.001 | isnan(v) | abs(v(1,1)) > N*100
+%         if  abs(v(1,1)) > N*1e+10
+% %v
+%  %   [beta,gamma,deltaS,alfaS,gammasUCI,gammasR]
+%   %     v(1,1) = sign(v(1,1))*10e+300 ;
+%         v(1,1) = nan;
+%         v(2,1) = nan;
+%         v(3,1) = nan;
+%         v(4,1) = 0;
+%        
+% % v
+%        end
+% %    
+%     end
 % 
 %    y(1)
 % 
 %     ylag1(2)
 %  ylag3(1)
 %     ylag4(1)
-if(isnan(v)|v(1,1)==inf)
+if( isnan(v) | v(1,1)==inf )
  format shortg
     t
 %     beta
@@ -171,15 +201,16 @@ if(isnan(v)|v(1,1)==inf)
   %   range(end)
 %v
     [beta,gamma,deltaS,alfaS,gammasUCI,gammasR]
-v
-  %  pause(0.001)
+%v
+   % pause
 
+%return
 
 if isempty(count)
   count = 0;
 end
 count = count + 1
-if mod(count,1000) == 0
+if mod(count,10000) == 0
   count = 0;
   t
   disp('en persistencia')
@@ -246,3 +277,5 @@ if isnan(Z) & traza == 1
     v
     pause
 end
+
+

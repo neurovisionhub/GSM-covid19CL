@@ -59,8 +59,8 @@ function [c, ceq] = simple_constraint(p_op)
 %      -p_op(1) + p_op(6);
 %      -p_op(6) + p_op(5)]; % recuperados UCI < ingresos UCI
 
-c = [-p_op(1) + p_op(6)]; 
-%c = [-p_op(1) + 0.001;]; 
+c = [ p_op(1)/p_op(2) - 10]; 
+ 
 % No nonlinear equality constraints:
 ceq = [];
 
