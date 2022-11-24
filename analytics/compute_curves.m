@@ -55,13 +55,14 @@ if acumulada == 1 || acumulada == 0
     fr=sigmoide_all(p,Inf_tmp,nTau);
     end
   %  fr = fr; %% ajuste relevante
-    InfR = fr.*Inf;
+    InfR = fr.*Idays;
+% InfR = fr.*Idays;
     f_tmp = cumsum(InfR);
 else
 
 fr=sigmoide_all(p,y(2,:),nTau);
 %fr = fr; %% ajuste relevante
-InfR = fr.*Inf;
+%InfR = fr.*Inf;
 
 end
 % %% Para la variante donde los UCI van en el target
@@ -95,7 +96,7 @@ ii = ( fr'.*test_data_covid_estimate(:,2)-test_data_covid(:,1) )./(test_data_cov
 rr = ( test_data_covid_estimate(:,3)-test_data_covid(:,2) )./(test_data_covid(:,3));
 uu = ( test_data_covid_estimate(:,4)-test_data_covid(:,3) )./(test_data_covid(:,4));
 
-
+salida=fr'.*test_data_covid_estimate(:,2)
 ii_fr = ( fr'.*test_data_covid_estimate(:,2)-test_data_covid(:,1) )./(fr'.*test_data_covid_estimate(:,2));
 rr_fr = ( fr'.*test_data_covid_estimate(:,3)-test_data_covid(:,2) )./(fr'.*test_data_covid_estimate(:,3));
 
@@ -141,7 +142,7 @@ InfDar = diferenciasDiarias(InfDa');
 Infc = diferenciasDiarias(Inf);
 UCI =UCIc;% [UCIc,UCIc(1,end)];
 UCIDa =UCIr; %[UCIr',UCIr(1,end)];
-InfR =Infac; %[Infac,Infac(1,end)];
+%InfR =Infac; %[Infac,Infac(1,end)];
 InfDa =InfDar;%[InfDar',InfDar(1,end)]; 
 Inf =Infc;%[Infc,Infc(1,end)];
 else

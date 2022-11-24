@@ -105,12 +105,15 @@ v_ini = [N-xd(diaInicio,1)-xd(diaInicio,2)-xd(diaInicio,3);
 tau1=5;
 tau2=14;
 tau3=7; %tiempo en que comienza el efecto de la vacuna?
-tau4=tau_4_op; % tiempo de inmunidad
+tau4=240; % tiempo de inmunidad
 tau5=35;
 %% Nueva variante con paso de UCI a R
 tau6=32;
 beta_qty = numThetas ; %RM % Ojo aqui con el n�mero de betas
 a=a_test;
+
+
+
 %all_gammasU = beta*0.001 ; %Mismo n�mero de betas en gammas Uci (experimental) 
 %% Este valor es determinante en los resultados del experimento - considerar su estudio en 
 %% en el modelo de optimizaci�n y estabilidad
@@ -145,7 +148,11 @@ if primero == 0
 p0=[a;k;aC;all_taus;all_gammas;all_alfaS;all_deltaS;all_gammasU;all_betas;all_gammasR];
 
  
+params_exp_ini = [a;k;aC];
+params_tasas_ini = [beta;gamma;alfaS;deltaS;all_test_gammasU;all_test_gammasR];
+params_taus_ini = [tau1;tau2;tau3;tau4;tau5;tau6];
 
+p_inicial = p0;
 
 %primero=1;
 %pUltimo=p0;

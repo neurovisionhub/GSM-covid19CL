@@ -80,7 +80,7 @@ Lb(5)=7; Ub(5)=21; %tau2 -> recuperacion
 Lb(6)=7; Ub(6)=21; %tau3 -> suceptible a recuperado (inmunidad) ojo hay reincidencia pero leve - menos casos UCI?
 % % %% Probare un rango de 1-20 días para tau3
 % % % Lb(6)=1; Ub(6)=20; %tau3 
-Lb(7)=1; Ub(7)=240; %tau4 -> duracion inmunidad
+Lb(7)=14; Ub(7)=240; %tau4 -> duracion inmunidad
 Lb(8)=7; Ub(8)=56; %tau5 -> en UCI
 Lb(9)=7; Ub(9)=42; %tau6 -> recuperacion UCI
 

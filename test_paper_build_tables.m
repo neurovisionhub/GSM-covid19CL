@@ -186,7 +186,7 @@ all_test_gammasU_lb_up_op = [a_t,b_t];
 a_test_lb_up_op = [0.01,0.5];
 
 d_t = diaFin - diaInicio;
-tau_4_op_lb_lb =[1,240]; % obs: los taus estimados < periodo (dias de la data)
+%tau_4_op_lb_lb =[1,240]; % obs: los taus estimados < periodo (dias de la data)
 
 %% Para acelerar proceso partir de valores bajos
 %% factor 
@@ -216,7 +216,7 @@ if acumulada == 1 || acumulada == 0
     if diaInicio < 200
     factor_inicial=0.0001 %(seleccionados: 0.0125,0.002125)
     else
-    factor_inicial=0.00005
+    factor_inicial=0.0001
     end
 
     if diaFinEstudio - diaInicio > 600
@@ -224,6 +224,7 @@ if acumulada == 1 || acumulada == 0
     end
 end
 
+factor_inicial =0.0001;
 
 
 beta = max(beta_lb_up_op)*factor_inicial; %tasa de contato (fabrizzio en algunas partes indica contacto en otra transmision) -- tasa de transmisión! .
@@ -233,7 +234,7 @@ deltaS=max(deltaS_lb_up_op)*factor_inicial;%0.0011;
 all_test_gammasR=max(all_test_gammasR_lb_up_op)*factor_inicial;%0.0041;
 all_test_gammasU=max(all_test_gammasU_lb_up_op)*factor_inicial;%0.00125;
 a_test = max(a_test_lb_up_op);%; 
-tau_4_op = max(tau_4_op_lb_lb);
+%tau_4_op = max(tau_4_op_lb_lb);
 
 
 % lb = [beta_lb_up_op(1,1);gamma_lb_up_op(1,1);alfaS_lb_up_op(1,1);deltaS_lb_up_op(1,1);all_test_gammasR_lb_up_op(1,1);all_test_gammasU_lb_up_op(1,1);a_test_lb_up_op(1,1)]'; % sin optimizar tau4
