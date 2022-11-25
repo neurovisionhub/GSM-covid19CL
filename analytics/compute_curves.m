@@ -53,6 +53,10 @@ if acumulada == 1 || acumulada == 0
     if acumulada == 0 || acumulada == 1
 
     fr=sigmoide_all(p,Inf_tmp,nTau);
+
+
+   % recordar que aca fr experimental=1 para ver que tan bien se ajusta
+   % fr=1
     end
   %  fr = fr; %% ajuste relevante
     InfR = fr.*Idays;
@@ -91,10 +95,10 @@ uu = ( test_data_covid_estimate(:,4)-test_data_covid(:,3) )./(test_data_covid_es
 ii_fr = ( fr'.*test_data_covid_estimate(:,2)-test_data_covid(:,1) )./(fr'.*test_data_covid_estimate(:,2));
 rr_fr = ( fr'.*test_data_covid_estimate(:,3)-test_data_covid(:,2) )./(fr'.*test_data_covid_estimate(:,3));
 
-ss = ( test_data_covid_estimate(:,1)-test_data_covid(:,4) )./(test_data_covid(:,1));
-ii = ( fr'.*test_data_covid_estimate(:,2)-test_data_covid(:,1) )./(test_data_covid(:,2));
-rr = ( test_data_covid_estimate(:,3)-test_data_covid(:,2) )./(test_data_covid(:,3));
-uu = ( test_data_covid_estimate(:,4)-test_data_covid(:,3) )./(test_data_covid(:,4));
+ss = ( test_data_covid_estimate(:,1)-test_data_covid(:,4) )./(test_data_covid(:,4));
+ii = ( fr'.*test_data_covid_estimate(:,2)-test_data_covid(:,1) )./(test_data_covid(:,1));
+rr = ( fr'.*test_data_covid_estimate(:,3)-test_data_covid(:,2) )./(test_data_covid(:,2));
+uu = ( test_data_covid_estimate(:,4)-test_data_covid(:,3) )./(test_data_covid(:,3));
 
 salida=fr'.*test_data_covid_estimate(:,2)
 ii_fr = ( fr'.*test_data_covid_estimate(:,2)-test_data_covid(:,1) )./(fr'.*test_data_covid_estimate(:,2));
@@ -134,7 +138,7 @@ Euu=  mean(abs(uu))
 Error_rr_fr=  mean(abs(rr_fr))
 Error_ii_fr=  mean(abs(ii_fr))
 
-if acumulada == 1 | acumulada == 0
+if acumulada == 1 || acumulada == 0
 UCIc = diferenciasDiarias(UCI);
 UCIr = diferenciasDiarias(UCIDa');
 Infac = diferenciasDiarias(InfR);

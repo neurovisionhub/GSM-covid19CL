@@ -186,7 +186,7 @@ all_test_gammasU_lb_up_op = [a_t,b_t];
 a_test_lb_up_op = [0.01,0.5];
 
 d_t = diaFin - diaInicio;
-tau_4_op_lb_lb =[1,240]; % obs: los taus estimados < periodo (dias de la data)
+%tau_4_op_lb_lb =[1,240]; % obs: los taus estimados < periodo (dias de la data)
 
 %% Para acelerar proceso partir de valores bajos
 %% factor 
@@ -204,8 +204,8 @@ tau_4_op_lb_lb =[1,240]; % obs: los taus estimados < periodo (dias de la data)
 %% mientras mas al inicio de la pandemia este valor es más bajo, a 
 %% medida que vanza se puede aumentar para asegurar convergencia
 if acumulada == 2
-    if diaInicio < 200
-    factor_inicial=0.00001 %(seleccionados: 0.0125,0.002125)
+    if diaInicio < 300
+    factor_inicial=0.001 %(seleccionados: 0.0125,0.002125)
     else
     factor_inicial=0.00005
 
@@ -214,21 +214,17 @@ end
 
 if acumulada == 1 || acumulada == 0
     if diaInicio < 200
-    factor_inicial=0.00001 %(seleccionados: 0.0125,0.002125)
+    factor_inicial=0.0001 %(seleccionados: 0.0125,0.002125)
     else
-    factor_inicial=0.00005
+    factor_inicial=0.0001
     end
 
-    if diaFinEstudio - diaInicio
-
+    if diaFinEstudio - diaInicio > 600
+       factor_inicial=0.00005 %(seleccionados: 0.0125,0.002125)
     end
-
-else % si se utilizan diferencias diarias
-    factor_inicial=0.0005 %(seleccionados: 0.0125,0.002125)
 end
 
-
-
+factor_inicial =0.0005;
 beta = max(beta_lb_up_op)*factor_inicial; %tasa de contato (fabrizzio en algunas partes indica contacto en otra transmision) -- tasa de transmisión! .
 gamma = max(gamma_lb_up_op)*factor_inicial;% % (1/gamma) tiempo de infección promedio - tasa de remosión media
 alfaS=max(alfaS_lb_up_op)*factor_inicial;%0.00194; 
@@ -236,7 +232,7 @@ deltaS=max(deltaS_lb_up_op)*factor_inicial;%0.0011;
 all_test_gammasR=max(all_test_gammasR_lb_up_op)*factor_inicial;%0.0041;
 all_test_gammasU=max(all_test_gammasU_lb_up_op)*factor_inicial;%0.00125;
 a_test = max(a_test_lb_up_op);%; 
-tau_4_op = max(tau_4_op_lb_lb);
+%tau_4_op = max(tau_4_op_lb_lb);
 
 
 % lb = [beta_lb_up_op(1,1);gamma_lb_up_op(1,1);alfaS_lb_up_op(1,1);deltaS_lb_up_op(1,1);all_test_gammasR_lb_up_op(1,1);all_test_gammasU_lb_up_op(1,1);a_test_lb_up_op(1,1)]'; % sin optimizar tau4

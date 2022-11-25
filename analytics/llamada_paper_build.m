@@ -7,9 +7,9 @@ globalPais =0;
 flagpause=0; %for pause on visualization
 % globalUCImovil = 1 <- ingreso movil nacional chileno 
 globalUCImovil = 0; % si se utiliza ingreso movil se ajusta mejor el final de la curva desde el inicio de optimizacion 
-diaInicio = 30
+diaInicio = 130
 diaFinEstudio = 950
-numThetas = 10
+numThetas = 20
 ventana_general=30; % en laptop nueno con 14
 matrix_results = [];
 regiones = {'Arica y Parinacota','Tarapacá','Antofagasta','Atacama','Coquimbo','Valparaíso','Metropolitana','O Higgins','Maule','Ñuble','Biobío','Araucanía','Los Ríos','Los Lagos','Aysén','Magallanes'};
@@ -22,7 +22,7 @@ total_days = [];
 
 matrix_resultados = [];
 
-acumulada = 1; %probar 2 con 50 o mas thetas 0.001
+acumulada =1; %probar 2 con 50 o mas thetas 0.001
 maxGlobal =0;% en acumulada 1
 meanGlobal =0; % en acumulada 1
 mediana = 0;

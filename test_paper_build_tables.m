@@ -224,8 +224,7 @@ if acumulada == 1 || acumulada == 0
     end
 end
 
-factor_inicial =0.0001;
-
+factor_inicial =0.0005;
 
 beta = max(beta_lb_up_op)*factor_inicial; %tasa de contato (fabrizzio en algunas partes indica contacto en otra transmision) -- tasa de transmisión! .
 gamma = max(gamma_lb_up_op)*factor_inicial;% % (1/gamma) tiempo de infección promedio - tasa de remosión media
