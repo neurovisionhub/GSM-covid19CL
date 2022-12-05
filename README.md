@@ -16,7 +16,7 @@
     <a href="https://github.com/neurovisionhub/GSM-covid19CL"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/neurovisionhub/GSM-covid19CL/blob/main/main.m">main call</a>
+    <a href="https://github.com/neurovisionhub/GSM-covid19CL/blob/main/main.m">main</a>
   </p>
 </p>
 
@@ -25,7 +25,11 @@
  - Department of Mathematics and Computers Science, Faculty of Science, University of Santiago of Chile
  - Department of Mathematical Engineering (DIM) and Center for Mathematical Modeling (CMM), University of Chile
  - Centre for Biotechnology and Bioengineering (CeBiB), University of Chile
-
+This will create a bullet point list in your markdown
+ Markup : * Bullet list
+              * Nested bullet
+                  * Sub-nested bullet etc
+          * Bullet list item 2
 
 <!-- TABLE OF CONTENTS -->
 <details open="open">
