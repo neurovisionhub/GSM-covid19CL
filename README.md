@@ -43,7 +43,7 @@
     <li><a href="#usage">Usage</a></li>
    <ul>
         <li><a href="#main-configuration">main configuration</a></li>
-        <li><a href="#data-web">data-web</a></li>
+        <li><a href="#data">data-web</a></li>
       </ul>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -89,16 +89,16 @@ matlab 2014 or higher
    ```
 <!-- USAGE EXAMPLES -->
 ## Usage
-
-
 In root folder, edit "main.m" to run predefined experiments, where 'test_paper_build_tables.m' loads the experimental data and params.
-
    ```sh
 clear
 addpath(genpath('./'))
 
-<!-- CONTRIBUTING -->
+## data
+
 ## Contributing
+<!-- CONTRIBUTING -->
+
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
