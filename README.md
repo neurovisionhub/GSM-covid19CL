@@ -7,7 +7,7 @@
   <a href="https://github.com/neurovisionhub/GSM-covid19CL">
     <img src="images/logobiobio.png" alt="Logo" width="80" height="80">
     <img src="images/logo_usach.png" alt="Logo" width="80" height="80">
-    <img src="images/uchile.gif" alt="Logo" width="80" height="80">
+    <img src="images/uchile.jpeg" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">A general modeling framework to assess COVID-19 ongoing vaccination in Chile</h3>
