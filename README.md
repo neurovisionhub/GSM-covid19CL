@@ -46,11 +46,12 @@
     </li>
     <li><a href="#usage">Usage</a></li>
    <ul>
-        <li><a href="#main-configuration">main configuration</a></li>
-        <li><a href="#data">data-web</a></li>
+        <li><a href="#run">main configuration</a></li>
+        <li><a href="#data">Official data</a></li>
       </ul>
+    <li><a href="#Authorcontributions">Author contributions</a></li>  
     <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
+      <li><a href="#license">License</a></li>
  <!--   <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>-->
   </ol>
@@ -123,6 +124,7 @@ O. Rojas - oscar.rojas.d@usach.cl
 
 Project Link: [https://github.com/neurovisionhub/GSM-covid19CL](https://github.com/neurovisionhub/GSM-covid19CL)](https://github.com/neurovisionhub/GSM-covid19CL)
 
+## Authorcontributions
 <!-- AUTHOR CONTRIBUTIONS -->
 PC contributed to conceptualization, formal analysis, investigation, methodology, project administration, software, supervision, validation, writing – original draft, writing review & editing.
 
