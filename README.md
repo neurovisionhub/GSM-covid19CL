@@ -1,5 +1,5 @@
 # GSM-covid19CL
- <h3 align="center">Colaborative research</h3>
+ <h3 align="center">Colaborative research: Department of Basic Sciences, Faculty of Sciences, University of Bío-Bío; Department of Mathematics and Computers Science, Faculty of Science, University of Santiago of Chile; Department of Mathematical Engineering (DIM) and Center for Mathematical Modeling (CMM), University of Chile and Centre for Biotechnology and Bioengineering (CeBiB), University of Chile,</h3>
 
  <!-- PROJECT LOGO -->
 <br />
@@ -7,13 +7,13 @@
   <a href="https://github.com/neurovisionhub/GSM-covid19CL">
     <img src="images/logobiobio.png" alt="Logo" width="80" height="80">
     <img src="images/logo_usach.png" alt="Logo" width="80" height="80">
-    <img src="images/udechile.jpeg" alt="Logo" width="80" height="80">
+    <img src="images/logouchile.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">A general modeling framework to assess COVID-19 ongoing vaccination in Chile</h3>
 
   <p align="center">
-    Patricio Cumsille, Oscar Rojas and Carlos Conca
+    Patricio Cumsille (U. Bío-Bío), Oscar Rojas (U. Santiago de Chile) and Carlos Conca (U. de Chile)
     <br />
     <a href="https://github.com/neurovisionhub/GSM-covid19CL"><strong>Explore the docs »</strong></a>
     <br />
@@ -65,7 +65,7 @@ Techniques to predict the processing time of document ranking algorithms are com
 
 ### run 
 
-* open file ./test.m and run with matlab 
+* open file ./main.m and run with matlab 
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -81,124 +81,54 @@ matlab 2014 or higher
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/neurovisionhub/dft-running-time-prediction.git
+   git clone https://github.com/neurovisionhub/GSM-covid19CL.git
    ```
 2. cd directory
    ```sh 
-   cd ./dft-running-time-prediction
+   cd ./GSM-covid19CL
    ```
-
-
-
 <!-- USAGE EXAMPLES -->
 ## Usage
 
 
-In root folder, edit "test.m" to run predefined experiments (**'simple','parallel','all','cross-fold','visual-map','block'**), where 'configdefault.m' loads the experimental data.
+In root folder, edit "main.m" to run predefined experiments, where 'test_paper_build_tables.m' loads the experimental data and params.
 
    ```sh
 clear
 addpath(genpath('./'))
-configdefault;
-cd train-test\
-
-% config examples
-% Simple test Baseline vs DFT-Based 
-% Selecction data-web
-[data_simple,labelsD,labelsA]= main('simple');
-data = [labelsD;labelsA;data_simple];
-data = [["","", "Baseline","DFT-Based"]',data];
-T = table(data)
-
-% runtime-parallel prediction
-%[data_parallel,~]= main('parallel');
-.
-.
-
-   ```
-
-
-main.m is a routine that receives as input a label (that describes the experiment) and outputs an array or tables.
-
-Matrix Data
-
-   ```sh
-   data_simple =
-
-    0.9636    0.0219    0.8906    0.0356    0.9015    0.0490    0.9309    0.0330
-    0.9688    0.0203    0.9279    0.0290    0.9235    0.0432    0.9324    0.0325
-
-Table
-
-                                       data                                    
-    ___________________________________________________________________________
-
-    ""             "W.CW.BM25"    "W.CW.BM25"    "BMW.CW.BM25"    "BMW.CW.BM25"
-    ""             "PCr"          "RMSE"         "PCr"            "RMSE"       
-    "Baseline"     "0.96363"      "0.021945"     "0.90145"        "0.049025"   
-    "DFT-Based"    "0.96875"      "0.020327"     "0.92353"        "0.043161"
-   ```
-
-
-## main-configuration
-The training and test run configuration is set to ./train-test/main.m. General options include: 
-
-```sh
-% ls = {0:local,1:shared}
-% t = {0,1,2,3} = {1 thread, 2 threads, 4 threads, 8 threads}
-% k = {10,100,1000,10000}  
-% P = {0:baseline, 1:DFT-Based}
-% p_test ={ %test }
-%  sequence of neurons hidden layer for multiple test
-vector_NHNeurons = [1,5,10,25,50];
-% number of hidden neurons
-NHNeurons = 5;
-```
-More information in [train-test]
-
-## data-web
-
-Directory data-web contains:
-
-*  Queries Trec09 processed for ClueWeb and Gov2
-* Descriptors of terms with baseline technique (for ClueWeb/Gov2 - BM25/TFIDF) and query 42 descriptors.
-* Baseline technique query descriptors computed for k = 10,100,1000,10000 for ClueWeb with BM25
 
 <!-- CONTRIBUTING -->
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-
+<!-- CONFLICT OF INTEREST STATEMENT -->
+The authors declare that the research was conducted without commercial or financial relationships that could constitute a potential conflict of interest.
 
 <!-- LICENSE -->
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
-
-
 <!-- CONTACT -->
 ## Contact
 
 O. Rojas - oscar.rojas.d@usach.cl
 
-Project Link: [https://github.com/neurovisionhub/dft-running-time-prediction](https://github.com/neurovisionhub/dft-running-time-prediction)
+Project Link: [https://github.com/neurovisionhub/GSM-covid19CL](https://github.com/neurovisionhub/GSM-covid19CL)](https://github.com/neurovisionhub/GSM-covid19CL)
 
+<!-- AUTHOR CONTRIBUTIONS -->
+PC contributed to conceptualization, formal analysis, investigation, methodology, project administration, software, supervision, validation, writing – original draft, writing review & editing.
 
+ORD contributed to conceptualization, formal analysis, investigation, methodology, software, validation, writing – review & editing.
+
+CC contributed to supervision, writing - review & editing.
 
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
-
-* []()
-* []()
-* []()
+Funding was provided by Centre for Biotechnology and Bioengineering (CeBiB), grant number PIA-CONICYT FB-01, to PC, and CC; and regular research project DIUBB
+436 2120432 IF/R, to PC. The funders had no role in study design, data collection and analysis, decision to publish, or preparation of the manuscript.
 
 <!-- 
 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
 
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-
-[train-test]: https://github.com/neurovisionhub/dft-running-time-prediction/tree/master/train-test
