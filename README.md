@@ -1,6 +1,4 @@
 # GSM-covid19CL
- <h3 align="center">Colaborative research: Department of Basic Sciences, Faculty of Sciences, University of Bío-Bío; Department of Mathematics and Computers Science, Faculty of Science, University of Santiago of Chile; Department of Mathematical Engineering (DIM) and Center for Mathematical Modeling (CMM), University of Chile and Centre for Biotechnology and Bioengineering (CeBiB), University of Chile,</h3>
-
  <!-- PROJECT LOGO -->
 <br />
 <p align="center">
@@ -22,6 +20,7 @@
   </p>
 </p>
 
+ <p align="center">Colaborative research: Department of Basic Sciences, Faculty of Sciences, University of Bío-Bío; Department of Mathematics and Computers Science, Faculty of Science, University of Santiago of Chile; Department of Mathematical Engineering (DIM) and Center for Mathematical Modeling (CMM), University of Chile and Centre for Biotechnology and Bioengineering (CeBiB), University of Chile,</p>
 
 
 <!-- TABLE OF CONTENTS -->
@@ -58,10 +57,11 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Series of machine learning experiments and data mining tests for the evaluation of query execution time predictors in web search engines.
+Background: This paper aims to develop a general epidemiological modeling framework to assess combined vaccination and NPIs strategies for the dynamics of any transmissible disease in the medium term. As a case study, we applied this framework to evaluate the ongoing vaccination impact on COVID-19 in Chile.
 
-Techniques to predict the processing time of document ranking algorithms are compared, where predicting performance allows to allocate resources efficiently in web search engines.
+Materials and methods: Official COVID-19 datasets provided by the Chilean government were processed and used to implement the general epidemiological modeling framework. The framework consists of two main parts: general epidemiological modeling and methodology that relies on robust parameter optimization, a parametric bootstrapping approach, and data processing.
 
+Results: The framework is reproducible since we provided open-source codes that implement the methodology, considering parameter initialization standardized for every dataset. As a result, the scientific community may adapt it to predict the impact of combined vaccination and NPIs strategies for any transmissible disease and help visualize the potential effects of implemented plans by policymakers. Furthermore, the framework is robust since it provided outstanding results concerning calibration, forecasting the COVID-19 pandemic for different datasets and pandemic stages, and vaccination assessment.
 
 ### run 
 
