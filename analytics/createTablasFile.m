@@ -1,7 +1,6 @@
 % tabla_errores = table(Region)
 % Region{i,1} = region;
 % erroresTags = cell(4,1);
-format shortE
 erroresTags = {'Susceptible*';'Infected';'Recovered';'ICU Internships'};
 errores = [Ess;Eii;Err;Euu];
 tabla_errores = table(erroresTags,errores)
@@ -29,8 +28,13 @@ hiperparametros_values = table(hiperparametros_tags,[globalPais,globalUCImovil,d
 
 
 Ub(7)
-disp('2 Errores relativos f(x) y ajustado en cum')
-%e
-formatSpec = '%.4e';
-sLogpng = strcat('&',num2str(factor_inicial,formatSpec),'&cum/two weeks&$',num2str(errores(1,1),formatSpec),'$&$',num2str(errores(2,1),formatSpec),'$&$',num2str(errores(3,1),formatSpec),'$&',num2str(numThetas),'&[',num2str(diaInicio),',',num2str(diaFinEstudio),']')
-%E2.1	&	0.001 & cum/two weeks   &$errores(1,1)$&$errores(2,1)$&$errores(3,1)$& numThetas & $[diaInicio,diaFinEstudio]$&  240 \\
+disp('3 Errores relativos - f(x) <=1')
+% 
+% t.Format = 'yyyymmddHHMMSS';
+% text_log = datestr(t,t.Format);
+% sLogxlsx = strcat('./',region,'_',text_log,'_',string(region),'.xlsx');
+% %saveas(gcf, sLogpng);
+% 
+% writetable(hiperparametros_values,'log.1.hiperparametros_values.xlsx',"WriteMode","append","AutoFitWidth",false);
+% 
+

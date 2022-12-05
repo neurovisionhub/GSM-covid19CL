@@ -58,7 +58,7 @@ end
 
 if acumulada ==1 
 
-%tc_a=diaInicio-1:diaFin-1;
+tc_a=diaInicio-1:diaFin-1;
 tc_a_ini=1:diaFin;
 %Data=xd(tc_a,:);
 Data_of_ini = xd(tc_a_ini,:);
@@ -76,6 +76,13 @@ Data_of_ini_diff_i = diferenciasDiarias(Data_of_ini(:,1)');
 % mean_data_ini = mean(Data_of_ini_diff_i);
 
    mean_data_ini=mean(xd(1:diaFin,1));
+   %mean_data_ini = mean(Data_of_ini_diff_i);
+   if media_inicio_fin == 1
+
+    mean_data_ini=mean(xd(diaInicio:diaFin,1));
+
+   end
+
    max_data_ini = max(xd(1:diaFin,1)); 
    median_data_ini= median(xd(1:diaFin,1));
 if maxGlobal==1
@@ -106,6 +113,7 @@ tau1=5;
 tau2=14;
 tau3=7; %tiempo en que comienza el efecto de la vacuna?
 tau4=240; % tiempo de inmunidad
+%tau4=30; % tiempo de inmunidad
 tau5=35;
 %% Nueva variante con paso de UCI a R
 tau6=32;
@@ -159,17 +167,3 @@ p_inicial = p0;
 else
 p0=pUltimo;
 end
-
-% d_t_tmp = diaFin - diaInicio;
-% sampling_t = ceil(1:d_t_tmp/(nGammas-1):d_t_tmp);
-% 
-% size_t_int =  [sampling_t,size(x0,1)]';
-% S_t = N-x0(1,1)-x0(1,2)-x0(1,3);
-% 
-% S_t = N-x0(size_t_int,2)-x0(size_t_int,3)-x0(size_t_int,4);
-% RE_SIR = (all_betas.*S_t)./(all_gammas*N);
-% t_taus = all_taus;
-% R_I = x0(size_t_int,2);
-%compute_curves
-% all_betas/100
-% 1./all_gammas

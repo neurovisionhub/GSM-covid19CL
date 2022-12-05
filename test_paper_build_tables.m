@@ -224,7 +224,7 @@ if acumulada == 1 || acumulada == 0
     end
 end
 
-factor_inicial =0.0005;
+factor_inicial =0.00025;
 
 beta = max(beta_lb_up_op)*factor_inicial; %tasa de contato (fabrizzio en algunas partes indica contacto en otra transmision) -- tasa de transmisión! .
 gamma = max(gamma_lb_up_op)*factor_inicial;% % (1/gamma) tiempo de infección promedio - tasa de remosión media
@@ -258,7 +258,7 @@ p=p0
 % 
 
 %return
-compute_curves_error
+%compute_curves_error
 compute_curves
 
 %pause
@@ -306,10 +306,17 @@ params_results = [suma_beta;suma_gamma;...
 
 ro_basico = suma_beta/suma_gamma
 ro_distribucion_bloque = all_betas_salida./all_gammas_salida
-
 ro_basico_st = (suma_beta/suma_gamma)/nGammas
-
 results_ro = [ro_basico;ro_basico_st];
+
+distancia_t = diaFinEstudio - diaInicio;
+meses = distancia_t/30
+
+dim_tramo = meses/nGammas
+
+
+
+
 %  p=p0
 %  compute_curves_error
 %  compute_curves

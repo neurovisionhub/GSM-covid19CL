@@ -7,14 +7,30 @@ globalPais =0;
 flagpause=0; %for pause on visualization
 % globalUCImovil = 1 <- ingreso movil nacional chileno 
 globalUCImovil = 0; % si se utiliza ingreso movil se ajusta mejor el final de la curva desde el inicio de optimizacion 
-diaInicio = 130
+diaInicio = 100
 diaFinEstudio = 950
+
+%% Parametros de control/performance
+primera_ola =0;
+toda_la_ola = 0;
+opcion_a1 = 0; % para primera optimizacion
+cargar_checkpoint = 0
+media_inicio_fin=0
+
+if diaInicio > 200
+media_inicio_fin = 0
+end
+
+
+distancia_t = diaFinEstudio - diaInicio;
+%numThetas=ceil(distancia_t/30);
+
 numThetas = 20
-ventana_general=30; % en laptop nueno con 14
+ventana_general=21; % en laptop nueno con 14
 matrix_results = [];
 regiones = {'Arica y Parinacota','Tarapacá','Antofagasta','Atacama','Coquimbo','Valparaíso','Metropolitana','O Higgins','Maule','Ñuble','Biobío','Araucanía','Los Ríos','Los Lagos','Aysén','Magallanes'};
 %global_time_op=tic;
-region = 'Metropolitana'
+region = 'Magallanes'
 
 size_regiones = size(regiones,2)
 Region = cell(size_regiones,1);

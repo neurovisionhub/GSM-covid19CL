@@ -1,6 +1,6 @@
 global nTau contF 
-%%%delete(gcp('nocreate'))
-%parpool("Processes",20)
+% delete(gcp('nocreate'))
+% parpool("Processes",20)
 
 %% ** Script para Optimizaci�n por m�nimos cuadrados **
 %% Opciones para el solver de optimizaci�n
@@ -41,9 +41,8 @@ pos_aC = 3;
 %%
 Lb(pos_a)=1e-5; Ub(pos_a)=1; %a
 Lb(pos_k)=1e-5; Ub(pos_k)=1; %k
-
-
 Lb(pos_aC)=1e-5; 
+
 if acumulada == 1 
     Ub(pos_aC)=max_data_ini;%max(Data(:,1)); %aC
 end
@@ -87,6 +86,63 @@ Lb(9)=7; Ub(9)=42; %tau6 -> recuperacion UCI
 
 
 p=p0;
+%load("analytics\p_global.mat")
+
+if cargar_checkpoint==1
+%load("analytics\p_global.mat")
+
+   if acumulada == 1 || acumulada == 2
+
+      
+   if numThetas == 10
+   load("analytics\p_global_10thetas_acum20.mat")
+   end
+   if numThetas == 20
+   load("analytics\p_global_20thetas_acum20.mat")
+        if primera_ola ==1
+        load("analytics\p_global_20thetas_acum20_deola1.mat")
+        end
+
+        if toda_la_ola ==1
+        load("analytics\p_global_30thetas_acum20_completa.mat")
+
+
+       if strcmp(region,'Antofagasta') 
+           load("analytics\p_antofagasta.mat")
+       end
+
+        end
+
+   end
+   if numThetas == 30
+
+
+
+   
+    if toda_la_ola ==1
+        load("analytics\p_global_30thetas_acum20_completa.mat")
+    end
+
+    if opcion_a1==1
+        load("analytics\p_global_30thetas_acum20_completa_a_igual1.mat")
+
+    end
+
+   end
+  
+   elseif acumulada == 2
+   if numThetas == 10
+   load("analytics\p_global_10thetas_daily10.mat")
+   end
+   if numThetas == 20
+   load("analytics\p_global_20thetas_daily20.mat")
+   end
+   if numThetas == 30
+   load("analytics\p_global_20thetas_daily30.mat")
+   end
+   end
+
+end
 %% ORIGINALES DE PATRICIO
 % % % resnormref=9.7028e-02;% no ad-hoc
 % % % tol=5e-2;
@@ -174,7 +230,7 @@ contF
     %[p,r,~,~,~,~,jac]=lsqnonlin(@(p) ESIR_rel(p,tc,Data,x0,N),p0,Lb,Ub,options);
 %disp(p')
 %disp(x0);
-   [p,r,~,~,~,~,jac]=lsqnonlin(@(p) ESIR_rel_all(p,tc_t,Data,x0,N,v_ini,acumulada),p0,Lb,Ub,options);
+   [p,r,~,~,~,~,jac]=lsqnonlin(@(p) ESIR_rel_all(p,tc_t,Data,x0,N,v_ini,opcion_a1),p0,Lb,Ub,options);
    %  [p,r,~,~,~,~,jac]=fmincon(@(p) ESIR_rel(p,tc,Data,x0,N),p0,Lb,Ub,options);
     p0=p
     r0=r;

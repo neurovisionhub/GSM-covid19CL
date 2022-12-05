@@ -1,5 +1,5 @@
 %% cï¿½lculo de la funciï¿½n error para el modelo SIR con retardo
-function E = ESIR_rel_all(p,tc,xd,x0,N,vectorIni,acumulada)
+function E = ESIR_rel_all(p,tc,xd,x0,N,vectorIni,opcion_a1)
 % global nTau 
 global h Mv contF 
 nTau = 6;
@@ -46,35 +46,45 @@ tmp = y;
 tmpx = xd;
 %  if acumulada == 1
 %   y(2,:) = diferenciasDiarias(y(2,:));
-%   y(4,:) = diferenciasDiarias(y(4,:));
-%   y(3,:) = diferenciasDiarias(y(3,:));
+% %   y(4,:) = diferenciasDiarias(y(4,:));
+% %   y(3,:) = diferenciasDiarias(y(3,:));
 %   xd(:,1) = diferenciasDiarias(xd(:,1)');
-%   xd(:,3) = diferenciasDiarias(xd(:,3)');
-%   xd(:,2) = diferenciasDiarias(xd(:,2)'); 
+% %   xd(:,3) = diferenciasDiarias(xd(:,3)');
+% %   xd(:,2) = diferenciasDiarias(xd(:,2)'); 
 %  end
-%alfa=sigmoide_all(p,y(2,:),nTau);
+% alfa=sigmoide_all(p,y(2,:),nTau);
 a=p(1);
 k=p(2);
 aC=p(3);
 
 alfa=1-(1-a)./( 1+exp( -k*(y(2,:)-aC) ) );
 
+%Para pre-aproximacion
+if opcion_a1 == 1
+alfa = 1;
+end
+
 alfaMean = mean(alfa);
-alfa=1; %% RECORDAR BORRAR SOLO PARA EXPERIMENTAL DEPENDENCIA
+%alfa=1; %% RECORDAR BORRAR SOLO PARA EXPERIMENTAL DEPENDENCIA
 %y(2,:) = tmp(2,:);
 %xd(:,1) = tmpx;
 %% Sacar comentarios en caso de realizar traza grafica en archivos
 
 
-
+v_t = alfa.*y(2,:);
 %% Error relativo al modelo considera
 %E= [  ( alfa.*y(2,:)-xd(:,1)' )./( alfa.*y(2,:)) +numRel',  ( y(4,:)-xd(:,3)' )./y(4,:) ];
-%E= abs([  ( alfa.*y(2,:)-xd(:,1)' )./( alfa.*y(2,:))   ( y(4,:)-xd(:,3)' )./y(4,:) ]);
-%%%E= [  ( alfa.*y(2,:)-xd(:,1)' )./( alfa.*y(2,:))   ( y(4,:)-xd(:,3)' )./y(4,:) ]; %para curva diaria acumulada=2
-E= [ ( alfa.*y(2,:)-xd(:,1)' )./(alfa.*y(2,:)) ( y(4,:)-xd(:,3)' )./y(4,:) ( alfa.*y(3,:)-xd(:,2)' )./(alfa.*y(3,:)) ]; %acumulada=1
-%%E= [ ( alfa.*y(2,:)-xd(:,1)' )./(alfa.*y(2,:)) ( y(4,:)-xd(:,3)' )./y(4,:) ( y(3,:)-xd(:,2)' )./(y(3,:)) ]; %acumulada=1
+%%E= abs([  ( alfa.*y(2,:)-xd(:,1)' )./( alfa.*y(2,:))   ( y(4,:)-xd(:,3)' )./y(4,:) ]);
+E= [  ( v_t-xd(:,1)' )./(v_t)   ( y(4,:)-xd(:,3)' )./y(4,:) ]; %para curva diaria acumulada=2
+%E= [ ( alfa.*y(2,:)-xd(:,1)' )./(alfa.*y(2,:)) ( y(4,:)-xd(:,3)' )./y(4,:) ( alfa.*y(3,:)-xd(:,2)' )./(alfa.*y(3,:)) ]; %acumulada=1
+%%%E= [ ( alfa.*y(2,:)-xd(:,1)' )./(alfa.*y(2,:)) ( y(4,:)-xd(:,3)' )./y(4,:) ( y(3,:)-xd(:,2)' )./(y(3,:)) ]; %acumulada=1
 %E= [ (y(1,:)-xd(:,5)' )./y(1,:)     ( alfa.*y(2,:)-xd(:,1)' )./(alfa.*y(2,:)) ( y(4,:)-xd(:,3)' )./y(4,:) ( y(3,:)-xd(:,2)' )./(y(3,:)) ]; %acumulada=1
 %E= [ (y(1,:)-xd(:,5)' )./y(1,:)     ( alfa.*y(2,:)-xd(:,1)' )./(alfa.*y(2,:)) ( y(4,:)-xd(:,3)' )./y(4,:) ( alfa.*y(3,:)-xd(:,2)' )./(alfa.*y(3,:)) ]; %acumulada=1
+
+% S+I+UCI
+%E= [ (y(1,:)-xd(:,5)' )./y(1,:)     ( alfa.*y(2,:)-xd(:,1)' )./(alfa.*y(2,:)) ( y(4,:)-xd(:,3)' )./y(4,:) ]; %acumulada=1
+
+
 
 y = tmp;
 xd = tmpx;
@@ -91,7 +101,7 @@ plot(xd(:,1:3));
 plot(alfa.*y(2,:),'-'); % I
 plot(y(2,:),'--'); % I
 %plot(alfa.*y(3,:),'--'); % R
-plot(y(3,:),'.'); % R
+%plot(y(3,:),'.'); % R
 plot(y(4,:),'-'); % U
 t = datetime;
 t.Format = 'yyyymmddHHMMSS';
