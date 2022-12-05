@@ -20,7 +20,11 @@
   </p>
 </p>
 
- <p align="center">Colaborative research: Department of Basic Sciences, Faculty of Sciences, University of Bío-Bío; Department of Mathematics and Computers Science, Faculty of Science, University of Santiago of Chile; Department of Mathematical Engineering (DIM) and Center for Mathematical Modeling (CMM), University of Chile and Centre for Biotechnology and Bioengineering (CeBiB), University of Chile,</p>
+ <p align="center">Colaborative research: 
+ Department of Basic Sciences, Faculty of Sciences, University of Bío-Bío
+ Department of Mathematics and Computers Science, Faculty of Science, University of Santiago of Chile
+ Department of Mathematical Engineering (DIM) and Center for Mathematical Modeling (CMM), University of Chile
+ Centre for Biotechnology and Bioengineering (CeBiB), University of Chile</p>
 
 
 <!-- TABLE OF CONTENTS -->
@@ -93,12 +97,14 @@ In root folder, edit "main.m" to run predefined experiments, where 'test_paper_b
    ```sh
 clear
 addpath(genpath('./'))
+```
 
-## data
+### data
+
+Official data from the Chilean Ministry of Science repository, available at https://github.com/MinCiencia/Datos-COVID19 
 
 ## Contributing
 <!-- CONTRIBUTING -->
-
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
