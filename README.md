@@ -1,5 +1,5 @@
 # GSM-covid19CL
- A Generalized SIR Model to describe and predict medium-term vaccine effect: The covid-19 dynamics in Chile as a study case
+ A general modeling framework to assess COVID-19 ongoing vaccination in Chile
 
 
 
@@ -10,8 +10,7 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">A DFT-Based Running Time Prediction Algorithm for
-Web Queries</h3>
+  <h3 align="center">A general modeling framework to assess COVID-19 ongoing vaccination in Chile</h3>
 
   <p align="center">
     Patricio Cumsille, Oscar Rojas and Carlos Conca
@@ -19,7 +18,7 @@ Web Queries</h3>
     <a href="https://github.com/neurovisionhub/GSM-covid19CL"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/neurovisionhub/dft-running-time-prediction/tree/master/train-test">View train-test</a>
+    <a href="https://github.com/neurovisionhub/GSM-covid19CL/blob/main/main.m">main call</a>
   </p>
 </p>
 
