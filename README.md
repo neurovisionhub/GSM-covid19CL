@@ -19,18 +19,11 @@
     <a href="https://github.com/neurovisionhub/GSM-covid19CL/blob/main/main.m">main</a>
   </p>
 </p>
-
- <p align="center">Colaborative research</p>
- - Department of Basic Sciences, Faculty of Sciences, University of Bío-Bío
- - Department of Mathematics and Computers Science, Faculty of Science, University of Santiago of Chile
- - Department of Mathematical Engineering (DIM) and Center for Mathematical Modeling (CMM), University of Chile
- - Centre for Biotechnology and Bioengineering (CeBiB), University of Chile
-This will create a bullet point list in your markdown
- Markup : * Bullet list
-              * Nested bullet
-                  * Sub-nested bullet etc
-          * Bullet list item 2
-
+- Colaborative research
+  - Department of Basic Sciences, Faculty of Sciences, University of Bío-Bío
+  - Department of Mathematics and Computers Science, Faculty of Science, University of Santiago of Chile
+  - Department of Mathematical Engineering (DIM) and Center for Mathematical Modeling (CMM), University of Chile
+  - Centre for Biotechnology and Bioengineering (CeBiB), University of Chile
 <!-- TABLE OF CONTENTS -->
 <details open="open">
   <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
