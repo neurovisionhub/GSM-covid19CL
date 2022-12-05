@@ -1,5 +1,5 @@
 # GSM-covid19CL
- A general modeling framework to assess COVID-19 ongoing vaccination in Chile
+ Colaborative research: A general modeling framework to assess COVID-19 ongoing vaccination in Chile
 
 
 
@@ -7,7 +7,9 @@
 <br />
 <p align="center">
   <a href="https://github.com/neurovisionhub/GSM-covid19CL">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="images/logobiobio.png" alt="Logo" width="80" height="80">
+    <img src="images/logo_usach.png" alt="Logo" width="80" height="80">
+    <img src="images/uchile.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">A general modeling framework to assess COVID-19 ongoing vaccination in Chile</h3>
