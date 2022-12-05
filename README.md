@@ -19,11 +19,7 @@
     <a href="https://github.com/neurovisionhub/GSM-covid19CL/blob/main/main.m">main</a>
   </p>
 </p>
-- Colaborative research
-  - Department of Basic Sciences, Faculty of Sciences, University of Bío-Bío
-  - Department of Mathematics and Computers Science, Faculty of Science, University of Santiago of Chile
-  - Department of Mathematical Engineering (DIM) and Center for Mathematical Modeling (CMM), University of Chile
-  - Centre for Biotechnology and Bioengineering (CeBiB), University of Chile
+
 <!-- TABLE OF CONTENTS -->
 <details open="open">
   <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
@@ -105,7 +101,6 @@ Official data from the Chilean Ministry of Science repository, available at http
 <!-- CONTRIBUTING -->
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
 <!-- CONFLICT OF INTEREST STATEMENT -->
 The authors declare that the research was conducted without commercial or financial relationships that could constitute a potential conflict of interest.
 
@@ -123,6 +118,13 @@ Project Link: [https://github.com/neurovisionhub/GSM-covid19CL](https://github.c
 
 ## Author contributions
 <!-- AUTHOR CONTRIBUTIONS -->
+
+- Colaborative research
+  - Department of Basic Sciences, Faculty of Sciences, University of Bío-Bío (P. Cumsille).
+  - Department of Mathematics and Computers Science, Faculty of Science, University of Santiago of Chile (O. Rojas).
+  - Department of Mathematical Engineering (DIM) and Center for Mathematical Modeling (CMM), University of Chile (C. Conca).
+  - Centre for Biotechnology and Bioengineering (CeBiB), University of Chile (C. Conca and P. Cumsille).
+
 PC contributed to conceptualization, formal analysis, investigation, methodology, project administration, software, supervision, validation, writing – original draft, writing review & editing.
 
 ORD contributed to conceptualization, formal analysis, investigation, methodology, software, validation, writing – review & editing.
