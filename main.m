@@ -1,129 +1,80 @@
-addpath (genpath('calls/'))
-addpath (genpath('model/'))
-addpath (genpath('dataCL/'))
-addpath (genpath('exps/'))
-%% -------- Description of the programa params ---------
-% --- grafica_data : muestra graficos de datos cargados (no:0. yes:1)
-% ej. grafica_data = 0;
-% --- grafica_ajustes : muestra graficos de datos ajustados (no:0. yes:1)
-% ej. grafica_ajustes = 0;
-
-%global grafica_data grafica_ajustes
-
-%% data_config : file data config (see file for more details)   
-%  region selection / type UCI / smoothing / 
-%  size movile screen / prunning / daily or acum / 
-%  init day & final day study
-
-%% model_solver_config : file model solver config (see file for more details)
-%  maxiters optimizer / size vector of the params(time) 
-%  assing option_model 
-% --- Model with unique gamma, alfaS and deltaS (constant)
-% option_model = 1 => some_blocks_params_model;
-% --- Model with multiple gamma, alfaS and deltaS (vectors)
-% "option_model = 2" => all_blocks_params_model;
-%region = 'Metropolitana'; % 
-%region = 'Atacama'
-%region = 'Arica y Parinacota'
-%region = 'Biobío'
-%region = 'Valparaíso'
-%region = 'Araucanía'
-%region = 'Los Ríos'
-%region = 'Los Lagos'
-%region = 'Aysén'
-%region = 'Magallanes'
-%region = 'Ñuble'
-%region = 'all_test'
-
 
 clear
 
-global numThetas
-close all
-cont=0;
-option_model = 2
-grafica_data = 0;
-grafica_ajustes = 0;
+%% vars global for test 
+global globalPais grafica_data ventana_general globalUCImovil flagpause numThetas
 
-%id_log = 1; % id_log:<id> of index experiments --> on file ej: log_file_p0_values.<1>.dat 
-% region = 'Metropolitana';
-% data_config % call data_config
-% maxiters = 10;
-% numThetas=20;
-% model_solver_config % call model_solver_config
-% 
-% % example 1
-% main_all_blocks_1
-% save_log('main_all_blocks_1-v20',p0)
-% save_log('error_1-v20',r)
-% compute_curves
-% save_log('curves_1-v20',salida)
-% 
-% % example 2
-% maxiters = 10;
-% numThetas=10;
-% 
-% model_solver_config 
-% main_all_blocks_1
-% save_log('main_all_blocks_1-v10',p0)
-% save_log('error_1-v10',r)
-% compute_curves
-% save_log('curves_1-v10',salida)
+% grafica_data = 1 for generated graphics on analisys
+grafica_data=0; 
+flagpause=0; % for pause on visualization
 
+% globalPais = 1 using data national; 
+% globalPais = 0 using data regional; 
+globalPais =0; 
 
+% globalUCImovil = 1 <- using  admission daily national; 
+% globalUCImovil = 0 <- using  hospitalization and ICU stay; 
+globalUCImovil = 0; 
 
-% example 2
-maxiters = 10;
-numThetas=3;
+% Research block analysis
+diaInicio = 250 % init day
+diaFinEstudio = 550 % finish day
 
+%% Params of control/performance
+primera_ola =0; % for localized research on first wave, default = 0
+toda_la_ola = 0; % for future test, default = 0
+opcion_a1 = 0; % for first optimization, default = 0
+cargar_checkpoint = 0; % 1-> for case load checkpoint, default = 0
+media_inicio_fin=0 % 1 for use media global, default 0
+
+% days after the first wave  
+if diaInicio > 200
+media_inicio_fin = 0
+end
+
+distancia_t = diaFinEstudio - diaInicio;
+%numThetas=ceil(distancia_t/30); % For automatic estimate number blocks
+
+numThetas = 20 % is recommended for all tests
+
+% (ventana_general) --> As the interest is the trend of the curves, and there is a data lag between 3 to 5 days,
+% at intervals of several months or a year, we increase the size of the mobile windows to a month
+% in this way, we smooth the curves and minimize the abrupt jumps in the data.
+% In addition, to avoid long approximation cycles in the sign changes of the derivatives, we have of the use of accumulated curves, where use larger moving window .... when there are abrupt changes in the curve
+%% Important: If is used one day (ventana_general = 1), original data from the data set is used
+
+ventana_general=14; % windows mobile size (on days), 14 days is default
+
+matrix_results = [];
+regiones = {'Arica y Parinacota','Tarapacá','Antofagasta','Atacama','Coquimbo','Valparaíso','Metropolitana','O Higgins','Maule','Ñuble','Biobío','Araucanía','Los Ríos','Los Lagos','Aysén','Magallanes'};
+%global_time_op=tic;
+
+% other example
+% region = 'Magallanes'
 region = 'Metropolitana'
-data_config
-model_solver_config 
-main_all_blocks_1
-save_log('main_all_blocks_1_Metropolitana-v3',p0)
-save_log('error_1-Metropolitana-v3',r)
-compute_curves
-save_log('curves_1-Metropolitana-v3',salida)
 
-region = 'Valparaíso'
-data_config
-model_solver_config 
-main_all_blocks_1
-save_log('main_all_blocks_1-Valparaiso-v3',p0)
-save_log('error_1-Valparaiso-v3',r)
-compute_curves
-save_log('curves_1-Valparaiso-v3',salida)
+% On case of the automatics design execution program 
+size_regiones = size(regiones,2)
+Region = cell(size_regiones,1);
+total_days = [];
+matrix_resultados = [];
 
-region = 'Ñuble'
-data_config
-model_solver_config 
-main_all_blocks_1
-save_log('main_all_blocks_1-nuble-v3',p0)
-save_log('error_1-nuble-v3',r)
-compute_curves
-save_log('curves_1-nuble-v3',salida)
+%% See relevant params for execution program
+% acumulada = 1 is cumulative data smooth and cumulative proccesing curves, util for the detection of anomalies on data and large datasets, and fast proccessing;
+% acumulada = 2 is cumulative data smooth and dialy proccesing curves, util for an exhaustive approach and definitive result; 
+acumulada = 1;  
+
+maxGlobal =0;%  For test with max of the all data, default = 0 
+meanGlobal =0; % For test with mean of the all data, default = 0
+mediana = 0; % For extra test, default = 0
+
+%% Call main test of the publication research 
+test_paper_build_tables
+
+%% Build results tables
+createTablas
 
 
-numThetas=10;
-data_config
-model_solver_config 
-main_all_blocks_1
-save_log('main_all_blocks_1-nuble-v10',p0)
-save_log('error_1-nuble-v10',r)
-compute_curves
-save_log('curves_1-nuble-v10',salida)
-% call_solver % call numeric method & optimizer
-% alfa, gamma y delta -> S of model=1
-% alfa, gamma y delta -> S(t) of model=2
-% or 
-
-%main_some_block  % (model 1 - proposed 1 "M1.ESIR_Rel.Aclouped.0.1")
-%save_log('main_some_block',p0)
-%main_some_block_iter (model 1 - extension.proposed 1 "M1.ESIR_W_Rel.Desacoupled.0.1") 
-%save_log('main_some_block_iter',p0)
-
-% main_all_blocks_1
-% save_log('main_all_blocks_1',p0)
 
 
 

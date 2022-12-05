@@ -1,37 +1,19 @@
-%% Lado derecho del modelo SIR con dos retardos tau1 y tau2
+%% Right side of SIR model with taus delays
 function v = sir_ret_fun_vac_all(t,y,Z,p,N,x0)
-%global time_range 
-%global nBetas
 persistent count
-% global all_betas
-% global all_gammasU
-% global all_gammasR
-% global all_gammas all_alfaS all_deltaS
-%global traza
 traza=0;
 nTau = 6;
 nGammas = (size(p,1)-9)/6;
-%Z
+%% decomment for trace possible errors at time t
 % t = ceil(t)
-%t
- if mod(t,100)==0
- t
- end
+
 ylag1 = Z(:,1);
 ylag2 = Z(:,2);
 ylag3 = Z(:,3);
 ylag4 = Z(:,4);
 ylag5 = Z(:,5);
-%% Version 16-01-2022
-%all_betas = p(end-nBetas+1:end);
-%all_gammasU = p(end-nGammas-nBetas+1:end-nBetas);
-%% Nueva variante con gamma de UCI a R
 ylag6 = Z(:,6);
-
-%p0=[gamma;alfaS;deltaS;all_taus;a;k;aC;all_gammasU;all_betas;all_gammasR];
-%% NUEVO -> p0=[a;k;aC;all_taus;all_gammas;all_alfaS;all_deltaS;all_gammasU;all_betas;all_gammasR];
 posIni = 4; 
-
 size_x=size(x0,1);
 range = 1:size_x;
 
@@ -41,20 +23,8 @@ all_deltaS  = p(posIni+nTau+nGammas*2:posIni+nTau+nGammas*3-1);
 all_gammasU = p(posIni+nTau+nGammas*3:posIni+nTau+nGammas*4-1);
 all_betas   = p(posIni+nTau+nGammas*4:posIni+nTau+nGammas*5-1);
 all_gammasR = p(posIni+nTau+nGammas*5:posIni+nTau+nGammas*6-1);
-%% hasta antes de 24 de septiembre 2002
-% % all_betas   = p(end-nGammas-nBetas+1:end-nGammas);
-% % all_gammasU = p(end-2*nGammas-nBetas+1:end-nBetas-nGammas);
-% % all_gammasR = p(end-nGammas+1:end);
-%% hasta antes de sep 2022
-% % gamma=p(1);
-% % alfaS=p(2);
-% % deltaS=p(3);
 
-
-
-%t=ceil(t); %% --- %%
 tr = linspace(min(range),max(range),numel(all_betas));
-%beta = piecewise_interpolator(t,all_betas,tr) ;
 if t<=range(end)
     beta   = interp1(tr,all_betas,t,'pchip');
     alfaS  = interp1(tr,all_alfaS,t,'pchip');
@@ -67,210 +37,97 @@ if t<=range(end)
     gamma  = interp1(tr,all_gammas,range,'pchip');
 end
 tr2 = linspace(min(range),max(range),numel(all_gammasU));
-%gammasUCI = piecewise_interpolator(t,all_gammasU,tr2);
+
  if t<=range(end)
    gammasUCI = interp1(tr2,all_gammasU,t,'pchip');
  else
       gammasUCI = interp1(tr2,all_gammasU,range,'pchip');
-%  gammasUCI = interp1(tr2,all_gammasU,t);
  end
-%% Nueva variante con gamma de UCI a R
 tr3 = linspace(min(range),max(range),numel(all_gammasR));
  if t<=range(end)
    gammasR   = interp1(tr3,all_gammasR,t,'pchip');
  else
     gammasR   = interp1(tr3,all_gammasR,range,'pchip');
  end
-%fr=sigmoide(p,y(2,:),nTau);
-%frd=interp1(time_range,fr,t-tau5,'pchip','extrap');
-%%
-%% Por ahora el cambio de escenario es al ojo
-%% Aqui definir una estrategia de carga rapida de datos y parametros de simulación
-%beta = beta1.*(t<=44)+beta2.*( (t>44) & (t<=72) )+beta3.*( t>72 );
-%   disp(y(1))
-%   disp(t)
-%   disp(Z)
-%  pause
-if isnan(sum(sum(Z))) & traza == 1
-    salida = 'aparece NAN en Z sis_ter_fun_vac_all'
-   
-    Z
-    beta
-    gamma   
-    deltaS
-    alfaS
-    
-    gammasUCI
-    gammasR
-    tr
-    figure;plot(Z,'DisplayName','Z')
-    hold on
-    xline(tr)
-    xline(t,'color','red')
-    figure;
-    plot(x0)
-    hold on
-    xline(t,'color','red')
-    %x0
-    - beta
-    y(1)
-    y(2)
-    y(3)
-    y(4)
-    y
-    ylag1
-    N
-    t
-    range(end)
-    pause
-end
 
-%v = zeros(3,1);
+%% decomment for trace all values model for this paper
+%% useful for thesis students or researcher
+% % if isnan(sum(sum(Z))) & traza == 1
+% %     salida = 'aparece NAN en Z sis_ter_fun_vac_all'
+% %     Z
+% %     beta
+% %     gamma   
+% %     deltaS
+% %     alfaS    
+% %     gammasUCI
+% %     gammasR
+% %     tr
+% %     figure;plot(Z,'DisplayName','Z')
+% %     hold on
+% %     xline(tr)
+% %     xline(t,'color','red')
+% %     figure;
+% %     plot(x0)
+% %     hold on
+% %     xline(t,'color','red')
+% %     %x0
+% %     - beta
+% %     y(1)
+% %     y(2)
+% %     y(3)
+% %     y(4)
+% %     y
+% %     ylag1
+% %     N
+% %     t
+% %     range(end)
+% %     pause
+% % end
+
 v = zeros(4,1);
-
-
-
-
-% v(1) = - beta*y(1)*ylag1(2)/N - alfaS*ylag3(1) + deltaS*ylag4(1);
-% v(2) = beta*y(1)*ylag1(2)/N - gamma*ylag2(2);
-% v(3) = gamma*ylag2(2)+alfaS*ylag3(1)-deltaS*ylag4(1);
-% v(4) = gammasUCI*ylag2(2);
-
-% %% NUEVO
-% v(1) = - beta*y(1)*ylag1(2)/N - alfaS*ylag3(1) + deltaS*ylag4(1);
-% v(2) = beta*y(1)*ylag1(2)/N - gamma*ylag2(2) - gammasUCI*ylag5(2);%*( 1 + (a-1)/( 1+exp( -k*(ylag5(2)-aC) ) ) );
-% %v(2) = beta*y(1)*ylag1(2)/N - gamma*ylag2(2);
-% v(3) = gamma*ylag2(2)+alfaS*ylag3(1)-deltaS*ylag4(1)+gammasR*ylag6(4);
-% v(4) = gammasUCI*ylag5(2)-gammasR*ylag6(4);
-
-% disp(t)
-%% OSCAR
-%t
-%alfaS=0;
-%deltaS=0;
+%% Diferential Equation and add tol=0.0001 for control stability 
 v(1,1) = - beta*y(1)*ylag1(2)/N - alfaS*ylag3(1) + deltaS*ylag4(1) +0.0001;
 v(2,1) = beta*y(1)*ylag1(2)/N - gamma*ylag2(2) - gammasUCI*ylag5(2)  +0.0001;%*( 1 + (a-1)/( 1+exp( -k*(ylag5(2)-aC) ) ) ); Di
 v(3,1) = gamma*ylag2(2)+alfaS*ylag3(1)-deltaS*ylag4(1)+gammasR*ylag6(4)  +0.0001 ;%dr
 v(4,1) = gammasUCI*ylag5(2)-gammasR*ylag6(4) +0.0001 ; %du
 
-% v(1,1) = - beta*y(1)*ylag1(2)/N - 0*ylag3(1) + 0*ylag4(1) +0.0001;
-% v(2,1) = beta*y(1)*ylag1(2)/N - gamma*ylag2(2) - gammasUCI*ylag5(2)  +0.0001;%*( 1 + (a-1)/( 1+exp( -k*(ylag5(2)-aC) ) ) ); Di
-% v(3,1) = gamma*ylag2(2)+0*ylag3(1)-0*ylag4(1)+gammasR*ylag6(4)  +0.0001 ;%dr
-% v(4,1) = gammasUCI*ylag5(2)-gammasR*ylag6(4) +0.0001 ; %du
-% 
-% v(1,1) = - beta*y(1)*ylag1(2)/N  +0.0001;
-% v(2,1) = beta*y(1)*ylag1(2)/N - gamma*ylag2(2) - gammasUCI*ylag5(2)  +0.0001;%*( 1 + (a-1)/( 1+exp( -k*(ylag5(2)-aC) ) ) ); Di
-% v(3,1) = gamma*ylag2(2)+gammasR*ylag6(4) +0.0001 ;%dr
-% v(4,1) = gammasUCI*ylag5(2)-gammasR*ylag6(4) +0.0001 ; %du
-
-
-%v(isnan(v))=1e+100; %% para que no se bloquee el solver y busque otro punto
-% if t > 10
-% 
-%     
-% 
-% 
-%    if abs(v(1,1)) < 0.001 | isnan(v) | abs(v(1,1)) > N*100
-%         if  abs(v(1,1)) > N*1e+10
-% %v
-%  %   [beta,gamma,deltaS,alfaS,gammasUCI,gammasR]
-%   %     v(1,1) = sign(v(1,1))*10e+300 ;
-%         v(1,1) = nan;
-%         v(2,1) = nan;
-%         v(3,1) = nan;
-%         v(4,1) = 0;
-%        
-% % v
-%        end
-% %    
-%     end
-% 
-%    y(1)
-% 
-%     ylag1(2)
-%  ylag3(1)
-%     ylag4(1)
-if( isnan(v) | v(1,1)==inf )
- format shortg
-    t
-%     beta
-%      alfaS
-%      deltaS
-%      all_betas
-%      p
-  %   range(end)
-%v
-    [beta,gamma,deltaS,alfaS,gammasUCI,gammasR]
-%v
-   % pause
-
-%return
-
-if isempty(count)
-  count = 0;
-end
-count = count + 1
-if mod(count,10000) == 0
-  count = 0;
-  t
-  disp('en persistencia')
-  count
- % pause
-end
-
-
-%pause
-
-end
-% v(1,1) = - beta*log10(gammasUCI*ylag5(2)+1)*(1+gammasR)-alfaS*ylag3(1)+deltaS*ylag4(1)+ 1e-5;
-% %v(2,1) = beta*y(1)*ylag1(2)/N - gamma*ylag2(2) - gammasUCI*ylag5(2)  + 1e-5;%*( 1 + (a-1)/( 1+exp( -k*(ylag5(2)-aC) ) ) ); Di
-% %v(2) = beta*y(1)*ylag1(2)/N - gamma*ylag2(2); %di
-% v(2,1) = log10(gammasUCI*ylag5(2)+1)*(1+gammasR)-gamma*ylag2(2)+ 1e-5;%- gammasUCI*ylag5(2)  + 1e-5;%*( 1 + (a-1)/( 1+exp( -k*(ylag5(2)-aC) ) ) ); Di
-% 
-% 
-% v(3,1) = gamma*ylag2(2)+alfaS*ylag3(1)-deltaS*ylag4(1)+ 1e-5;%   +gammasR*ylag6(4)  ;%dr
-% v(4,1) = gammasUCI*ylag5(2);%+ 1e-5-gammasR*ylag6(4) + 1e-2; %du
-
-% %%% bien uci
-% v(1,1) = - beta*y(1)*ylag1(2)/N+deltaS*ylag4(1)+ 1e-5;
-% %v(2,1) = beta*y(1)*ylag1(2)/N - gamma*ylag2(2) - gammasUCI*ylag5(2)  + 1e-5;%*( 1 + (a-1)/( 1+exp( -k*(ylag5(2)-aC) ) ) ); Di
-% %v(2) = beta*y(1)*ylag1(2)/N - gamma*ylag2(2); %di
-% v(2,1) = log10(gammasUCI*ylag5(2)+1)*(1+gammasR)+ 1e-5;%- gammasUCI*ylag5(2)  + 1e-5;%*( 1 + (a-1)/( 1+exp( -k*(ylag5(2)-aC) ) ) ); Di
-% v(3,1) = log10(gammasUCI*ylag5(2)+1)*(1+gamma)-deltaS*ylag4(1)+ 1e-5;%   +gammasR*ylag6(4)  ;%dr
-% v(4,1) = gammasUCI*ylag5(2);%+ 1e-5-gammasR*ylag6(4) + 1e-2; %du
-
-
-
-% v(1,1) = -beta*y(1)*ylag1(2)/N + log10(gammasUCI*ylag5(2)+1)*(1+gamma)+ 1e-5;
-% %v(2,1) = beta*y(1)*ylag1(2)/N - gamma*ylag2(2) - gammasUCI*ylag5(2)  + 1e-5;%*( 1 + (a-1)/( 1+exp( -k*(ylag5(2)-aC) ) ) ); Di
-% %v(2) = beta*y(1)*ylag1(2)/N - gamma*ylag2(2); %di
-% v(2,1) =beta*y(1)*ylag1(2)/N - log10(gammasUCI*ylag5(2)+1)*(1+gammasR)+ 1e-5;%- gammasUCI*ylag5(2)  + 1e-5;%*( 1 + (a-1)/( 1+exp( -k*(ylag5(2)-aC) ) ) ); Di
-% 
-% 
-% v(3,1) = log10(gammasUCI*ylag5(2)+1)*(1+gamma)+ 1e-5;%   +gammasR*ylag6(4)  ;%dr
-% v(4,1) = gammasUCI*ylag5(2);%+ 1e-5-gammasR*ylag6(4) + 1e-2; %du
-
-% %pause
-% if isnan(v(1,1)) || isnan(v(2,1))|| isnan(v(3,1))|| isnan(v(4,1))
-%     
-%     N
-%     v(1,1)
-%     v(2,1)
-%     v(3,1)
-%     v(4,1)
-%     t
-%     beta
-%     deltaS
-%     alfaS
-%     gamma
-%     gammasUCI
-%     gammasR
-%     ylag3(1)
-%     %pause 
-%     y(1)
-%     pause
-% end
-
+%% decomment for trace all values model for this paper
+%% useful for thesis students or researcher
+% % if( isnan(v) || v(1,1)==inf )
+% %     format shortg
+% %     [beta,gamma,deltaS,alfaS,gammasUCI,gammasR]
+% %     if isempty(count)
+% %       count = 0;
+% %     end
+% %     count = count + 1
+% %     if mod(count,10000) == 0
+% %       count = 0;
+% %       t
+% %       disp('en persistencia')
+% %       count
+% %      % pause
+% %     end
+% % end
+% % %pause
+% % if isnan(v(1,1)) || isnan(v(2,1))|| isnan(v(3,1))|| isnan(v(4,1))
+% %     
+% %     N
+% %     v(1,1)
+% %     v(2,1)
+% %     v(3,1)
+% %     v(4,1)
+% %     t
+% %     beta
+% %     deltaS
+% %     alfaS
+% %     gamma
+% %     gammasUCI
+% %     gammasR
+% %     ylag3(1)
+% %     %pause 
+% %     y(1)
+% %     pause
+% % end
 
 if isnan(Z) & traza == 1
     salida = 'aparece NAN en v'

@@ -4,8 +4,9 @@ warning('off')
 stringPath = '';
 global globalPais grafica_data ventana_general globalUCImovil flagpause
 grafica=grafica_data;
+
 if globalPais == 1
-N = 19212362;
+    N = 19212362; % chilean case
 end
 revisados = 0;
 fechas_iniciales = [];
@@ -179,12 +180,6 @@ tmp = zeros(1,dt_ui_t);
 final_t = IngresosUCIt.MediaMvilIngresosAUCIPorCOVID19(end);
 i_uci = [tmp, IngresosUCIt.MediaMvilIngresosAUCIPorCOVID19',final_t,final_t,final_t,final_t];
 
-% FC_test = [FC(1,1:nn) + tasaTest*FC(1,1:nn),FC(1,nn+1:end)];
-
-
-
-
-
 %% datos nacionales desde 02 de marzo 2020 a 29 de octubre 2022 - ANID
 [TotalesNacionalesT,Fallecidos_Acumulados,Infectados_Acumulados,Recuperados_Acumulados] = loadDataProducto5("\producto5\TotalesNacionales_T.csv");
 t1_nac = datetime(2020,3,2,0,0,0,'TimeZone','America/Santiago');
@@ -199,9 +194,7 @@ if (dt_nac ~= size_data_nac)
     size_data_nac
     revisados=revisados+1;
 else
-    fprintf('Dimensiones de totales nacionales diario ok - > %d días \n',dt_nac);
-    
-    
+    fprintf('Dimensiones de totales nacionales diario ok - > %d días \n',dt_nac);   
 end
 
 fechas_iniciales = [fechas_iniciales,t1_nac];
@@ -260,38 +253,43 @@ IC_pais_diff_days = diferenciasDiarias(IC_pais)';
 RC_pais_diff_days = diferenciasDiarias(RC_pais)';
 FC_pais_diff_days = diferenciasDiarias(FC_pais)';
 
-
-
-% DATOS base 
+% Regional daily data [infected, recovered, deceased, internships icu] 
 data_region_diff = [IC_diff_days,RC_diff_days,FC_diff_days,U']; 
-% DATOS base 
+
+% National daily data [infected, recovered, deceased, internships icu] 
 data_pais_diff = [IC_pais_diff_days,RC_pais_diff_days,FC_pais_diff_days,U_pais']; 
 
 
 figure;plot(log(data_region_diff),'DisplayName','diff_days')
 figure;plot(log(data_pais_diff),'DisplayName','data_total_pais')
 
-%figure;plot(log(diff_days),'DisplayName','diff_days')
+
 [salida] = mediamovil(data_total_pais,21);
 hold on
 plot(log(diff(salida)),'DisplayName','salida')
 hold on
 plot(log(U),'DisplayName','U')
-%% Se producen 2 outlers importantes que se ajustarán impactand en menor medida la funcion acumulada, pero distribuyendo
-%% el reporte en meses contiguos al outler, mismo caso para datos faltantes en primeros meses de pandemia, donde se agregaran tasas promedio
-%% de meses contiguos para completarr datos (recuperados)
 
-%% Ajustes ad-hoc para primeros meses de pandemia
-% Inicio periodo de ajuste
+
+%%% ------------ Init of infected adjustment -------------------------
+%% Important: in case of having consistent data at the beginning of the pandemic, it is not necessary to make this adjustment (**  up to this point **)
+%% ad hoc construction: Two significant outliers are produced that will be adjusted, impacting the accumulated function to a lesser extent, 
+% but distributing the report in months contiguous to the outlier, the same case for missing data in the first months of the pandemic,
+% where average rates will be added of contiguous months to complete data (recovered)
+%% Ad-hoc adjustments for the first months of the pandemic
+% adjustments (initial)
 iniAjuste=5;
-% Fin periodo de ajuste
+% adjustments (end)
 finAjuste=150;
 ventana = 3;
-% Ajuste básico con media movil sobre funcion acumulada
-% para suavizar distribución donde se presenta salto discreto grande
+% Basic fit with moving average over accumulated function
+% to smooth distribution where large abrupt jump occurs
 [aIC,IC_day,aIC_day,error_aIC] = ajusteI(IC,iniAjuste,finAjuste,ventana);
 [aIC_pais,IC_pais_day,aIC_pais_day,error_aIC_pais] = ajusteI(IC_pais,iniAjuste,finAjuste,ventana);
+%% **  up to this point **
 
+
+% Mobile window app in global experiment
 ventana = ventana_general;
 [aIC_pais_day_fit] = mediamovil(aIC_pais_day,ventana);
 [aIC_day_fit] = mediamovil(aIC_day,ventana);
@@ -300,193 +298,153 @@ figure;plot(aIC_day_fit)
 hold on
 plot(aIC_pais_day_fit)
 plot(aIC_day)
-%%% ______________ Fin ajuste infectados  ________________________
+%%% ______________ End of infected adjustment ________________________
+
+
+%%% ------------ Init of recovered adjustment -------------------------
+%% Important: in case of having consistent data at the beginning of the pandemic, it is not necessary to make this adjustment (**  up to this point **)
 ventana = ventana_general;
 diaPrimerRecs = 7; % dia en que se presenta primer recuperado
 [aRC,RC_day,aRC_day,error_aRC] = ajusteR(aIC,RC,diaPrimerRecs);
 [aRC_day_fit] = mediamovil(aRC_day,ventana);
+%% **  up to this point **
 
 ventana = ventana_general;
 [aRC_pais,RC_pais_day,aRC_pais_day,error_aRC_pais] = ajusteR(aIC_pais,RC_pais,diaPrimerRecs);
 [aRC_pais_day_fit] = mediamovil(aRC_pais_day,ventana);
+figure;plot(aRC_day_fit);
+hold on;
+figure;plot(aRC_pais_day_fit);
+plot(aRC_day);
+%%% ______________ End of recovered adjustment ________________________
 
 
-figure;plot(aRC_day_fit)
-hold on
-figure;plot(aRC_pais_day_fit)
-plot(aRC_day)
-%%% ______________ Fin ajuste recuperados  ________________________
-
-%% Afecta mucho los 10 mil agregados de fallecidos , se podria aplicar heuristica de distribuir todos esos fallecidos
-%% en toda la pandemia, indicando que se hace para terminos experimentales numericos y no epidemiologicos
-%% se calcula la tasa/porcentaje de fallecidos a agregar (apro. 10000 de totales)
-%% al 30 de octubre 11660 sospechosos agregados, confirmados 50017, total 61677
-% tasaTest_tramo_sin_ajuste = 11660/61677;
-%% al 21 de marzo 11349 sospechosos agregados, confirmados 44616, total 55965
-% tasaTest =  11349/55965;
-nn=748; %en 749 se agregan 6 mil fallecidos - a partir de alli hay que restar los probables
-% heuristica h3: agregar proporcionalmente los fallecidos a toda la data -
-% se descarta porque se intervienen los datos oficiales
-% nf = size(FC,2);
-% pivot_local = FC(1,nn);
-% dias = pivot + days(nn); 
-% FC_test = [FC(1,1:nn) + tasaTest*FC(1,1:nn),FC(1,nn+1:end)];
-
-%% Aca se descartaran de datos de fallecidos los casos probables para así mantener tendencia de data 
-%% reportada desde marzo de 2020 
-
-extractDefeatsConfirmed % se procesa data para solo utilizar falleicos confirmados covid (no se agregan probables)
+%%% ------------ Init of deceased adjustment -------------------------
+%% Important: in case of having consistent data at the beginning of the pandemic, it is not necessary to make this adjustment
+% pre-analysis: It greatly affects 10 thousand aggregates of deceased, heuristics could be applied to distribute all those deceased
+% in the entire pandemic, indicating that it is done for numerical and non-epidemiological experimental terms
+% the rate/percentage of deaths to be added is calculated (approx. 10000 of totals)
+% as of October 30, 11,660 suspects added, confirmed 50,017, total 61,677
+% as of March 21, 2022, 11349 suspects added, confirmed 44616, total 55965
+nn=748; %on day 749 the new government adds 6 thousand deaths - from there you have to subtract the possible cases
+%% Here, the probable cases will be discarded from the data on deceased in order to maintain a trend of data
+% reported since March 2020
+extractDefeatsConfirmed % Data is processed to only use confirmed covid deceased (possible cases are not added)
 f = f_confirmed;
 FC_test = [FC(1,1:nn),f_confirmed(end,:)];
-
 f_pais = f_confirmed_pais;
 FC_test_pais = [FC_pais(1,1:nn),f_confirmed_pais(end,:)];
+%% **  up to this point **
+%%% ______________ End of deceased adjustments  ________________________
 
-%%% ______________ Fin ajuste fallecidos  ________________________
-
-ventana = ventana_general; %% las olas se presentan en periodos en tre 2.5 a 4 meses - se suavisara la curva pero se mantendra tendencia
-
+%% Experimental data
+ventana = ventana_general;
 [aFC2] = mediamovil(FC_test,ventana);
 F = diferenciasDiarias(FC_test);
 [aFC_day_fit_2] = diferenciasDiarias(aFC2);
-
 [aFC2_pais] = mediamovil(FC_test_pais,ventana);
 F_pais = diferenciasDiarias(FC_test_pais);
 [aFC_pais_day_fit_2] = diferenciasDiarias(aFC2_pais);
+figure;plot(log(aFC_day_fit_2));
+hold on;
+plot(log(F));
+figure;plot(log(aFC_pais_day_fit_2));
 
-figure;plot(log(aFC_day_fit_2))
-hold on
-plot(log(F))
-figure;plot(log(aFC_pais_day_fit_2))
-
-% DATOS experimento región
+%% regional data
 I_analysis = aIC_day_fit;
 R_analysis = aRC_day_fit;
 F_analysis = aFC_day_fit_2;
 [U_analysis] = mediamovil(U,ventana);
-%U_analysis = U;
 
-% DATOS experimento país
 
+%% national data
 I_analysis_pais = aIC_pais_day_fit
 R_analysis_pais = aRC_pais_day_fit;
 F_analysis_pais = aFC_pais_day_fit_2;
 [U_analysis_pais] = mediamovil(U_pais,ventana);
 [i_uci_analysis_pais] = mediamovil(i_uci,ventana);
-%U_analysis_pais = U_pais;
 
-%% Datos usados para aproximar curvas SIER - luego transformar a curvas epidemiologicas diarias.
-
-
-
-%%Que la grafica sea por pais, y mientras preparao informe lanzo
-%%expeirmentos
-% Como se puede observar existe correlación entre las curvas de Ingreso UCI
-% (U_I), Internados en UCI  (U_H) y fallecidos F. Esta correlación se
-% observa en mayor media entre la cantidad de pacientes internado en
-% estado UCI y fallecidos, esto debido a que la mayoria de los fallecidos
-% han pasado por el sistema de atención de emergencia del covid (se presume)
+%% national data matrix
 data_pais = [I_analysis_pais;R_analysis_pais;F_analysis_pais;U_analysis_pais;i_uci_analysis_pais]';
-data_region = [I_analysis;R_analysis;F_analysis;U_analysis]';
-tmp = [];
-tmp_G = []
-if globalPais == 1
 
-    if globalUCImovil == 1
-    
+%% regional data matrix
+data_region = [I_analysis;R_analysis;F_analysis;U_analysis]';
+
+tmp = [];
+tmp_G = [];
+
+if globalPais == 1 % for case national data
+    if globalUCImovil == 1 % for case national data: ICU asmission
        tmp = [I_analysis_pais;R_analysis_pais;F_analysis_pais;i_uci]'; 
-    else
+    else % for case national data: ICU internship
        tmp = [I_analysis_pais;R_analysis_pais;F_analysis_pais;U_analysis_pais]'; 
     end
-
-
-
-
-   
-else
-%tmp = data_pais(1:end-1,:);
-tmp = data_region;
-
+else % for case regioonal data: default
+    tmp = data_region;
 end
 
-
-
-
-
-
-
+%% Assigned experimental data
 I=tmp(:,1)';
 R=tmp(:,2)';
 F=tmp(:,3)';
-%[aF_day_movil] = mediamovil(F,ventana);
 U=tmp(:,4)';
 U_extra=i_uci
 pruning_tmp = 1;
-interpolacion = 2
-ajuste_pruning
+interpolacion = 2 % force use original data
+ajuste_pruning; % for use of the splines on case the used prunning : for fast analysis
 
-%% En caso de trabajar con datos ajustados y curvas acumuladas
+
+%% In case of working with adjusted data and accumulated curves
 Is = cumsum(I);
 Rs = cumsum(R);
 Us = cumsum(U);
 Fs = cumsum(F);
 U_extra_s=cumsum(U_extra);
-xds=[Is Rs Fs+Us];
-xd=[I R U+F];
-xds_extra=[Is Rs Fs Us U_extra_s'];
 
+%% Definitive data matrix of the study
+xds=[Is Rs Fs+Us]; % accumulated curves
+xd=[I R U+F]; % % daily or accumulated curves (depends on experiment)
+xds_extra=[Is Rs Fs Us U_extra_s']; % extra analysis
 
-
-
-
-
-
-
-
-
+%% for case cumulatived curves
 if acumulada ==1
-xd=xds;
+    xd=xds;
 end
 xd_test = [];
+
+%% This paper experiment
 if variante_sier == 1
    S = N - Is - Rs -(Us+Fs);
+   xd = [Is Rs Us+Fs S (Is+Rs+Fs) (Is+Rs+Fs+Us)];    
+   %% Others examples composition data study
    %xd = [Is Rs Us+Fs S (Is+Rs+Us+Fs)];
-   %S = N - Is - Rs - Fs; % sacando uci movil internado
-   xd = [Is Rs Us+Fs S (Is+Rs+Fs) (Is+Rs+Fs+Us)]; % sacando uci movil internado
+   %S = N - Is - Rs - Fs; % sacando uci movil internado   
    %xd = [Is Rs Fs S (Is+Rs+Fs) (Is+Rs+Fs+Us)]; % para test de consistencia en intervalo
 
 end
 
+% for trace
 if grafica_data == 1
-figure;plot(xds,'DisplayName','xds')
-figure;plot(xd,'DisplayName','xd')
+figure;plot(xds,'DisplayName','xds');
+figure;plot(xd,'DisplayName','xd');
 end
 
-if grafica_data==1 & flagpause==1
-
+% for trace
+if grafica_data==1 && flagpause==1
     all_data = data_pais;
-%     uci_input = mediamovil(all_data(:,5),ventana);
+    %uci_input = mediamovil(all_data(:,5),ventana);
     figure;
-   % plot(all_data)
+    % plot(all_data)
     curva_nacional_log(all_data);
-
-    [rho,pval] = corr(all_data)
-
-
-
-figure;
- %   cdata = [45 60 32; 43 54 76; 32 94 68; 23 95 58];
-xvalues = {'Infected','Recovered','Deceased','ICU Internships','ICU Admission'};
-yvalues = {'Infected','Recovered','Deceased','ICU Internships','ICU Admission'};
-h = heatmap(xvalues,yvalues,rho);
-
-
+    [rho,pval] = corr(all_data); 
+    figure;
+     %   cdata = [45 60 32; 43 54 76; 32 94 68; 23 95 58];
+    xvalues = {'Infected','Recovered','Deceased','ICU Internships','ICU Admission'};
+    yvalues = {'Infected','Recovered','Deceased','ICU Internships','ICU Admission'};
+    h = heatmap(xvalues,yvalues,rho);
     curva_nacional_log(xds_extra);
     acumDis(xds_extra);
-    
-   pause
-    %close all
-
+    pause
 end
 
 
