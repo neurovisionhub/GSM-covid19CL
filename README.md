@@ -20,11 +20,11 @@
   </p>
 </p>
 
- <p align="center">Colaborative research: 
- Department of Basic Sciences, Faculty of Sciences, University of Bío-Bío
- Department of Mathematics and Computers Science, Faculty of Science, University of Santiago of Chile
- Department of Mathematical Engineering (DIM) and Center for Mathematical Modeling (CMM), University of Chile
- Centre for Biotechnology and Bioengineering (CeBiB), University of Chile</p>
+ <p align="center">Colaborative research</p>
+ - Department of Basic Sciences, Faculty of Sciences, University of Bío-Bío
+ - Department of Mathematics and Computers Science, Faculty of Science, University of Santiago of Chile
+ - Department of Mathematical Engineering (DIM) and Center for Mathematical Modeling (CMM), University of Chile
+ - Centre for Biotechnology and Bioengineering (CeBiB), University of Chile
 
 
 <!-- TABLE OF CONTENTS -->
