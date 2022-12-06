@@ -119,7 +119,7 @@ Project Link: [https://github.com/neurovisionhub/GSM-covid19CL](https://github.c
 ## Author contributions
 <!-- AUTHOR CONTRIBUTIONS -->
 
-- Colaborative research
+- Collaborative research
   - Department of Basic Sciences, Faculty of Sciences, University of Bío-Bío (P. Cumsille).
   - Department of Mathematics and Computers Science, Faculty of Science, University of Santiago of Chile (O. Rojas).
   - Department of Mathematical Engineering (DIM) and Center for Mathematical Modeling (CMM), University of Chile (C. Conca).
