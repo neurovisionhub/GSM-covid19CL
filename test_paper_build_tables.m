@@ -21,7 +21,7 @@ funEvals = 40000; % max evals on the optimizer
 %global_time_op=tic;
 %option_model = 2
 %grafica_data = 0; % 1 = graphics of data_config, 0 =  default
-grafica_ajustes = 0; % 1 = graphics of smooth, 0 =  default
+grafica_ajustes = 1; % 1 = graphics of smooth, 0 =  default
 
 % smooth curve - phase 1 
 interpolacion = 1; % for interpolation origin curve (0 original data with many abrupt changes), deafult = 1
@@ -49,7 +49,7 @@ diaFin=diaFinEstudio-nF;
 %% data_times_processing: analitics and processing of the data covid oficial and not covid oficial repositories
 format shortg
 variante_sier = 1; % para uso de funciones combinadas (diaria infectado % acum(R,U+F) )
-%grafica_data=0
+grafica_data=1
 matrix_optimus=[];
 matrix_optimus_poblacion=[];
 matrix_optimus_scores=[];

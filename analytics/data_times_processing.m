@@ -39,6 +39,10 @@ fechas_iniciales = [fechas_iniciales,t1_ic];
 fechas_finales = [fechas_finales,t2_ic];
 datos_metadata = [datos_metadata,string('Infectados Comunas - ANID')];
 
+%% Incidencia Nacional desde week 1/2021 to week 51/2022 
+incidenciaenvacunados = loadDataProducto90('producto90/incidencia_en_vacunados.csv')
+
+
 
 %% fallecidos nacional comunas 2020-06-12 to 2022-10-28
 [PoblacionesF,FRegion,Fpais,Fdist,fT,fDstring,fDtable,fDdouble] = loadDataProducto38(region,grafica,stringPath);
