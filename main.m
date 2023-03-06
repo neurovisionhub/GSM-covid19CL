@@ -18,7 +18,7 @@ globalUCImovil = 0;
 
 % Research block analysis
 diaInicio = 250 % init day
-diaFinEstudio = 550 % finish day
+diaFinEstudio = 900 % finish day
 
 %% Params of control/performance
 primera_ola =0; % for localized research on first wave, default = 0

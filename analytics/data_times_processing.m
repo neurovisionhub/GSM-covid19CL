@@ -374,6 +374,10 @@ data_pais = [I_analysis_pais;R_analysis_pais;F_analysis_pais;U_analysis_pais;i_u
 %% regional data matrix
 data_region = [I_analysis;R_analysis;F_analysis;U_analysis]';
 
+%% test reviewers
+test_review
+
+
 tmp = [];
 tmp_G = [];
 
