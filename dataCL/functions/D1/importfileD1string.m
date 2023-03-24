@@ -10,7 +10,7 @@ function Covid19 = importfileD1string(filename, dataLines)
 %  for dis-contiguous row intervals.
 %
 %  Example:
-%  Covid19 = importfile("L:\Univesidad2021\Tesistas\Ingemat\propuesta beca\Codigos-06-08-21\code-usach-biobio-cebib\code\data\Datos-COVID19-master-09-11-2021\output\producto1\Covid-19.csv", [1, 1]);
+%  Covid19 = importfile(".\output\producto1\Covid-19.csv", [1, 1]);
 %
 %  See also READMATRIX.
 %
