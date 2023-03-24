@@ -9,7 +9,7 @@ function Covid2 = importfileD1table(filename, dataLines,nTimeInf)
 %  dis-contiguous row intervals.
 %
 %  Example:
-%  Covid2 = importfile("L:\Univesidad2021\Tesistas\Ingemat\propuesta beca\Codigos-06-08-21\code-usach-biobio-cebib\code\data\Datos-COVID19-master-09-11-2021\output\producto1\Covid-19.csv", [1, Inf]);
+%  Covid2 = importfile(".\output\producto1\Covid-19.csv", [1, Inf]);
 %
 %  See also READTABLE.
 %
