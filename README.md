@@ -8,7 +8,7 @@
     <img src="images/logouchile.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">A general modeling framework to assess COVID-19 ongoing vaccination in Chile</h3>
+  <h3 align="center">A general modeling framework for quantitative tracking, accurate prediction of ICU, and assessing vaccination for COVID-19 in Chile</h3>
 
   <p align="center">
     Patricio Cumsille (U. Bío-Bío), Oscar Rojas (U. Santiago de Chile) and Carlos Conca (U. de Chile)
