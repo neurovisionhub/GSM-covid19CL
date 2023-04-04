@@ -62,9 +62,9 @@ Materials and methods: Epidemiological modeling of the present work relies on de
 Results: We show the framework's calibration capabilities for several processed COVID-19 datasets of different regions of Chile. We found a unique range of parameters that works well for every dataset and provides overall numerical stability and convergence for parameter optimization. Consequently, the framework produces outstanding results concerning quantitative tracking of COVID-19 dynamics. In addition, it allows us to accurately predict the ICU curve trend in the medium term and assess vaccination. Finally, it is reproducible since we provide open-source codes that consider parameter initialization standardized for every dataset.
 
 Conclusion: This work attempts to implement a holistic and general modeling framework for quantitative tracking of the dynamics of any transmissible disease, focusing on accurately predicting the ICU curve trend in the medium term and assessing vaccination. The scientific community could adapt it to evaluate the impact of combined vaccination and NPIs strategies for COVID-19 or any transmissible disease in any country and help visualize the potential effects of implemented plans by policymakers. In future work, we want to improve the computational cost of the parametric bootstrap technique or use another more efficient technique. The aim would be to reconstruct epidemiological curves to predict the combined NPIs and vaccination policies' impact on the ICU curve trend in real-time, providing scientific evidence to help anticipate policymakers' decisions.
-
+<p align="center">
 <a href="https://doi.org/10.3389/fpubh.2023.1111641">https://doi.org/10.3389/fpubh.2023.1111641</a>
-
+  </p>
 ### run 
 
 * open file ./main.m and run with matlab 
