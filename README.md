@@ -139,7 +139,7 @@ CC contributed to supervision, writing - review & editing.
 ## Acknowledgements
 Funding 
 
-The Centre for Biotechnology and Bioengineering (CeBiB), Grant Number ANID PFBasal-01, partially supported PC and CC. In addition, PC was partially supported by the regular research project DIUBB 2120432 IF/R. Finally, CC was partially supported by the ACE210010 and CMM PIA AFB170001 projects. The funders had no role in study design, data collection, analysis, publication decision, or manuscript preparation.
+The Centre for Biotechnology and Bioengineering (CeBiB), Grant Number ANID PFBasal-01, partially supported PC and CC. In addition, PC was partially supported by the regular research project DIUBB 2120432 IF/R. Finally, CC was partially supported by the ACE210010 and CMM PIA AFB170001 projects. The funders had no role in study design, data collection, analysis, publication decision, or manuscript preparation. 
 
 <!-- 
 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
