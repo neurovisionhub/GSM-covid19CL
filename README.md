@@ -63,6 +63,8 @@ Results: We show the framework's calibration capabilities for several processed 
 
 Conclusion: This work attempts to implement a holistic and general modeling framework for quantitative tracking of the dynamics of any transmissible disease, focusing on accurately predicting the ICU curve trend in the medium term and assessing vaccination. The scientific community could adapt it to evaluate the impact of combined vaccination and NPIs strategies for COVID-19 or any transmissible disease in any country and help visualize the potential effects of implemented plans by policymakers. In future work, we want to improve the computational cost of the parametric bootstrap technique or use another more efficient technique. The aim would be to reconstruct epidemiological curves to predict the combined NPIs and vaccination policies' impact on the ICU curve trend in real-time, providing scientific evidence to help anticipate policymakers' decisions.
 
+<a href="https://doi.org/10.3389/fpubh.2023.1111641">https://doi.org/10.3389/fpubh.2023.1111641</a>
+
 ### run 
 
 * open file ./main.m and run with matlab 
