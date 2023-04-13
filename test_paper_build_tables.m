@@ -152,8 +152,8 @@ compute_curves
 %sum_target = sum(test_data_covid(:,1));
 %sum_model = sum(fr'.*test_data_covid_estimate(:,2))
 
-conteos_mayores_cero
-if sum_target > sum_model && (conteos_mayores_cero == 0) %% valores mayores que 0 en vector model...
+conteos_menores_cero
+if sum_target > sum_model && (conteos_menores_cero == 0) %% valores mayores que 0 en vector model...
  break;
 end
 % E
