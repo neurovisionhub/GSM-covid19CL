@@ -70,8 +70,8 @@ rr_fr = ( fr'.*test_data_covid_estimate(:,3)-test_data_covid(:,2) )./(fr'.*test_
 sum_target = sum(test_data_covid(:,1));
 tmp_model = fr'.*test_data_covid_estimate(:,2);
 sum_model = sum(fr'.*test_data_covid_estimate(:,2));
-conteos_mayores_cero = find(tmp_model<=0);
-conteos_mayores_cero = size(conteos_mayores_cero,1);
+conteos_menores_cero = find(tmp_model<=0);
+conteos_menores_cero = size(conteos_menores_cero,1);
 
 %% error groups
 tx_dt = [ ss ; ii_fr; ii ; rr; uu ];
