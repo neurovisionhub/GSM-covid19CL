@@ -15,10 +15,14 @@ globalPais =0;
 % globalUCImovil = 1 <- using  admission daily national; 
 % globalUCImovil = 0 <- using  hospitalization and ICU stay; 
 globalUCImovil = 0; 
-
+auto_ajuste = 0
 % Research block analysis
 diaInicio = 250 % init day
 diaFinEstudio = 900 % finish day
+
+diaInicio = 30 % init day
+diaFinEstudio = 250 % finish day
+
 
 %% Params of control/performance
 primera_ola =0; % for localized research on first wave, default = 0
@@ -43,7 +47,7 @@ numThetas = 20 % is recommended for all tests
 % In addition, to avoid long approximation cycles in the sign changes of the derivatives, we have of the use of accumulated curves, where use larger moving window .... when there are abrupt changes in the curve
 %% Important: If is used one day (ventana_general = 1), original data from the data set is used
 
-ventana_general=14; % windows mobile size (on days), 14 days is default
+ventana_general=30; % windows mobile size (on days), 14 days is default
 
 matrix_results = [];
 regiones = {'Arica y Parinacota','Tarapacá','Antofagasta','Atacama','Coquimbo','Valparaíso','Metropolitana','O Higgins','Maule','Ñuble','Biobío','Araucanía','Los Ríos','Los Lagos','Aysén','Magallanes'};

@@ -127,11 +127,14 @@ d_t = diaFin - diaInicio;
 %% Important 2: if after 20 iters and no convergence, modification of one grade of the magnitude of the +- factor_inicial and repeat the experiment
 
 %factor_inicial =0.00025; % Magallanes
-factor_inicial =0.0001; % Metropolitan
+factor_inicial =0.001; % Metropolitan
+
+
+
+if auto_ajuste == 1
 
 for iTest=1:100
 factor_inicial =1.0000/(pow2(iTest)); % Metropolitan
-
 beta = max(beta_lb_up_op)*factor_inicial; %rate of the contact/transmition 
 gamma = max(gamma_lb_up_op)*factor_inicial;% (1/gamma) mean time infection - mean rate of the remotion 
 alfaS=max(alfaS_lb_up_op)*factor_inicial; 
@@ -139,19 +142,13 @@ deltaS=max(deltaS_lb_up_op)*factor_inicial;
 all_test_gammasR=max(all_test_gammasR_lb_up_op)*factor_inicial;
 all_test_gammasU=max(all_test_gammasU_lb_up_op)*factor_inicial;
 a_test = max(a_test_lb_up_op);%; 
-
-
 %% This routine builds the vector of initial values (p0) of the model 
 all_blocks_params_model_analytics_hibridas
 p=p0
-
 %% Errores usando valores iniciales
 compute_curves
-
-
 %sum_target = sum(test_data_covid(:,1));
 %sum_model = sum(fr'.*test_data_covid_estimate(:,2))
-
 conteos_menores_cero
 if sum_target > sum_model && (conteos_menores_cero == 0) %% valores mayores que 0 en vector model...
  break;
@@ -160,10 +157,28 @@ end
 % Eii
 iTest
 end
+
+else
+beta = max(beta_lb_up_op)*factor_inicial; %rate of the contact/transmition 
+gamma = max(gamma_lb_up_op)*factor_inicial;% (1/gamma) mean time infection - mean rate of the remotion 
+alfaS=max(alfaS_lb_up_op)*factor_inicial; 
+deltaS=max(deltaS_lb_up_op)*factor_inicial; 
+all_test_gammasR=max(all_test_gammasR_lb_up_op)*factor_inicial;
+all_test_gammasU=max(all_test_gammasU_lb_up_op)*factor_inicial;
+a_test = max(a_test_lb_up_op);%; 
+%% This routine builds the vector of initial values (p0) of the model 
+all_blocks_params_model_analytics_hibridas
+p=p0
+end
+
+
+
 %pause
 tic
 main_all_blocks_1
 toc
+
+
 
 %% Errores usando valores optimizados
 

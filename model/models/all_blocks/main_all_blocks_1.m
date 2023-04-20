@@ -6,7 +6,7 @@ global nTau contF
 %% ** Script for Least Squares Optimization **
 %% Options for the optimization solver
 
-oldoptions = optimoptions(@lsqnonlin,'UseParallel',true,'Algorithm','trust-region-reflective','Display','iter','MaxIter',maxiters,'TolFun',1e-6,'TolX',1e-10,'MaxFunEvals',40000,'Diagnostics','on')
+oldoptions = optimoptions(@lsqnonlin,'UseParallel',true,'Algorithm','trust-region-reflective','Display','iter','MaxIter',maxiters,'TolFun',1e-8,'TolX',1e-10,'MaxFunEvals',40000,'Diagnostics','on')
 options = optimoptions(oldoptions)
 
 %% Upper and lower limits of optimization
