@@ -21,7 +21,7 @@ funEvals = 40000; % max evals on the optimizer
 %global_time_op=tic;
 %option_model = 2
 %grafica_data = 0; % 1 = graphics of data_config, 0 =  default
-grafica_ajustes = 1; % 1 = graphics of smooth, 0 =  default
+grafica_ajustes = 0; % 1 = graphics of smooth, 0 =  default
 
 % smooth curve - phase 1 
 interpolacion = 1; % for interpolation origin curve (0 original data with many abrupt changes), deafult = 1
@@ -33,8 +33,12 @@ percentPrunning = 1 %  this is in the experimental phase, next version ->  1  > 
 traza = 0;
 primero = 0; % first experiment = 0
 
-% example 2
+% example 2 - maxiters on cicle lsqnonline
 maxiters = 10;
+
+% for map jabobian of lsqnonline
+maxiters = 1;
+
 % realizar primera aproximación factible, luego al usal el optimizadro no lineal aumentar su valor para conseguir mejor precisión
 %nCiclos =1% veces que se reduce beta a la mitad
 primera_ola=0
@@ -129,7 +133,7 @@ d_t = diaFin - diaInicio;
 %factor_inicial =0.00025; % Magallanes
 factor_inicial =0.001; % Metropolitan
 
-
+%beta = max(beta_lb_up_op)*0.1;
 
 if auto_ajuste == 1
 

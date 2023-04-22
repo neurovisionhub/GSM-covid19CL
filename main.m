@@ -15,7 +15,7 @@ globalPais =0;
 % globalUCImovil = 1 <- using  admission daily national; 
 % globalUCImovil = 0 <- using  hospitalization and ICU stay; 
 globalUCImovil = 0; 
-auto_ajuste = 0
+auto_ajuste = 1
 % Research block analysis
 diaInicio = 250 % init day
 diaFinEstudio = 900 % finish day
@@ -78,7 +78,8 @@ test_paper_build_tables
 %% Build results tables
 createTablas
 
-
+%% test reviewers
+test_review
 
 
 

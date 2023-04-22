@@ -1,4 +1,4 @@
-global nTau contF
+global nTau contF mJacobian
 %% In case you need to restart parpool
 % delete(gcp('nocreate'))
 % parpool("Processes",20)
@@ -119,13 +119,16 @@ v_ini = [N-xd(diaInicio,1)-xd(diaInicio,2)-xd(diaInicio,3);
 vectorInicial = v_ini;
 tc_t=1:size(x0,1);
 
+% for map jabobian of lsqnonline
+mJacobian = {}
+
 for it=0:maxit
    if abs(r-resnormref)/r<tol
        disp('abs(r-resnormref)/r<tol');
        break;
    end
 
-   if abs(r)<=0.001
+   if abs(r)<=0.0001
       disp('abs(r)<=0.001');
        break;
    end
@@ -134,13 +137,14 @@ for it=0:maxit
        disp('funEvals<=contF');
        break;
    end
-
+   
    %% Call optimizer lsqnonlin
    [p,r,~,~,~,~,jac]=lsqnonlin(@(p) ESIR_rel_all(p,tc_t,Data,x0,N,v_ini,opcion_a1),p0,Lb,Ub,options);
     p0=p
     r0=r;
     vectorR = [vectorR,r];
-    
+    mJacobian{1,it+1} = full(jac)
+    %pause
     if cont==5
         coefVar = std(vectorR)/mean(vectorR)
         vectorR = vectorR(1,2:5);
