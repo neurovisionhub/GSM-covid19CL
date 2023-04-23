@@ -138,23 +138,3 @@ axes("Position",[0 0 1 1])
 movie(M1)
 close(v)
 
-
-% syms x y
-% v = [x y];
-% g = mJacobian{1, 1}'
-% spacing = 0.2;
-% [X,Y] = meshgrid(size(g));
-% G1 = subs(g(1,:),v,{X,Y});
-% G2 = subs(g(2),v,{X,Y});
-% quiver(X,Y,G1,G2)
-% 
-% 
-% 
-% Z = X.*exp(-X.^2 - Y.^2);
-% [DX,DY] = gradient(Z,spacing);
-% 
-% quiver(X,Y,DX,DY)
-% hold on
-% contour(X,Y,Z)
-% axis equal
-% hold off
