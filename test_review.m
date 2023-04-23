@@ -1,4 +1,4 @@
-global nTau contF mJacobian
+global nTau contF 
 % x_test = data_pais;
 % 
 % x_sum = [];
@@ -52,49 +52,109 @@ global nTau contF mJacobian
 %     'dosis unica comp fall','dosis ref comp fall'}
 % 
 % legend(labels_grafico)
-v = VideoWriter('newfile.mp4');
-v.FrameRate = 1; 
-open(v)
-k0=size(mJacobian,2);
+
+%% generation videos
+%close all
+clear M
+%M = struct;
+% Animation Jacobian 
+v = VideoWriter('Jacobian_left.mp4','Motion JPEG AVI');
+v.Quality = 95;
+v.FrameRate = 2; 
+open(v); 
+k0=size(mJacobianFull_left,2);
 f = figure;
-p = uipanel(f,"Position",[0.1 0.1 0.8 0.8],...
+px = uipanel(f,"Position",[0 0 1 1],...
     "BackgroundColor","w");
-ax = axes(p);
+ax = axes(px); 
 loops = k0;
 M(loops) = struct('cdata',[],'colormap',[]);
 for k = 1:k0
-    mesh(mJacobian{1, k}')
-    %axis([-1 1 -1 1])
+    mesh(mJacobianFull_left{1, k}','FaceAlpha','0.15',FaceColor = 'interp')
+    ax = gca;
+    c = ax.Color;
+    
+    ax.View = [20 5];
+    
     u.Value = k;
-    %pause(1)
     M(k) = getframe(gcf);
     writeVideo(v,M(k))
-
-    %pause(0.2)
 end
-
-figure
+figure;
 axes("Position",[0 0 1 1])
-movie(M,k0)
+movie(M)
+close(v)
+
+clear M
+%M = struct;
+% Animation Jacobian 
+v = VideoWriter('Jacobian_right.mp4','Motion JPEG AVI');
+v.Quality = 95;
+v.FrameRate = 2; 
+open(v); 
+k0=size(mJacobianFull_right,2);
+f = figure;
+px = uipanel(f,"Position",[0 0 1 1],...
+    "BackgroundColor","w");
+ax = axes(px); 
+loops = k0;
+M(loops) = struct('cdata',[],'colormap',[]);
+for k = 1:k0
+    mesh(mJacobianFull_right{1, k}','FaceAlpha','0.15',FaceColor = 'interp')
+    ax = gca;
+    c = ax.Color;
+    
+    ax.View = [20 5];
+    
+    u.Value = k;
+    M(k) = getframe(gcf);
+    writeVideo(v,M(k))
+end
+figure;
+axes("Position",[0 0 1 1])
+movie(M)
+close(v)
+
+% Animation residual 
+
+v = VideoWriter('Residual.mp4');
+v.FrameRate = 1; open(v); k0=size(mResidual,1);
+f = figure;
+% px = uipanel(f,"Position",[0 0 1 1],...
+%     "BackgroundColor","w");
+% ax = axes(px); 
+% 
+loops = k0;
+M1(loops) = struct('cdata' ,[],'colormap',[]);
+for k = 1:k0
+    plot(mResidual(k, :)')
+    %axis([-1 1 -1 1])
+    u.Value = k;
+    M1(k) = getframe(gcf);
+    writeVideo(v,M1(k))
+end
+figure;
+axes("Position",[0 0 1 1])
+movie(M1)
 close(v)
 
 
-syms x y
-v = [x y];
-g = mJacobian{1, 1}'
-spacing = 0.2;
-[X,Y] = meshgrid(size(g));
-G1 = subs(g(100,:),v,{X,Y});
-G2 = subs(g(2),v,{X,Y});
-quiver(X,Y,G1,G2)
-
-
-
-Z = X.*exp(-X.^2 - Y.^2);
-[DX,DY] = gradient(Z,spacing);
-
-quiver(X,Y,DX,DY)
-hold on
-contour(X,Y,Z)
-axis equal
-hold off
+% syms x y
+% v = [x y];
+% g = mJacobian{1, 1}'
+% spacing = 0.2;
+% [X,Y] = meshgrid(size(g));
+% G1 = subs(g(1,:),v,{X,Y});
+% G2 = subs(g(2),v,{X,Y});
+% quiver(X,Y,G1,G2)
+% 
+% 
+% 
+% Z = X.*exp(-X.^2 - Y.^2);
+% [DX,DY] = gradient(Z,spacing);
+% 
+% quiver(X,Y,DX,DY)
+% hold on
+% contour(X,Y,Z)
+% axis equal
+% hold off

@@ -1,12 +1,13 @@
-global nTau contF mJacobian
+global nTau contF %% mJacobianFull mJacobianDisperse mResidual mLambda
 %% In case you need to restart parpool
 % delete(gcp('nocreate'))
 % parpool("Processes",20)
 
 %% ** Script for Least Squares Optimization **
 %% Options for the optimization solver
-
-oldoptions = optimoptions(@lsqnonlin,'UseParallel',true,'Algorithm','trust-region-reflective','Display','iter','MaxIter',maxiters,'TolFun',1e-8,'TolX',1e-10,'MaxFunEvals',40000,'Diagnostics','on')
+%% next option for daily curve -> 'TolFun',1e-16
+%% next option for cum curve -> 'TolFun',1e-12 ()
+oldoptions = optimoptions(@lsqnonlin,'UseParallel',true,'Algorithm','trust-region-reflective','Display','iter','MaxIter',maxiters,'TolFun',1e-12,'TolX',1e-10,'MaxFunEvals',40000,'Diagnostics','on')
 options = optimoptions(oldoptions)
 
 %% Upper and lower limits of optimization
@@ -93,7 +94,7 @@ end
 resnormref=1e-2;
 tol=5e-2;
 r=0.3;
-it=0;
+it=1;
 maxit=100;
 vectorR = [];
 cont=0;
@@ -119,16 +120,22 @@ v_ini = [N-xd(diaInicio,1)-xd(diaInicio,2)-xd(diaInicio,3);
 vectorInicial = v_ini;
 tc_t=1:size(x0,1);
 
-% for map jabobian of lsqnonline
-mJacobian = {}
+% for map p, residual, resnorm, jabobian, mLabda of lsqnonline
+mJacobianDisperse = {};
+mJacobianFull_left = {};
+mJacobianFull_right = {};
+mResidual = [];
+mResNorm = [];
+mLambda = {};
+pM = [];
 
-for it=0:maxit
+for it=1:maxit
    if abs(r-resnormref)/r<tol
        disp('abs(r-resnormref)/r<tol');
        break;
    end
 
-   if abs(r)<=0.0001
+   if abs(r)<=0.001
       disp('abs(r)<=0.001');
        break;
    end
@@ -138,12 +145,20 @@ for it=0:maxit
        break;
    end
    
-   %% Call optimizer lsqnonlin
-   [p,r,~,~,~,~,jac]=lsqnonlin(@(p) ESIR_rel_all(p,tc_t,Data,x0,N,v_ini,opcion_a1),p0,Lb,Ub,options);
+   %% Call optimizer lsqnonlin / structure lambda whose fields contain the Lagrange multipliers at the solution x, and the Jacobian of fun at the solution x. 
+   %% [p=x,resnorm=r,residual,exitflag,output,lambda,jacobian]
+   [p,resnorm,residual,exitflag,output,lambda,jacobian]=lsqnonlin(@(p) ESIR_rel_all(p,tc_t,Data,x0,N,v_ini,opcion_a1),p0,Lb,Ub,options);
+    [fil, col] = size(jacobian);
     p0=p
-    r0=r;
-    vectorR = [vectorR,r];
-    mJacobian{1,it+1} = full(jac)
+    r0=resnorm;
+    vectorR = [vectorR,resnorm];
+    mJacobianFull_left{1,it} = full(jacobian(1:fil/2,:)); % contains on matrix of the gradient of the optimization
+    mJacobianFull_right{1,it} = full(jacobian(fil/2+1:end,:));
+    mJacobianDisperse{1,it} = jacobian; % contains on matrix of the gradient of the optimization
+    mLambda{1,it} = lambda;
+    mResNorm = [mResNorm,resnorm];
+    mResidual = [mResidual;residual];
+    pM = [pM,p];
     %pause
     if cont==5
         coefVar = std(vectorR)/mean(vectorR)

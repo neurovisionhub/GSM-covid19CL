@@ -36,8 +36,8 @@ primero = 0; % first experiment = 0
 % example 2 - maxiters on cicle lsqnonline
 maxiters = 10;
 
-% for map jabobian of lsqnonline
-maxiters = 1;
+% maxiters = 1 on cicle lsqnonline for map p, residual, resnorm, jabobian, mLabda of lsqnonline
+maxiters = 5;
 
 % realizar primera aproximación factible, luego al usal el optimizadro no lineal aumentar su valor para conseguir mejor precisión
 %nCiclos =1% veces que se reduce beta a la mitad
@@ -53,7 +53,7 @@ diaFin=diaFinEstudio-nF;
 %% data_times_processing: analitics and processing of the data covid oficial and not covid oficial repositories
 format shortg
 variante_sier = 1; % para uso de funciones combinadas (diaria infectado % acum(R,U+F) )
-grafica_data=1
+grafica_data=0
 matrix_optimus=[];
 matrix_optimus_poblacion=[];
 matrix_optimus_scores=[];
@@ -130,8 +130,12 @@ d_t = diaFin - diaInicio;
 %% this is experimental for each covid 19 data set
 %% Important 2: if after 20 iters and no convergence, modification of one grade of the magnitude of the +- factor_inicial and repeat the experiment
 
-%factor_inicial =0.00025; % Magallanes
-factor_inicial =0.001; % Metropolitan
+%factor_inicial =0.00025; % Magallanes for cum curve
+% factor_inicial =0.001; % Metropolitan for cum curve
+%factor_inicial =0.0018; % acceptable Metropolitan for daily curve
+%factor_inicial =0.018; % bad results for Metropolitan for daily curve
+%factor_inicial =0.018; % bad results for Metropolitan for cum curve
+factor_inicial =0.0018; % good results for Metropolitan for daily curve
 
 %beta = max(beta_lb_up_op)*0.1;
 
